@@ -13,13 +13,12 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
-import com.sun.j3d.utils.geometry.ColorCube;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import figuras.Esfera;
 import figuras.EsferaMDL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
+import utilidades.Camara;
 
 public class Juego extends JFrame {
 
@@ -32,15 +31,18 @@ public class Juego extends JFrame {
     BranchGroup conjunto = new BranchGroup();
     public boolean actualizandoFisicas, mostrandoFisicas;
     public float tiempoJuego;
-    // Pesonajes importantes del juego
-    Figura personaje;  //golem;
-    Figura perseguidor;
+
+    // Personajes 
+    private Figura jugador;
+    private List<Figura> perseguidores = new ArrayList<Figura>();
 
     /* Tiempo de espera del loop */
     private float dt = 3f / 100f;
     private int tiempoDeEspera = (int) (dt * 1000);
 
-    private boolean peticionDeCerrar = false;
+    private boolean peticionDeCierre = false;
+
+    private Camara camara = null;
 
     public Juego() {
 
@@ -72,6 +74,7 @@ public class Juego extends JFrame {
         universo.getViewingPlatform().setNominalViewingTransform();
         universo.addBranchGraph(escena);
         universo.getViewer().getView().setBackClipDistance(50);
+        camara = new Camara(universo);
     }
 
     public BranchGroup crearEscena() {
@@ -96,10 +99,11 @@ public class Juego extends JFrame {
         //Es sencillo crearlos estaticos como se muestra a continuacion. Si desea que caigan, y se sometan a fuerzas, mejor crear una figura.
         float radio = 2f;
         float posY = -4f;
-        // tutorial de creacion de una objeto   (la piedra con textura de ladrillo)
-        // parte gráfica del objeto:
+
+        // Creación de un objeto (la piedra con textura de ladrillo)
+        // Componente gráfico
         Appearance apariencia = new Appearance();
-        apariencia.setTexture(new TextureLoader(System.getProperty("user.dir") + "//texturas//ladrillo.jpg", this).getTexture());
+        apariencia.setTexture(new TextureLoader(System.getProperty("user.dir") + "//res//texturas//ladrillo.jpg", this).getTexture());
         TextureAttributes texAttr = new TextureAttributes();
         texAttr.setTextureMode(TextureAttributes.MODULATE);
         apariencia.setTextureAttributes(texAttr);
@@ -110,8 +114,8 @@ public class Juego extends JFrame {
         TGesferaFija.addChild(figuraVisual);
         objRoot.addChild(TGesferaFija);
 
-        // parte física del objeto:
-        float masa = 0f;                                                       //con masa =0 el objeto es est‡tico
+        // Componente físico
+        float masa = 0f;                                                       //con masa =0 el objeto es estático
         SphereShape figuraFisica = new SphereShape(radio);
         CollisionObject ramaFisica = new CollisionObject();
         ramaFisica.setCollisionShape(figuraFisica);
@@ -132,6 +136,7 @@ public class Juego extends JFrame {
     }
 
     public void cargarContenido() {
+
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float masa = 1f;
         float radio = 1f;
@@ -140,56 +145,71 @@ public class Juego extends JFrame {
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
-        personaje = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
-        personaje.crearPropiedades(masa, elasticidad, 0.5f, posX, posY, posZ, mundoFisico);
-        personaje.cuerpoRigido.setDamping(dampingLineal, dampingAngular);
+        jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
+        jugador.crearPropiedades(masa, elasticidad, 0.1f, posX, posY, posZ, mundoFisico);
+        jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular);
 
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
-        perseguidor = new Esfera(radio, "texturas//bosques2.jpg", conjunto, listaObjetosFisicos, this);
-        if (!actualizandoFisicas) {
-            perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15, mundoFisico);
+        float fuerza_muscular = 200000f;
+        Figura perseguidor;
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                perseguidor = new Esfera(radio, "res//texturas//balon.jpg", conjunto, listaObjetosFisicos, this);
+            } else {
+                perseguidor = new Esfera(radio, "res//texturas//hielo.jpg", conjunto, listaObjetosFisicos, this);
+            }
+            if (!actualizandoFisicas) {
+                perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15, mundoFisico);
+            }
+            perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
+            perseguidores.add(perseguidor);
         }
-        perseguidor.asignarObjetivo(personaje, 15f);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
 
-        //Creacion de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
-        float friccion = 0.5f;
-        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(30, 30, -5, -3f, -12, "unaTextura_Desabilitada", conjunto, mundoFisico, friccion);
+        // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
+        float friccion = 0.3f;
+        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 
     public void actualizar(float dt) {
 
-        perseguidor.asignarObjetivo(personaje, 150f);
-
-        //ACTUALIZAR DATOS DE FUERZAS DEL PERSONAJE CONTROLADO POR EL JUGADOR
-        if (personaje != null) {
-            float fuerzaHaciaAdelante = 0, fuerzaLateral = 0;
-            if (personaje.adelante) {
-                fuerzaHaciaAdelante = personaje.masa * 100f * 2.5f;
-            }
-            if (personaje.atras) {
-                fuerzaHaciaAdelante = -personaje.masa * 100f * 2.5f;
-            }
-            if (personaje.derecha) {
-                fuerzaLateral = -personaje.masa * 40f;
-            }
-            if (personaje.izquierda) {
-                fuerzaLateral = personaje.masa * 40f;
-            }
-
-            Vector3d direccionFrente = personaje.conseguirDireccionFrontal();
-            personaje.cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * fuerzaHaciaAdelante * 0.1f, 0, (float) direccionFrente.z * fuerzaHaciaAdelante * 0.1f));
-            personaje.cuerpoRigido.applyTorque(new Vector3f(0, fuerzaLateral, 0));
+        for (Figura perseguidor : perseguidores) {
+            perseguidor.asignarObjetivo(jugador, 150f);
         }
 
-        //ACTUALIZAR DATOS DE FUERZAS DE LAS FIGURAS AUTONOMAS  (ej. para que cada figura pueda persiguir su objetivo)
+        // Movimiento por fuerzas del jugador
+        if (jugador != null) {
+            float fuerzaHaciaAdelante = 0, fuerzaLateral = 0, fuerzaHaciaArriba = 0f;
+            if (jugador.adelante) {
+                fuerzaHaciaAdelante = jugador.masa * 100f * 2.5f;
+            }
+            if (jugador.atras) {
+                fuerzaHaciaAdelante = -jugador.masa * 100f * 2.5f;
+            }
+            if (jugador.derecha) {
+                fuerzaLateral = -jugador.masa * 40f;
+            }
+            if (jugador.izquierda) {
+                fuerzaLateral = jugador.masa * 40f;
+            }
+            if (jugador.arriba) {
+                fuerzaHaciaArriba = jugador.masa * 40f;
+            }
+
+            Vector3d direccionFrente = jugador.conseguirDireccionFrontal();
+            jugador.cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * fuerzaHaciaAdelante * 0.1f, fuerzaHaciaArriba, (float) direccionFrente.z * fuerzaHaciaAdelante * 0.1f));
+            jugador.cuerpoRigido.applyTorque(new Vector3f(0, fuerzaLateral, 0));
+        }
+
+        // Fuerzas físicas
         for (int i = 0; i < this.listaObjetosFisicos.size(); i++) {
             listaObjetosFisicos.get(i).actualizar();
         }
 
-        //ACTUALIZAR DATOS DE LOCALIZACION DE FIGURAS FISICAS
+        // Datos físicos de localización
         this.actualizandoFisicas = true;
         try {
-            mundoFisico.stepSimulation(dt);    //mundoFisico.stepSimulation ( dt  ,50000, dt*0.2f);
+            //mundoFisico.stepSimulation ( dt  ,50000, dt*0.2f);
+            mundoFisico.stepSimulation(dt);
         } catch (Exception e) {
             System.out.println("JBullet forzado. No debe crearPropiedades de solidoRigidos durante la actualizacion stepSimulation");
         }
@@ -197,45 +217,23 @@ public class Juego extends JFrame {
         tiempoJuego = tiempoJuego + dt;
     }
 
-    public void mostrar() throws Exception {
-        //MOSTRAR FIGURAS FISICAS (muestra el componente visual de la figura, con base en los datos de localizacion del componente fisico)
+    // Muestra el componente visual de la figura, con base en los datos de localizacion del componente fisico
+    public void mostrar() {
         this.mostrandoFisicas = true;
-        try {
-            if ((mundoFisico.getCollisionObjectArray().size() != 0)
-                    && (listaObjetosFisicos.size() != 0)) {
-                for (int idFigura = 0; idFigura <= this.listaObjetosFisicos.size() - 1; idFigura++) {     // Actualizar posiciones fisicas y graficas de los objetos.
-                    try {
-                        int idFisico = listaObjetosFisicos.get(idFigura).identificadorFisico;
-                        CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(idFisico); //
-                        RigidBody cuerpoRigido = RigidBody.upcast(objeto);
-                        listaObjetosFisicos.get(idFigura).mostrar(cuerpoRigido);
-                    } catch (Exception e) {
-                        // No hacer nada
-                    }
+        if ((mundoFisico.getCollisionObjectArray().size() != 0) && !(listaObjetosFisicos.isEmpty())) {
+            // Actualizar posiciones fisicas y graficas de los objetos.
+            for (int idFigura = 0; idFigura <= this.listaObjetosFisicos.size() - 1; idFigura++) {
+                try {
+                    int idFisico = listaObjetosFisicos.get(idFigura).identificadorFisico;
+                    CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(idFisico); //
+                    RigidBody cuerpoRigido = RigidBody.upcast(objeto);
+                    listaObjetosFisicos.get(idFigura).mostrar(cuerpoRigido);
+                } catch (Exception e) {
+                    // No hacer nada
                 }
             }
-        } catch (Exception e) {
-            // No hacer nada
         }
         this.mostrandoFisicas = false;
-    }
-
-    public void empezar() {
-
-        /* Bucle principal del juego */
-        while (!peticionDeCerrar) {
-            actualizar(dt);
-            try {
-                mostrar();
-            } catch (Exception ex) {
-                Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            camaraAlJugador();
-
-            esperar();
-        }
-
     }
 
     public void esperar() {
@@ -246,40 +244,24 @@ public class Juego extends JFrame {
         }
     }
 
-    public void camaraAlJugador() {
+    public void empezar() {
 
-        /* Calcular posición y dirección */
-        Transform3D t3dPersonaje = new Transform3D();
-        personaje.desplazamientoFigura.getTransform(t3dPersonaje);
-        Vector3f posPersonaje = new Vector3f(0, 0, 0);
-        t3dPersonaje.get(posPersonaje);
+        /* Bucle principal del juego */
+        while (!peticionDeCierre) {
 
-        double[] c = new double[]{posPersonaje.x, posPersonaje.y, posPersonaje.z};
-        Vector3d dir = personaje.conseguirDireccionFrontal();
-        dir.scale(1.5);
-        Point3d posicionCamara = new Point3d(c[0] - dir.x, c[1] + 4, c[2] - dir.z);
+            actualizar(dt);
+            mostrar();
 
-        /* Colocar en la espalda encima del jugador */
-        colocarCamara(universo, posicionCamara, new Point3d(c[0]+ dir.x, c[1], c[2] + dir.z));
+            camara.camaraAlPersonaje(jugador);
 
-    }
-
-    public void colocarCamara(SimpleUniverse universo, Point3d posicionCamara, Point3d objetivoCamara) {
-        posicionCamara = new Point3d(posicionCamara.x + 0.001, posicionCamara.y + 0.001d, posicionCamara.z + 0.001);
-        Transform3D datosConfiguracionCamara = new Transform3D();
-        datosConfiguracionCamara.lookAt(posicionCamara, objetivoCamara, new Vector3d(0.001, 1.001, 0.001));
-        try {
-            datosConfiguracionCamara.invert();
-            TransformGroup TGcamara = universo.getViewingPlatform().getViewPlatformTransform();
-            TGcamara.setTransform(datosConfiguracionCamara);
-        } catch (Exception e) {
-            System.out.println(e.toString());
+            esperar();
         }
     }
 
     public static void main(String[] args) {
-        Juego juego = new Juego();
 
+        /* Inicialización */
+        Juego juego = new Juego();
         juego.cargarContenido();
 
         /* Frame */

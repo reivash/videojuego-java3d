@@ -18,7 +18,7 @@ public class Figura {
     public BranchGroup ramaVisible = new BranchGroup();
     public TransformGroup desplazamientoFigura = new TransformGroup();
     public RigidBody cuerpoRigido;
-    public boolean adelante, atras, izquierda, derecha, caminando, corriendo, quieto;
+    public boolean adelante, atras, izquierda, derecha, caminando, corriendo, quieto, arriba;;
     public boolean esMDL;
     ArrayList<simulador.Figura> listaObjetosFisicos;
     public BranchGroup conjunto;
@@ -33,6 +33,7 @@ public class Figura {
     public Figura objetivo;                      //El objetivo puede ser: localizar otra figura,
     //Si adem‡s, hubiera que realizar uan accion particular (ej. Dispararle, darle alimento) se necesitaria otro atributo (ej. TareaObjetivo)
     float aceleracionMuscular;
+
 
     public Figura(BranchGroup conjunto, ArrayList<Figura> listaObjetosFisicos, Juego juego) {
         this.listaObjetosFisicos = listaObjetosFisicos;
@@ -127,13 +128,13 @@ public class Figura {
     }
 
     public void actualizar() {
-  //Opcional: ACTUALIZACION DEL ESTADO DE LA FIGURA Y DEL ESTADO DEL ENTORNO
+        //Opcional: ACTUALIZACION DEL ESTADO DE LA FIGURA Y DEL ESTADO DEL ENTORNO
         //Para actualizar el estado de la figura:  detectar cercanias,exploraciones picking, localizacion (cuadrantes, mundos)
         //Para actualizar el estado del entorno:  lo puede hacer la misma figura, una figura coordinara, o el mismo juego
 
- //Opcional: ACTUALIZACION DE PLANIFICACION A LARGO PLAZAO
+        //Opcional: ACTUALIZACION DE PLANIFICACION A LARGO PLAZAO
         //Dependiendo del objetivo a conseguir ejecutar un plan a largo plazo
- //REGLAS DE MOVIMIENTO A CORTO PLAZO DE LA FIGURA DEPENDIENDO DE SU ESTADO, DEL ENTORNO Y DEL ESTADO DEL JUEGO
+        //REGLAS DE MOVIMIENTO A CORTO PLAZO DE LA FIGURA DEPENDIENDO DE SU ESTADO, DEL ENTORNO Y DEL ESTADO DEL JUEGO
         //ejemplo: C—digo de actualizar() del programa  Navegador_Tema_3
         if (localizacionObjetivo != null) {
             Vector3f direccion = new Vector3f(localizacionObjetivo.x - posiciones[0], 0f, localizacionObjetivo.z - posiciones[2]);
@@ -155,7 +156,7 @@ public class Figura {
         this.aceleracionMuscular = aceleracionMuscular;
     }
 
-    Vector3d conseguirDireccionFrontal() {
+    public Vector3d conseguirDireccionFrontal() {
         Transform3D t3dPersonaje = new Transform3D();
         this.desplazamientoFigura.getTransform(t3dPersonaje);
         Transform3D copiat3dPersonaje = new Transform3D(t3dPersonaje);
