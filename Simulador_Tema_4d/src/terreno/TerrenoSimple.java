@@ -1,4 +1,4 @@
-package utilidades;
+package terreno;
 
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.dynamics.*;

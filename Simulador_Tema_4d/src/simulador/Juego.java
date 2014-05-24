@@ -1,5 +1,6 @@
 package simulador;
 
+import figuras.EntidadInteligente;
 import java.awt.*;
 import javax.swing.*;
 import javax.media.j3d.*;
@@ -15,34 +16,35 @@ import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
+import entidad.EntidadFisica;
 import figuras.Esfera;
 import figuras.EsferaMDL;
 import java.util.List;
-import utilidades.Camara;
+import util.Camara;
 
 public class Juego extends JFrame {
 
-    SimpleUniverse universo;
-    BoundingSphere limites = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
-    public String rutaCarpetaProyecto = System.getProperty("user.dir") + "/";
-    ArrayList<simulador.Figura> listaObjetosFisicos = new ArrayList<Figura>();
-    ArrayList<simulador.Figura> listaObjetosNoFisicos = new ArrayList<Figura>();
-    DiscreteDynamicsWorld mundoFisico;
-    BranchGroup conjunto = new BranchGroup();
-    public boolean actualizandoFisicas, mostrandoFisicas;
-    public float tiempoJuego;
+    /* Java3D y física */
+    private SimpleUniverse universo;
+    private BranchGroup conjunto = new BranchGroup();
+    private DiscreteDynamicsWorld mundoFisico;
+    private float tiempoJuego;
+    private BoundingSphere limitesBackground = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
 
-    // Personajes 
-    private Figura jugador;
-    private List<Figura> perseguidores = new ArrayList<Figura>();
+    private Camara camara = null;
+
+    /* Entidades */
+    private ArrayList<entidad.EntidadFisica> listaEntidadesFisicas = new ArrayList<entidad.EntidadFisica>();
+    private ArrayList<figuras.EntidadInteligente> listaObjetosNoFisicos = new ArrayList<EntidadInteligente>();
+
+    private EntidadInteligente jugador;
+    private List<EntidadInteligente> perseguidores = new ArrayList<EntidadInteligente>();
 
     /* Tiempo de espera del loop */
     private float dt = 3f / 100f;
     private int tiempoDeEspera = (int) (dt * 1000);
 
     private boolean peticionDeCierre = false;
-
-    private Camara camara = null;
 
     public Juego() {
 
@@ -83,18 +85,15 @@ public class Juego extends JFrame {
         objRoot.addChild(conjunto);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        ComportamientoMostrar mostrar = new ComportamientoMostrar(this);
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f),
                 new Vector3f(1f, 0f, -1f));
         BoundingSphere limitesLuz = new BoundingSphere(new Point3d(-15, 10, 15), 100.0); //Localizacion de fuente/paso de luz
         objRoot.addChild(LuzDireccional);
-        mostrar.setSchedulingBounds(limites);
         LuzDireccional.setInfluencingBounds(limitesLuz);
         Background bg = new Background();
-        bg.setApplicationBounds(limites);
+        bg.setApplicationBounds(limitesBackground);
         bg.setColor(new Color3f(135f / 256, 206f / 256f, 250f / 256f));
         objRoot.addChild(bg);
-        objRoot.addChild(mostrar);
 
         //Es sencillo crearlos estaticos como se muestra a continuacion. Si desea que caigan, y se sometan a fuerzas, mejor crear una figura.
         float radio = 2f;
@@ -135,6 +134,15 @@ public class Juego extends JFrame {
         return objRoot;
     }
 
+    /* Getters y setters */
+    public DiscreteDynamicsWorld getMundoFisico() {
+        return mundoFisico;
+    }
+
+    public List<EntidadFisica> getListaEntidadesFisicas() {
+        return listaEntidadesFisicas;
+    }
+
     public void cargarContenido() {
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
@@ -145,102 +153,63 @@ public class Juego extends JFrame {
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
-        jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, listaObjetosFisicos, this, true);
-        jugador.crearPropiedades(masa, elasticidad, 0.1f, posX, posY, posZ, mundoFisico);
-        jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular);
+        jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
+        jugador.crearPropiedades(masa, elasticidad, 0.1f, posX, posY, posZ);
+        jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
 
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
         float fuerza_muscular = 200000f;
-        Figura perseguidor;
+        EntidadInteligente perseguidor;
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {
-                perseguidor = new Esfera(radio, "res//texturas//balon.jpg", conjunto, listaObjetosFisicos, this);
+                perseguidor = new Esfera(radio, "res//texturas//balon.jpg", conjunto, this);
             } else {
-                perseguidor = new Esfera(radio, "res//texturas//hielo.jpg", conjunto, listaObjetosFisicos, this);
+                perseguidor = new Esfera(radio, "res//texturas//hielo.jpg", conjunto, this);
             }
-            if (!actualizandoFisicas) {
-                perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15, mundoFisico);
-            }
+
+            perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15);
             perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
             perseguidores.add(perseguidor);
         }
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 0.3f;
-        utilidades.TerrenoSimple terreno = new utilidades.TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
+        terreno.TerrenoSimple terreno = new terreno.TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 
     public void actualizar(float dt) {
 
-        for (Figura perseguidor : perseguidores) {
+        for (EntidadInteligente perseguidor : perseguidores) {
             perseguidor.asignarObjetivo(jugador, 150f);
         }
 
-        // Movimiento por fuerzas del jugador
-        if (jugador != null) {
-            float fuerzaHaciaAdelante = 0, fuerzaLateral = 0, fuerzaHaciaArriba = 0f;
-            if (jugador.adelante) {
-                fuerzaHaciaAdelante = jugador.masa * 100f * 2.5f;
-            }
-            if (jugador.atras) {
-                fuerzaHaciaAdelante = -jugador.masa * 100f * 2.5f;
-            }
-            if (jugador.derecha) {
-                fuerzaLateral = -jugador.masa * 40f;
-            }
-            if (jugador.izquierda) {
-                fuerzaLateral = jugador.masa * 40f;
-            }
-            if (jugador.arriba) {
-                fuerzaHaciaArriba = jugador.masa * 40f;
-            }
-
-            Vector3d direccionFrente = jugador.conseguirDireccionFrontal();
-            jugador.cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * fuerzaHaciaAdelante * 0.1f, fuerzaHaciaArriba, (float) direccionFrente.z * fuerzaHaciaAdelante * 0.1f));
-            jugador.cuerpoRigido.applyTorque(new Vector3f(0, fuerzaLateral, 0));
+        /* Actualizar las entidades */
+        for (EntidadFisica ef : listaEntidadesFisicas) {
+            ef.actualizar();
         }
 
-        // Fuerzas físicas
-        for (int i = 0; i < this.listaObjetosFisicos.size(); i++) {
-            listaObjetosFisicos.get(i).actualizar();
-        }
-
-        // Datos físicos de localización
-        this.actualizandoFisicas = true;
+        /* Actualizar la física del mundo */
         try {
-            //mundoFisico.stepSimulation ( dt  ,50000, dt*0.2f);
             mundoFisico.stepSimulation(dt);
         } catch (Exception e) {
             System.out.println("JBullet forzado. No debe crearPropiedades de solidoRigidos durante la actualizacion stepSimulation");
         }
-        this.actualizandoFisicas = false;
+
         tiempoJuego = tiempoJuego + dt;
     }
 
-    // Muestra el componente visual de la figura, con base en los datos de localizacion del componente fisico
+    /* Actualiza la posición visual en base a la física */
     public void mostrar() {
-        this.mostrandoFisicas = true;
-        if ((mundoFisico.getCollisionObjectArray().size() != 0) && !(listaObjetosFisicos.isEmpty())) {
-            // Actualizar posiciones fisicas y graficas de los objetos.
-            for (int idFigura = 0; idFigura <= this.listaObjetosFisicos.size() - 1; idFigura++) {
-                try {
-                    int idFisico = listaObjetosFisicos.get(idFigura).identificadorFisico;
-                    CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(idFisico); //
-                    RigidBody cuerpoRigido = RigidBody.upcast(objeto);
-                    listaObjetosFisicos.get(idFigura).mostrar(cuerpoRigido);
-                } catch (Exception e) {
-                    // No hacer nada
-                }
-            }
+        for (EntidadFisica ef : listaEntidadesFisicas) {
+            ef.mostrar();
         }
-        this.mostrandoFisicas = false;
     }
 
     public void esperar() {
         try {
             Thread.sleep(tiempoDeEspera);
         } catch (InterruptedException e) {
-            // No hacer nada
+            // Nada
         }
     }
 

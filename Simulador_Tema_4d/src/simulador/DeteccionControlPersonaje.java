@@ -1,5 +1,6 @@
 package simulador;
 
+import figuras.EntidadInteligente;
 import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
@@ -7,13 +8,13 @@ import javax.media.j3d.*;
 
 public class DeteccionControlPersonaje extends javax.media.j3d.Behavior {
 
-    Figura personaje;
+    EntidadInteligente personaje;
     WakeupOnAWTEvent presionada = new WakeupOnAWTEvent(KeyEvent.KEY_PRESSED);
     WakeupOnAWTEvent liberada = new WakeupOnAWTEvent(KeyEvent.KEY_RELEASED);
     WakeupCondition keepUpCondition = null;
     WakeupCriterion[] continueArray = new WakeupCriterion[2];
 
-    public DeteccionControlPersonaje(Figura _personaje) {
+    public DeteccionControlPersonaje(EntidadInteligente _personaje) {
         personaje = _personaje;
         continueArray[0] = liberada;
         continueArray[1] = presionada;

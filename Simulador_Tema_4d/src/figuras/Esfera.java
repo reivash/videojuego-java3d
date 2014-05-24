@@ -1,6 +1,6 @@
 package figuras;
 
-import utilidades.CapabilitiesMDL;
+import util.CapabilitiesMDL;
 import simulador.*;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
@@ -15,7 +15,7 @@ import javax.vecmath.*;
 import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
 
-public class Esfera extends Figura {
+public class Esfera extends EntidadInteligente {
 
     public Scene escenaPersonaje1;
     AnimationBehavior ab = null;
@@ -28,11 +28,10 @@ public class Esfera extends Figura {
     public Esfera(float radio,
             String textura,
             BranchGroup conjunto,
-            ArrayList<Figura> listaObjetosFisicos,
             Juego juego) {
 
         // Si se desea programar una clase Esfera, su constrctor tendr’a esta linea
-        super(conjunto, listaObjetosFisicos, juego);
+        super(juego, conjunto);
 
         // Creando una apariencia
         Appearance apariencia = new Appearance();
@@ -47,9 +46,9 @@ public class Esfera extends Figura {
         SphereShape figuraFisica = new SphereShape(radio);
         ramaFisica = new CollisionObject();
         ramaFisica.setCollisionShape(figuraFisica);
-        ramaVisible.addChild(desplazamientoFigura);
-        desplazamientoFigura.addChild(figuraVisual);
-        this.conjunto = conjunto;
+        ramaVisible.addChild(desplazamiento);
+        desplazamiento.addChild(figuraVisual);
+        this.branchGroup = conjunto;
     }
 
     TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {

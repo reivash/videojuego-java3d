@@ -1,4 +1,4 @@
-package utilidades;
+package util;
 
 import simulador.*;
 import com.sun.j3d.demos.utils.scenegraph.traverser.ProcessNodeInterface;

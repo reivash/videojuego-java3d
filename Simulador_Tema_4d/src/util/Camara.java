@@ -1,4 +1,4 @@
-package utilidades;
+package util;
 
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import javax.media.j3d.Transform3D;
@@ -6,7 +6,7 @@ import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import simulador.Figura;
+import figuras.EntidadInteligente;
 
 /**
  * Clase interfaz para el reposicionamiento de la cámara en el mundo.
@@ -32,11 +32,11 @@ public class Camara {
         }
     }
 
-    public void camaraAlPersonaje(Figura personaje) {
+    public void camaraAlPersonaje(EntidadInteligente personaje) {
 
         /* Calcular posición y dirección */
         Transform3D t3dPersonaje = new Transform3D();
-        personaje.desplazamientoFigura.getTransform(t3dPersonaje);
+        personaje.desplazamiento.getTransform(t3dPersonaje);
         Vector3f posPersonaje = new Vector3f(0, 0, 0);
         t3dPersonaje.get(posPersonaje);
 
