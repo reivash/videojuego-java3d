@@ -1,12 +1,12 @@
 package util;
 
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import entidad.EntidadJava3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import figuras.EntidadInteligente;
 
 /**
  * Clase interfaz para el reposicionamiento de la cámara en el mundo.
@@ -32,7 +32,7 @@ public class Camara {
         }
     }
 
-    public void camaraAlPersonaje(EntidadInteligente personaje) {
+    public void camaraAlPersonaje(EntidadJava3D personaje) {
 
         /* Calcular posición y dirección */
         Transform3D t3dPersonaje = new Transform3D();
@@ -41,7 +41,7 @@ public class Camara {
         t3dPersonaje.get(posPersonaje);
 
         double[] c = new double[]{posPersonaje.x, posPersonaje.y, posPersonaje.z};
-        Vector3d dir = personaje.conseguirDireccionFrontal();
+        Vector3d dir = personaje.direccionFrontal();
         dir.scale(1.5);
         Point3d posicionCamara = new Point3d(c[0] - dir.x, c[1] + 4, c[2] - dir.z);
 

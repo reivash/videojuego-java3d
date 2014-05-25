@@ -213,3 +213,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/TrabajoVideojuegos/nbproject/private/
+/AsaltoAlCastillo/nbproject/private/

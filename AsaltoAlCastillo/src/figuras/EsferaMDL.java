@@ -36,7 +36,7 @@ public class EsferaMDL extends EntidadInteligente {
         texAttr.setTextureMode(TextureAttributes.MODULATE);
         apariencia.setTextureAttributes(texAttr);
         esMDL = true;
-     //Creacion de la forma visual MDL
+        //Creacion de la forma visual MDL
         //nombre = "figura_MDL_" + identificador;
         //Sphere figuraVisual = new Sphere(radio);
         TransformGroup figuraVisual = crearObjetoMDL(ficheroMDL, radio * 2);
@@ -45,16 +45,9 @@ public class EsferaMDL extends EntidadInteligente {
         ramaFisica.setCollisionShape(figuraFisica);
         ramaVisible.addChild(desplazamiento);
         desplazamiento.addChild(figuraVisual);
-
-        //Creaci—n de detector de teclas asociado a este cono
-        if (esPersonaje) {
-            DeteccionControlPersonaje mueve = new DeteccionControlPersonaje(this);
-            mueve.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
-            ramaVisible.addChild(mueve);
-        }
     }
 
-    TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {
+    public TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {
         BranchGroup RamaMDL = new BranchGroup();
         float rotacionX = 0;
         float rotacionY = 0;

@@ -17,20 +17,22 @@ import simulador.Juego;
 public class EntidadFisica extends EntidadJava3D {
 
     /* Física */
-    protected List<EntidadFisica> listaObjetosFisicos;
+    protected DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
     protected DiscreteDynamicsWorld mundoFisico;
     public RigidBody cuerpoRigido;
     protected CollisionObject ramaFisica;
     public float masa, elasticidad;
     protected float[] velocidades = new float[3];
 
-    public boolean adelante, atras, izquierda, derecha, caminando, corriendo, quieto, arriba;
+    /* La velocidad lineal es relativa a la posicion del jugador, siendo hacia delante el eje x positivo */
+    public Vector3f velocidad_lineal = new Vector3f(0f, 0f, 0f);
+    public Vector3f velocidad_angular = new Vector3f(0f, 0f, 0f);
+
     public boolean esMDL;
 
     /* Constructor */
     public EntidadFisica(Juego juego, BranchGroup branchGroup) {
         super(juego, branchGroup);
-        this.listaObjetosFisicos = juego.getListaEntidadesFisicas();
         this.mundoFisico = juego.getMundoFisico();
     }
 
@@ -59,8 +61,7 @@ public class EntidadFisica extends EntidadJava3D {
 
         //A–adiendo objetoVisual asociado al grafo de escea y a la lista de objetos fisicos visibles y situandolo
         branchGroup.addChild(ramaVisible);
-        this.listaObjetosFisicos.add(this);
-        identificadorFigura = listaObjetosFisicos.size() - 1;
+        diccionarioEntidades.añadirEntidadFisica(this);
 
         //Presentaci—n inicial de la  figura visual asociada al cuerpo rigido
         Transform3D inip = new Transform3D();
@@ -75,13 +76,10 @@ public class EntidadFisica extends EntidadJava3D {
 
     public void remover() {
         try {
-            mundoFisico.getCollisionObjectArray().remove(this.identificadorFisico);
+            mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
             mundoFisico.removeRigidBody(cuerpoRigido);
-            branchGroup.removeChild(this.identificadorFigura);
-            for (int i = this.identificadorFigura + 1; i < this.listaObjetosFisicos.size(); i++) {
-                listaObjetosFisicos.get(i).identificadorFigura = listaObjetosFisicos.get(i).identificadorFigura - 1;
-            }
-            listaObjetosFisicos.remove(this.identificadorFigura);;
+            branchGroup.removeChild(identificadorFigura);
+            diccionarioEntidades.eliminarEntidadFisica(this);
         } catch (Exception e) {
             System.out.println("Ya eliminado");
         }
@@ -112,28 +110,49 @@ public class EntidadFisica extends EntidadJava3D {
 
     @Override
     public void actualizar() {
-
+        /* Sistema Marlónico */
         // Movimiento por fuerzas del jugador
-        float fuerzaHaciaAdelante = 0, fuerzaLateral = 0, fuerzaHaciaArriba = 0f;
-        if (adelante) {
-            fuerzaHaciaAdelante = masa * 100f * 2.5f;
+//        float fuerzaHaciaAdelante = 0, fuerzaLateral = 0, fuerzaHaciaArriba = 0f;
+//        if (adelante) {
+//            fuerzaHaciaAdelante = masa * 100f * 2.5f;
+//        }
+//        if (atras) {
+//            fuerzaHaciaAdelante = -masa * 100f * 2.5f;
+//        }
+//        if (derecha) {
+//            fuerzaLateral = -masa * 40f;
+//        }
+//        if (izquierda) {
+//            fuerzaLateral = masa * 40f;
+//        }
+//        if (arriba) {
+//            fuerzaHaciaArriba = masa * 40f;
+//        }
+
+        Vector3d direccionFrente = direccionFrontal();
+
+        /* Fuerza hacia delante */
+        cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * velocidad_lineal.x * 0.1f,
+                (float) direccionFrente.y,
+                (float) direccionFrente.z * velocidad_lineal.x * 0.1f));
+        
+        /* Fuerza hacia arriba */
+        cuerpoRigido.applyCentralForce(new Vector3f(0,velocidad_lineal.y,0));
+        
+        
+        /* Rotación */
+        cuerpoRigido.applyTorque(new Vector3f(0, velocidad_angular.y, 0));
+
+        /* Damping */
+        velocidad_lineal.scale(.7f);
+        velocidad_angular.scale(.1f);
+        if (velocidad_lineal.length() < .0001) {
+            velocidad_lineal = new Vector3f(0, 0, 0);
         }
-        if (atras) {
-            fuerzaHaciaAdelante = -masa * 100f * 2.5f;
-        }
-        if (derecha) {
-            fuerzaLateral = -masa * 40f;
-        }
-        if (izquierda) {
-            fuerzaLateral = masa * 40f;
-        }
-        if (arriba) {
-            fuerzaHaciaArriba = masa * 40f;
+        if (velocidad_angular.length() < .0001) {
+            velocidad_angular = new Vector3f(0, 0, 0);
         }
 
-        Vector3d direccionFrente = conseguirDireccionFrontal();
-        cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * fuerzaHaciaAdelante * 0.1f, fuerzaHaciaArriba, (float) direccionFrente.z * fuerzaHaciaAdelante * 0.1f));
-        cuerpoRigido.applyTorque(new Vector3f(0, fuerzaLateral, 0));
     }
 
 }

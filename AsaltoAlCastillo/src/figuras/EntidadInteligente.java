@@ -12,7 +12,7 @@ public class EntidadInteligente extends entidad.EntidadFisica {
     public Vector3f localizacionObjetivo;
     public int estadoFigura;                    //Dependiendo del estado de la figura, su entorno, y del juego, la figura tiene un comportamiento dado.
     public int[] estadoEntornoFigura;      //El entorno alrededoar de la figura podria descrbirse con m‡s de un estado. Lloviendo y tengo poca energia
-    public EntidadInteligente objetivo;                      //El objetivo puede ser: localizar otra figura,
+    public EntidadJava3D objetivo;                      //El objetivo puede ser: localizar otra figura,
     //Si adem‡s, hubiera que realizar uan accion particular (ej. Dispararle, darle alimento) se necesitaria otro atributo (ej. TareaObjetivo)
     float aceleracionMuscular;
 
@@ -21,6 +21,7 @@ public class EntidadInteligente extends entidad.EntidadFisica {
     }
 
     public void actualizar() {
+        super.actualizar();
         //Opcional: ACTUALIZACION DEL ESTADO DE LA FIGURA Y DEL ESTADO DEL ENTORNO
         //Para actualizar el estado de la figura:  detectar cercanias,exploraciones picking, localizacion (cuadrantes, mundos)
         //Para actualizar el estado del entorno:  lo puede hacer la misma figura, una figura coordinara, o el mismo juego
@@ -36,10 +37,14 @@ public class EntidadInteligente extends entidad.EntidadFisica {
             fuerzaDePersecucion = new Vector3f(direccion.x * masa * aceleracionMuscular / 2f, 0, direccion.z * masa * aceleracionMuscular / 2f);  //Crea vector fuerza
             cuerpoRigido.applyCentralForce(fuerzaDePersecucion);
         }
+        
+        if(objetivo != null) {
+             this.localizacionObjetivo = new Vector3f(this.objetivo.posiciones[0], this.objetivo.posiciones[1], this.objetivo.posiciones[2]);
+        }
     }
 
-    public void asignarObjetivo(EntidadInteligente Objetivo, float aceleracionMuscular) {
-        this.objetivo = Objetivo;
+    public void asignarObjetivo(EntidadJava3D objetivo, float aceleracionMuscular) {
+        this.objetivo = objetivo;
         this.localizacionObjetivo = new Vector3f(this.objetivo.posiciones[0], this.objetivo.posiciones[1], this.objetivo.posiciones[2]);
         this.aceleracionMuscular = aceleracionMuscular;
     }

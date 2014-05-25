@@ -5,7 +5,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import java.util.ArrayList;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import com.bulletphysics.dynamics.*;
 import com.bulletphysics.collision.broadphase.AxisSweep3;
@@ -16,10 +15,10 @@ import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
-import entidad.EntidadFisica;
+import entidad.DiccionarioEntidades;
+import entidad.Jugador;
+import entrada.Teclado;
 import figuras.Esfera;
-import figuras.EsferaMDL;
-import java.util.List;
 import util.Camara;
 
 public class Juego extends JFrame {
@@ -34,12 +33,12 @@ public class Juego extends JFrame {
     private Camara camara = null;
 
     /* Entidades */
-    private ArrayList<entidad.EntidadFisica> listaEntidadesFisicas = new ArrayList<entidad.EntidadFisica>();
-    private ArrayList<figuras.EntidadInteligente> listaObjetosNoFisicos = new ArrayList<EntidadInteligente>();
+    private DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
+    private Jugador jugador;
 
-    private EntidadInteligente jugador;
-    private List<EntidadInteligente> perseguidores = new ArrayList<EntidadInteligente>();
-
+    /* Entrada por teclado */
+    private Teclado teclado;
+    
     /* Tiempo de espera del loop */
     private float dt = 3f / 100f;
     private int tiempoDeEspera = (int) (dt * 1000);
@@ -77,6 +76,9 @@ public class Juego extends JFrame {
         universo.addBranchGraph(escena);
         universo.getViewer().getView().setBackClipDistance(50);
         camara = new Camara(universo);
+        
+        teclado = new Teclado(conjunto);
+
     }
 
     public BranchGroup crearEscena() {
@@ -139,11 +141,8 @@ public class Juego extends JFrame {
         return mundoFisico;
     }
 
-    public List<EntidadFisica> getListaEntidadesFisicas() {
-        return listaEntidadesFisicas;
-    }
-
     public void cargarContenido() {
+
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float masa = 1f;
@@ -153,12 +152,13 @@ public class Juego extends JFrame {
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
-        jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
+        jugador = new Jugador("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
         jugador.crearPropiedades(masa, elasticidad, 0.1f, posX, posY, posZ);
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
-
+        teclado.setJugador(jugador);
+        
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
-        float fuerza_muscular = 200000f;
+        float fuerza_muscular = 20f;
         EntidadInteligente perseguidor;
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {
@@ -169,7 +169,7 @@ public class Juego extends JFrame {
 
             perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15);
             perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
-            perseguidores.add(perseguidor);
+            diccionarioEntidades.añadirEntidadFisica(perseguidor);
         }
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
@@ -179,14 +179,7 @@ public class Juego extends JFrame {
 
     public void actualizar(float dt) {
 
-        for (EntidadInteligente perseguidor : perseguidores) {
-            perseguidor.asignarObjetivo(jugador, 150f);
-        }
-
-        /* Actualizar las entidades */
-        for (EntidadFisica ef : listaEntidadesFisicas) {
-            ef.actualizar();
-        }
+        diccionarioEntidades.actualizar();
 
         /* Actualizar la física del mundo */
         try {
@@ -200,9 +193,7 @@ public class Juego extends JFrame {
 
     /* Actualiza la posición visual en base a la física */
     public void mostrar() {
-        for (EntidadFisica ef : listaEntidadesFisicas) {
-            ef.mostrar();
-        }
+        diccionarioEntidades.mostrar();
     }
 
     public void esperar() {
@@ -218,6 +209,8 @@ public class Juego extends JFrame {
         /* Bucle principal del juego */
         while (!peticionDeCierre) {
 
+            teclado.actualizar();
+            
             actualizar(dt);
             mostrar();
 
