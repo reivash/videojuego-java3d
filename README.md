@@ -12,4 +12,4 @@ TrabajoVideojuegos
 - Posibilidad de escalar la muralla o destruir la puerta para entrar al castillo
 - Opcional: distintos niveles o fases
 
-Unos atacan otros defienden ¿lo quieres más claro o te hago un croquis
+Unos atacan otros defienden ¿lo quieres más claro o te hago un croquis?
