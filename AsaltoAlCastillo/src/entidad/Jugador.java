@@ -4,22 +4,30 @@ import eventos.Evento;
 import figuras.EsferaMDL;
 import java.util.ArrayList;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Transform3D;
-import javax.vecmath.Vector3d;
-import simulador.Juego;
+import net.sf.nwn.loader.ModelAnimation;
+import main.Juego;
 
 public class Jugador extends EsferaMDL {
 
     private float velocidad_giro = 50f;
     private float velocidad_movimiento = 100;
 
+    private String animacionActual = "";
+
+    private boolean accionRealizada = false;
+
     public Jugador(String ficheroMDL, float radio, BranchGroup conjunto, Juego juego, boolean esPersonaje) {
         super(ficheroMDL, radio, conjunto, juego, esPersonaje);
-        logEnabled = false;
+        logEnabled = true;
     }
 
     public void realizarAccion(Evento e) {
-        log("Dirección frontal: " + direccionFrontal());
+
+        accionRealizada = true;
+
+        /* Velocidad por defecto de la animación */
+        ab.setAnimationTimeScale(.5f);
+        
         try {
             String command = e.getCommando();
             ArrayList<String> params = e.getParams();
@@ -29,12 +37,19 @@ public class Jugador extends EsferaMDL {
                     switch (option) {
                         case "adelante":
                             log("Ir adelante");
-                            /* Parece ser que no hay forma de saber si una animacion está en marcha */
-                            /* Habrá que controlarlo a mano */
-//                            ab.playAnimation(nombreAnimacionCaminando, true);
+                            if (!animacionActual.equals(nombreAnimacionCaminando)) {
+                                ab.playAnimation(nombreAnimacionCaminando, true);
+                                ab.setAnimationTimeScale(.5f);
+                                animacionActual = nombreAnimacionCaminando;
+                            }
                             velocidad_lineal.x += velocidad_movimiento;
                             break;
                         case "atras":
+                            if (!animacionActual.equals(nombreAnimacionCaminando)) {
+                                ab.playAnimation(nombreAnimacionCaminando, true);
+                                ab.setAnimationTimeScale(.5f);
+                                animacionActual = nombreAnimacionCaminando;
+                            }
                             log("Ir atras");
                             velocidad_lineal.x -= velocidad_movimiento;
                             break;
@@ -54,6 +69,15 @@ public class Jugador extends EsferaMDL {
                     }
                     break;
                 }
+                case "atacar": {
+                    log("Atacando");
+                    if (!animacionActual.equals(nombreAnimacionLuchando)) {
+                        ab.playAnimation(nombreAnimacionLuchando, true);
+                        ab.setAnimationTimeScale(.5f);
+                        animacionActual = nombreAnimacionLuchando;
+                    }
+                    break;
+                }
                 /* Porque puedo */
                 case "volar": {
                     log("Volando");
@@ -66,4 +90,16 @@ public class Jugador extends EsferaMDL {
         }
     }
 
+    @Override
+    public void actualizar() {
+        super.actualizar();
+
+        /* Si no estamos haciendo nada ponemos la animacion por defecto */
+        if (!accionRealizada && !animacionActual.equals(nombreAnimacionQuieto)) {
+            log("Animacion quieto");
+            ab.playAnimation(nombreAnimacionQuieto, true);
+            animacionActual = nombreAnimacionQuieto;
+        }
+        accionRealizada = false;
+    }
 }

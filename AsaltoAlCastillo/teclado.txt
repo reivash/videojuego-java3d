@@ -3,3 +3,4 @@ a jugador girar izquierda
 w jugador mover adelante
 s jugador mover atras
 f jugador volar
+l jugador atacar

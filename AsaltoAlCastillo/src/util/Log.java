@@ -12,7 +12,9 @@ public abstract class Log {
     /* Imprime en pantalla el mensaje pasado por parámetro, la hora actual y la clase que realizó la llamada */
     protected void log(String message) {
         if (logEnabled) {
-            System.out.println(timeFormat.format(new Date(System.currentTimeMillis())));
+            System.out.println("[" + timeFormat.format(new Date(System.currentTimeMillis())) + " | " 
+                    + getClass() + "] " 
+                    + message);
         }
     }
 }

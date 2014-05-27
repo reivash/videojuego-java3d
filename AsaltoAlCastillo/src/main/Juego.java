@@ -1,4 +1,4 @@
-package simulador;
+package main;
 
 import figuras.EntidadInteligente;
 import java.awt.*;
@@ -59,7 +59,7 @@ public class Juego extends JFrame {
         AxisSweep3 broadphase = new AxisSweep3(worldAabbMin, worldAabbMax);
         SequentialImpulseConstraintSolver solver = new SequentialImpulseConstraintSolver();
         mundoFisico = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-        mundoFisico.setGravity(new Vector3f(0, -10, 0));
+        mundoFisico.setGravity(new Vector3f(0, -100, 0));
     }
 
     public void inicializarJava3D() {
@@ -74,7 +74,7 @@ public class Juego extends JFrame {
         escena.compile();
         universo.getViewingPlatform().setNominalViewingTransform();
         universo.addBranchGraph(escena);
-        universo.getViewer().getView().setBackClipDistance(50);
+        universo.getViewer().getView().setBackClipDistance(10000);
         camara = new Camara(universo);
         
         teclado = new Teclado(conjunto);
@@ -173,7 +173,7 @@ public class Juego extends JFrame {
         }
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
-        float friccion = 0.3f;
+        float friccion = 4f;
         terreno.TerrenoSimple terreno = new terreno.TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 

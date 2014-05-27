@@ -21,6 +21,7 @@ import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
 import util.Actualizable;
 import eventos.Evento;
+import java.util.ConcurrentModificationException;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Point3d;
@@ -40,13 +41,16 @@ public class Teclado
     private BranchGroup branchGroup = new BranchGroup();
     private Jugador jugador;
 
+    /* Para cuando processStimulus es llamado (asíncronamente) y estamos en actualizar revisando las teclas */
+    private boolean iterando = false;
+
     public Teclado(BranchGroup conjunto) {
         continueArray[0] = liberada;
         continueArray[1] = presionada;
         keepUpCondition = new WakeupOr(continueArray);
 
         branchGroup.addChild(this);
-        setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0));
+        setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0));
         conjunto.addChild(branchGroup);
 
         /* Leermos las acciones */
@@ -59,21 +63,23 @@ public class Teclado
 
     public void processStimulus(Enumeration criteria) {
 
-        while (criteria.hasMoreElements()) {
-            WakeupCriterion ster = (WakeupCriterion) criteria.nextElement();
-            if (ster instanceof WakeupOnAWTEvent) {
-                AWTEvent[] events = ((WakeupOnAWTEvent) ster).getAWTEvent();
-                for (int n = 0; n < events.length; n++) {
-                    if (events[n] instanceof KeyEvent) {
-                        KeyEvent ek = (KeyEvent) events[n];
-                        String key = String.valueOf(ek.getKeyChar());
-                        if (ek.getID() == KeyEvent.KEY_PRESSED && !teclasPulsadas.contains(key)) {
-                            /* ToDo: Guardar la tecla pulsada */
-                            teclasPulsadas.add(key);
+        if (!iterando) {
+            while (criteria.hasMoreElements()) {
+                WakeupCriterion ster = (WakeupCriterion) criteria.nextElement();
+                if (ster instanceof WakeupOnAWTEvent) {
+                    AWTEvent[] events = ((WakeupOnAWTEvent) ster).getAWTEvent();
+                    for (int n = 0; n < events.length; n++) {
+                        if (events[n] instanceof KeyEvent) {
+                            KeyEvent ek = (KeyEvent) events[n];
+                            String key = String.valueOf(ek.getKeyChar());
+                            if (ek.getID() == KeyEvent.KEY_PRESSED && !teclasPulsadas.contains(key)) {
+                                /* ToDo: Guardar la tecla pulsada */
+                                teclasPulsadas.add(key);
 
-                        } else if (ek.getID() == KeyEvent.KEY_RELEASED) {
-                            /* Eliminar la tecla que se ha pulsado */
-                            teclasPulsadas.remove(key);
+                            } else if (ek.getID() == KeyEvent.KEY_RELEASED) {
+                                /* Eliminar la tecla que se ha pulsado */
+                                teclasPulsadas.remove(key);
+                            }
                         }
                     }
                 }
@@ -119,17 +125,23 @@ public class Teclado
 
     @Override
     public void actualizar() {
-        for (String tecla : teclasPulsadas) {
-            // ¿Es necesario String.valueOf? No eliminar sin comprobar que funciona sin él
-            Evento e = map.get(tecla);
+        iterando = true;
+        try {
+            for (String tecla : teclasPulsadas) {
+                // ¿Es necesario String.valueOf? No eliminar sin comprobar que funciona sin él
+                Evento e = map.get(tecla);
 
-            /* El jugador es un caso especial. El teclado habla directamente con él */
-            if (e != null) {
-                if (e.getTipoObjetivo().equals(TipoEntidad.JUGADOR) && jugador != null) {
-                    jugador.realizarAccion(e);
+                /* El jugador es un caso especial. El teclado habla directamente con él */
+                if (e != null) {
+                    if (e.getTipoObjetivo().equals(TipoEntidad.JUGADOR) && jugador != null) {
+                        jugador.realizarAccion(e);
+                    }
                 }
             }
+        } catch (ConcurrentModificationException e) {
+            /* Incluso con la variable iterando estas excepcione siguen apareciendo, aunque con menor frecuencia */
         }
+        iterando = false;
     }
 
     public void setJugador(Jugador jugador) {

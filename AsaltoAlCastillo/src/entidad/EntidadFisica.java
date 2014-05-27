@@ -12,7 +12,7 @@ import javax.media.j3d.Transform3D;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import simulador.Juego;
+import main.Juego;
 
 public class EntidadFisica extends EntidadJava3D {
 

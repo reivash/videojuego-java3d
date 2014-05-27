@@ -1,6 +1,6 @@
 package util;
 
-import simulador.*;
+import main.Juego;
 import com.sun.j3d.demos.utils.scenegraph.traverser.ProcessNodeInterface;
 import com.sun.j3d.demos.utils.scenegraph.traverser.TreeScan;
 import javax.media.j3d.Appearance;

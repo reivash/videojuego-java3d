@@ -1,7 +1,7 @@
 package figuras;
 
+import main.Juego;
 import util.CapabilitiesMDL;
-import simulador.*;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
 import com.sun.j3d.loaders.Scene;
@@ -67,7 +67,7 @@ public class EsferaMDL extends EntidadInteligente {
                 nombreAnimacionCorriendo = "iron_golem:cwalk";
                 nombreAnimacionCaminando = "iron_golem:cwalk";
                 nombreAnimacionQuieto = "iron_golem:cpause1";
-                nombreAnimacionLuchando = "iron_golem:cwalk";//"iron_golem:ca1slashl";
+                nombreAnimacionLuchando = "iron_golem:ca1slashl";
                 rotacionX = -1.5f;
                 rotacionZ = 3.14f;
                 escalaTamano = 0.65f;

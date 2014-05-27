@@ -9,7 +9,7 @@ import javax.media.j3d.TransformGroup;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import simulador.Juego;
+import main.Juego;
 import util.Actualizable;
 import util.Log;
 import util.Mostrable;

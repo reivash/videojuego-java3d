@@ -1,7 +1,7 @@
 package figuras;
 
+import main.Juego;
 import util.CapabilitiesMDL;
-import simulador.*;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
 import com.sun.j3d.utils.image.TextureLoader;

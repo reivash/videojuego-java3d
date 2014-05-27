@@ -4,7 +4,7 @@ import entidad.EntidadJava3D;
 import java.util.ArrayList;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.*;
-import simulador.Juego;
+import main.Juego;
 
 public class EntidadInteligente extends entidad.EntidadFisica {
 
