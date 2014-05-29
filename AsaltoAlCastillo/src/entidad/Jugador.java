@@ -4,7 +4,6 @@ import eventos.Evento;
 import figuras.EsferaMDL;
 import java.util.ArrayList;
 import javax.media.j3d.BranchGroup;
-import net.sf.nwn.loader.ModelAnimation;
 import main.Juego;
 
 public class Jugador extends EsferaMDL {
@@ -18,7 +17,7 @@ public class Jugador extends EsferaMDL {
 
     public Jugador(String ficheroMDL, float radio, BranchGroup conjunto, Juego juego, boolean esPersonaje) {
         super(ficheroMDL, radio, conjunto, juego, esPersonaje);
-        logEnabled = true;
+        logEnabled = false;
     }
 
     public void realizarAccion(Evento e) {
@@ -27,7 +26,7 @@ public class Jugador extends EsferaMDL {
 
         /* Velocidad por defecto de la animación */
         ab.setAnimationTimeScale(.5f);
-        
+
         try {
             String command = e.getCommando();
             ArrayList<String> params = e.getParams();
@@ -76,6 +75,13 @@ public class Jugador extends EsferaMDL {
                         ab.setAnimationTimeScale(.5f);
                         animacionActual = nombreAnimacionLuchando;
                     }
+                    for (EntidadFisica ef : diccionarioEntidades.getEntidadesFisicas()) {
+                        /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
+                        if(!getId().equals(ef.getId()) && distancia(posiciones, ef.posiciones) < 10) {
+                             ef.velocidad_lineal.y += 500;
+//                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
+                        }
+                    }
                     break;
                 }
                 /* Porque puedo */
@@ -90,6 +96,13 @@ public class Jugador extends EsferaMDL {
         }
     }
 
+    public float distancia(float[] p1, float[] p2) {
+        float x = p1[0] - p2[0];
+        float y = p1[1] - p2[1];
+        float z = p1[2] - p2[2];
+        return (float) Math.sqrt(x*x + y*y + z*z);
+    }
+    
     @Override
     public void actualizar() {
         super.actualizar();

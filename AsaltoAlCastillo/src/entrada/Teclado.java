@@ -1,5 +1,10 @@
 package entrada;
 
+import dataengine.DataGroup;
+import dataengine.DataNode;
+import static dataengine.DataTestMain.print;
+import dataengine.Yylex;
+import dataengine.parser;
 import entidad.Jugador;
 import entidad.TipoEntidad;
 import java.awt.AWTEvent;
@@ -21,6 +26,11 @@ import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
 import util.Actualizable;
 import eventos.Evento;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ConcurrentModificationException;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
@@ -54,7 +64,63 @@ public class Teclado
         conjunto.addChild(branchGroup);
 
         /* Leermos las acciones */
-        cargarConfiguracion("teclado.txt");
+//        cargarConfiguracion("teclado.txt");
+    }
+
+    public Teclado(BranchGroup conjunto, String tecladotxt) {
+        this(conjunto);
+        /* Empezar */
+        try {
+            /* Leer configuración teclado */
+            InputStream in = new FileInputStream("teclado.txt");
+
+            System.out.print("Write some test data defs: \n");
+            BufferedReader aux = new BufferedReader(new InputStreamReader(in));
+            StringBuilder sb = new StringBuilder();
+            String line = aux.readLine();
+            while (line.length() > 0) {
+                sb.append(line);
+                sb.append(" ");
+                line = aux.readLine();
+            }
+            in = new ByteArrayInputStream(sb.toString().getBytes());
+
+            parser p = new parser(new Yylex(in));
+            DataGroup data = (DataGroup) p.parse().value;
+
+            interpretarDatos(data);
+
+            System.out.println("The parsing worked: " + (data != null));
+            print(data);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void interpretarDatos(DataNode datos) {
+        for (DataNode dn : datos.asGroup()) {
+
+            DataGroup datosTecla = dn.asGroup();
+
+            String tecla = datosTecla.getIdentifier();
+
+            TipoEntidad tipoObjetivo = TipoEntidad.valueOf(datosTecla.getNodeByIndex(0).asValue().getValue().getDatum().toString().toUpperCase());
+            String comando = datosTecla.getNodeByIndex(1).asValue().getValue().getDatum().toString();
+
+            /* Parámetros */
+            ArrayList<String> parametros = new ArrayList<String>();
+            for (int i = 2; i < datosTecla.getAllNodes().size(); i++) {
+                parametros.add(datosTecla.getNodeByIndex(i).asValue().getValue().getDatum().toString());
+            }
+
+            Evento e = new Evento();
+            e.setTipoObjetivo(tipoObjetivo);
+            e.setCommando(comando);
+            e.setParams(parametros);
+
+            map.put(tecla, e);
+        }
     }
 
     public void initialize() {

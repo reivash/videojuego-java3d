@@ -1,5 +1,6 @@
 package eventos;
 
+import dataengine.DataGroup;
 import entidad.TipoEntidad;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,17 +8,17 @@ import javax.vecmath.Vector3f;
 
 public class Evento implements Comparable {
 
-    /* Target to send */
+    /* Objetivos */
     private TipoEntidad tipoObjetivo = null;
     private List<Integer> objetivos = new ArrayList<Integer>();
     private long tiempo = 0;
     private Integer emisor = -1;
 
-    /* Event actions */
-    private String command = null;
+    /* Acciones del evento */
+    private String comando = null;
     private ArrayList<String> params = new ArrayList<String>();
 
-    /* Data */
+    /* Datos */
     private double valor = 0.0;
     private Vector3f vector = new Vector3f();
 
@@ -63,11 +64,11 @@ public class Evento implements Comparable {
     }
 
     public String getCommando() {
-        return command;
+        return comando;
     }
 
     public Evento setCommando(String commando) {
-        this.command = commando;
+        this.comando = commando;
         return this;
     }
 
@@ -112,7 +113,7 @@ public class Evento implements Comparable {
 
     @Override
     public String toString() {
-        return "Evento\n\t[Target type: " + tipoObjetivo + ",\n\tObjetivos: " + objetivos.toString() + ",\n\tTiempo: " + tiempo + ",\n\tComando: " + command + ",\n\tParámetros: " + params.toString() + "]";
+        return "Evento\n\t[Target type: " + tipoObjetivo + ",\n\tObjetivos: " + objetivos.toString() + ",\n\tTiempo: " + tiempo + ",\n\tComando: " + comando + ",\n\tParámetros: " + params.toString() + "]";
     }
 
     public Evento setTipoObjetivo(TipoEntidad tipo) {

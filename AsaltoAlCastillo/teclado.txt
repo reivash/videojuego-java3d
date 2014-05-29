@@ -1,6 +1,39 @@
-d jugador girar derecha
-a jugador girar izquierda
-w jugador mover adelante
-s jugador mover atras
-f jugador volar
-l jugador atacar
+"Teclado" 
+{
+	"w"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'mover';
+		nuevoParametro('adelante');
+	}
+	"s"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'mover';
+		nuevoParametro('atras');
+	}
+	"a"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'girar';
+		nuevoParametro('izquierda');
+	}
+	"d"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'girar';
+		nuevoParametro('derecha');
+	}
+	"l"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'atacar';
+	}
+	"f"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'volar';
+	}
+}
+
+

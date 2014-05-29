@@ -77,8 +77,8 @@ public class Juego extends JFrame {
         universo.getViewer().getView().setBackClipDistance(10000);
         camara = new Camara(universo);
         
-        teclado = new Teclado(conjunto);
-
+        teclado = new Teclado(conjunto, "teclado.txt");
+        
     }
 
     public BranchGroup crearEscena() {
@@ -141,6 +141,10 @@ public class Juego extends JFrame {
         return mundoFisico;
     }
 
+    public Teclado getTeclado(){
+        return teclado;
+    }
+    
     public void cargarContenido() {
 
 
