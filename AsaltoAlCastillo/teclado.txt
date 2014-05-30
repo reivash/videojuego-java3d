@@ -1,5 +1,7 @@
 "Teclado" 
 {
+// Definición tecla a tecla
+
 	"w"
 	{
 		TipoObjetivo = 'jugador';

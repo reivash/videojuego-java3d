@@ -74,6 +74,7 @@ public class Teclado
             /* Leer configuración teclado */
             InputStream in = new FileInputStream("teclado.txt");
 
+            /*
             System.out.print("Write some test data defs: \n");
             BufferedReader aux = new BufferedReader(new InputStreamReader(in));
             StringBuilder sb = new StringBuilder();
@@ -84,7 +85,8 @@ public class Teclado
                 line = aux.readLine();
             }
             in = new ByteArrayInputStream(sb.toString().getBytes());
-
+            */
+            
             parser p = new parser(new Yylex(in));
             DataGroup data = (DataGroup) p.parse().value;
 
