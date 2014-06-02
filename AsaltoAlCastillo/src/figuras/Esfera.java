@@ -8,14 +8,14 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.loaders.Scene;
 import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.Sphere;
+import entidad.EntidadFisica;
 import java.net.URL;
-import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
 
-public class Esfera extends EntidadInteligente {
+public class Esfera extends EntidadFisica {
 
     public Scene escenaPersonaje1;
     AnimationBehavior ab = null;

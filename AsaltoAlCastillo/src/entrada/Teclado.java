@@ -5,7 +5,6 @@ import dataengine.DataNode;
 import static dataengine.DataTestMain.print;
 import dataengine.Yylex;
 import dataengine.parser;
-import entidad.Jugador;
 import entidad.TipoEntidad;
 import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
@@ -24,8 +23,8 @@ import javax.media.j3d.WakeupCondition;
 import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
-import util.Actualizable;
 import eventos.Evento;
+import figuras.EsferaMDL;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -37,7 +36,7 @@ import javax.media.j3d.BranchGroup;
 import javax.vecmath.Point3d;
 
 public class Teclado
-        extends javax.media.j3d.Behavior implements Actualizable {
+        extends javax.media.j3d.Behavior  {
 
     /* Mapa de acciones asociadas a las teclas */
     private Map<String, Evento> map = new HashMap<String, Evento>();
@@ -49,7 +48,7 @@ public class Teclado
     private WakeupCriterion[] continueArray = new WakeupCriterion[2];
 
     private BranchGroup branchGroup = new BranchGroup();
-    private Jugador jugador;
+    private EsferaMDL jugador;
 
     /* Para cuando processStimulus es llamado (asíncronamente) y estamos en actualizar revisando las teclas */
     private boolean iterando = false;
@@ -74,7 +73,7 @@ public class Teclado
             /* Leer configuración teclado */
             InputStream in = new FileInputStream("teclado.txt");
 
-            System.out.print("Write some test data defs: \n");
+//            System.out.print("Write some test data defs: \n");
             BufferedReader aux = new BufferedReader(new InputStreamReader(in));
             StringBuilder sb = new StringBuilder();
             String line = aux.readLine();
@@ -90,7 +89,7 @@ public class Teclado
 
             interpretarDatos(data);
 
-            System.out.println("The parsing worked: " + (data != null));
+//            System.out.println("The parsing worked: " + (data != null));
             print(data);
 
         } catch (Exception e) {
@@ -189,7 +188,6 @@ public class Teclado
         }
     }
 
-    @Override
     public void actualizar() {
         iterando = true;
         try {
@@ -210,7 +208,7 @@ public class Teclado
         iterando = false;
     }
 
-    public void setJugador(Jugador jugador) {
+    public void setJugador(EsferaMDL jugador) {
         this.jugador = jugador;
     }
 

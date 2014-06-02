@@ -1,6 +1,6 @@
 package main;
 
-import figuras.EntidadInteligente;
+import figuras.EntidadPerseguidora;
 import java.awt.*;
 import javax.swing.*;
 import javax.media.j3d.*;
@@ -16,9 +16,9 @@ import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import entidad.DiccionarioEntidades;
-import entidad.Jugador;
 import entrada.Teclado;
 import figuras.Esfera;
+import figuras.EsferaMDL;
 import util.Camara;
 
 public class Juego extends JFrame {
@@ -34,7 +34,7 @@ public class Juego extends JFrame {
 
     /* Entidades */
     private DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
-    private Jugador jugador;
+    private EsferaMDL jugador;
 
     /* Entrada por teclado */
     private Teclado teclado;
@@ -156,19 +156,19 @@ public class Juego extends JFrame {
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
-        jugador = new Jugador("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
+        jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
         jugador.crearPropiedades(masa, elasticidad, 0.1f, posX, posY, posZ);
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
         
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
         float fuerza_muscular = 20f;
-        EntidadInteligente perseguidor;
+        EntidadPerseguidora perseguidor;
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {
-                perseguidor = new Esfera(radio, "res//texturas//balon.jpg", conjunto, this);
+                perseguidor = new EntidadPerseguidora(radio, "res//texturas//balon.jpg", conjunto, this);
             } else {
-                perseguidor = new Esfera(radio, "res//texturas//hielo.jpg", conjunto, this);
+                perseguidor = new EntidadPerseguidora(radio, "res//texturas//hielo.jpg", conjunto, this);
             }
 
             perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15);

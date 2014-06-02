@@ -1,19 +1,18 @@
 package entidad;
 
-import figuras.EntidadInteligente;
+import figuras.EntidadPerseguidora;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import util.Actualizable;
 
-public class DiccionarioEntidades implements Actualizable {
+public class DiccionarioEntidades {
 
     private Map<Integer, EntidadFisica> listaEntidadesFisicas = new HashMap<Integer, EntidadFisica>();
-    private ArrayList<EntidadInteligente> listaObjetosNoFisicos = new ArrayList<EntidadInteligente>();
+    private ArrayList<EntidadPerseguidora> listaObjetosNoFisicos = new ArrayList<EntidadPerseguidora>();
 
-    private EntidadInteligente jugador;
+    private EntidadPerseguidora jugador;
 
     private Integer index = new Integer(0);
 
@@ -76,8 +75,15 @@ public class DiccionarioEntidades implements Actualizable {
         }
         return null;
     }
-    
+
     public Collection<EntidadFisica> getEntidadesFisicas() {
         return listaEntidadesFisicas.values();
+    }
+
+    
+    public Iterable<EntidadInteligente> getEntidadesHostiles(EntidadInteligente objetivo) {
+        /* ToDo: Implementar */
+        /* Crear comprobaciones de hostilidad en un hashmap (si se considera como estructura de datos adecuada */
+        return null;
     }
 }

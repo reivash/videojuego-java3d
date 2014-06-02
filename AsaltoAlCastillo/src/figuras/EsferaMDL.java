@@ -5,14 +5,17 @@ import util.CapabilitiesMDL;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
 import com.sun.j3d.loaders.Scene;
+import entidad.EntidadFisica;
+import eventos.Evento;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
+import static util.Maths.distancia;
 
-public class EsferaMDL extends EntidadInteligente {
+public class EsferaMDL extends EntidadFisica {
 
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
@@ -20,6 +23,14 @@ public class EsferaMDL extends EntidadInteligente {
     Vector3d direccion = new Vector3d(0, 0, 10);
     public float radio, alturaP, alturaDeOjos;
     boolean esPersonaje;
+
+    /* Control de animaciones */
+    private float velocidad_giro = 50f;
+    private float velocidad_movimiento = 100;
+
+
+    private String animacionActual = "";
+    private boolean accionRealizada = false;
 
     public EsferaMDL(String ficheroMDL,
             float radio,
@@ -107,6 +118,19 @@ public class EsferaMDL extends EntidadInteligente {
                 desplazamientoY = -6.5f;
                 alturaDeOjos = alturaP * escalaTamano;
             }
+            if (archivo.equals("objetosMDL/Intellect_Devour.mdl")){
+                nombreAnimacionCaminando = "intellect_devour:crun";
+                nombreAnimacionCaminando = "intellect_devour:cwalk";
+                nombreAnimacionQuieto = "intellect_devour:cpause1";
+                nombreAnimacionLuchando = "intellect_devour:ca1slashl";
+                
+                rotacionX = -1.5f;
+                rotacionZ = 3.14f;
+                alturaP = 1f;
+                escalaTamano = 6.0f;
+                desplazamientoY = -6.5f;
+                alturaDeOjos = alturaP * escalaTamano;
+            }
         } catch (Exception exc) {
             exc.printStackTrace();
             System.out.println("Error during load Dire_Cat.mdl");
@@ -127,5 +151,95 @@ public class EsferaMDL extends EntidadInteligente {
         TransformGroup rotadorDeFIguraMDL = new TransformGroup(rotacionCombinada);
         rotadorDeFIguraMDL.addChild(RamaMDL);
         return rotadorDeFIguraMDL;
+    }
+
+    public void realizarAccion(Evento e) {
+
+        accionRealizada = true;
+
+        /* Velocidad por defecto de la animación */
+        ab.setAnimationTimeScale(.5f);
+
+        try {
+            String command = e.getCommando();
+            ArrayList<String> params = e.getParams();
+            switch (command) {
+                case "mover": {
+                    String option = params.get(0);
+                    switch (option) {
+                        case "adelante":
+                            log("Ir adelante");
+                            if (!animacionActual.equals(nombreAnimacionCaminando)) {
+                                ab.playAnimation(nombreAnimacionCaminando, true);
+                                ab.setAnimationTimeScale(.5f);
+                                animacionActual = nombreAnimacionCaminando;
+                            }
+                            velocidad_lineal.x += velocidad_movimiento;
+                            break;
+                        case "atras":
+                            if (!animacionActual.equals(nombreAnimacionCaminando)) {
+                                ab.playAnimation(nombreAnimacionCaminando, true);
+                                ab.setAnimationTimeScale(.5f);
+                                animacionActual = nombreAnimacionCaminando;
+                            }
+                            log("Ir atras");
+                            velocidad_lineal.x -= velocidad_movimiento;
+                            break;
+                    }
+                    break;
+                }
+                case "girar": {
+                    String option = params.get(0);
+                    switch (option) {
+                        case "izquierda":
+                            log("Girar izquierda");
+                            velocidad_angular.y += velocidad_giro;
+                            break;
+                        case "derecha":
+                            log("Girar derecha");
+                            velocidad_angular.y -= velocidad_giro;
+                    }
+                    break;
+                }
+                case "atacar": {
+                    log("Atacando");
+                    if (!animacionActual.equals(nombreAnimacionLuchando)) {
+                        ab.playAnimation(nombreAnimacionLuchando, true);
+                        ab.setAnimationTimeScale(.5f);
+                        animacionActual = nombreAnimacionLuchando;
+                    }
+                    for (EntidadFisica ef : diccionarioEntidades.getEntidadesFisicas()) {
+                        /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
+                        if (!getId().equals(ef.getId()) && distancia(posiciones, ef.posiciones) < 10) {
+                            ef.velocidad_lineal.y += 500;
+//                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
+                        }
+                    }
+                    break;
+                }
+                /* Porque puedo */
+                case "volar": {
+                    log("Volando");
+                    velocidad_lineal.y += velocidad_movimiento;
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            log("Error al procesar evento");
+        }
+    }
+
+
+    @Override
+    public void actualizar() {
+        super.actualizar();
+
+        /* Si no estamos haciendo nada ponemos la animacion por defecto */
+        if (!accionRealizada && !animacionActual.equals(nombreAnimacionQuieto)) {
+            log("Animacion quieto");
+            ab.playAnimation(nombreAnimacionQuieto, true);
+            animacionActual = nombreAnimacionQuieto;
+        }
+        accionRealizada = false;
     }
 }

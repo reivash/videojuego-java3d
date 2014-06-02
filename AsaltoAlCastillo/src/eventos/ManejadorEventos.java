@@ -2,7 +2,6 @@ package eventos;
 
 import entidad.DiccionarioEntidades;
 import entidad.EntidadJava3D;
-import entidad.Jugador;
 import entidad.TipoEntidad;
 
 import java.util.PriorityQueue;
