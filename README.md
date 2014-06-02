@@ -18,6 +18,7 @@ Unos atacan otros defienden ¿lo quieres más claro o te hago un croquis?
 **Javier**
 - [x] Teclado configurable
 - [x] Intérprete de la configuración del teclado
+- [ ] Comportamiento de los personajes
 
 **Nur**
 - [x] Parser de la estructura de datos Nur
