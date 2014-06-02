@@ -1,9 +1,13 @@
 package entidad;
 
+import com.bulletphysics.linearmath.Transform;
 import eventos.Evento;
 import figuras.EsferaMDL;
 import java.util.ArrayList;
 import javax.media.j3d.BranchGroup;
+import javax.vecmath.Quat4f;
+import javax.vecmath.Tuple4f;
+import javax.vecmath.Vector3f;
 import main.Juego;
 
 public class Jugador extends EsferaMDL {
@@ -12,7 +16,7 @@ public class Jugador extends EsferaMDL {
     private float velocidad_movimiento = 100;
 
     private String animacionActual = "";
-
+  
     private boolean accionRealizada = false;
 
     public Jugador(String ficheroMDL, float radio, BranchGroup conjunto, Juego juego, boolean esPersonaje) {
@@ -59,12 +63,30 @@ public class Jugador extends EsferaMDL {
                     String option = params.get(0);
                     switch (option) {
                         case "izquierda":
+                        {
+                            Transform trans = new Transform();
+                            Quat4f rotacion = new Quat4f();
+                            cuerpoRigido.getCenterOfMassTransform(trans);
+                            trans.getRotation(rotacion);
+                            rotacion.y += 0.01f;
+                            System.out.println(rotacion);
+                            trans.setRotation(rotacion);
+                            cuerpoRigido.setCenterOfMassTransform(trans);
                             log("Girar izquierda");
-                            velocidad_angular.y += velocidad_giro;
+                          //  velocidad_angular.y += velocidad_giro;
+                        }
                             break;
                         case "derecha":
+                            Transform trans = new Transform();
+                            Quat4f rotacion = new Quat4f();
+                            cuerpoRigido.getCenterOfMassTransform(trans);
+                            trans.getRotation(rotacion);
+                            rotacion.y -= 0.01f;
+                            System.out.println(rotacion);
+                            trans.setRotation(rotacion);
+                            cuerpoRigido.setCenterOfMassTransform(trans);
                             log("Girar derecha");
-                            velocidad_angular.y -= velocidad_giro;
+                            //velocidad_angular.y -= velocidad_giro;
                     }
                     break;
                 }

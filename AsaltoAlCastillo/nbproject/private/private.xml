@@ -10,8 +10,10 @@
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/main/Juego.java</file>
         </group>
         <group>
-            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/teclado.txt</file>
-            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entrada/Teclado.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/EntidadFisica.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/EsferaMDL.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/EntidadInteligente.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/Jugador.java</file>
         </group>
     </open-files>
 </project-private>
