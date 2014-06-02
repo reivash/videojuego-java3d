@@ -4,6 +4,7 @@ import main.Juego;
 import util.CapabilitiesMDL;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
+import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.loaders.Scene;
 import entidad.EntidadFisica;
 import eventos.Evento;
@@ -25,9 +26,8 @@ public class EsferaMDL extends EntidadFisica {
     boolean esPersonaje;
 
     /* Control de animaciones */
-    private float velocidad_giro = 50f;
+    private float velocidad_giro = .08f;
     private float velocidad_movimiento = 100;
-
 
     private String animacionActual = "";
     private boolean accionRealizada = false;
@@ -118,12 +118,12 @@ public class EsferaMDL extends EntidadFisica {
                 desplazamientoY = -6.5f;
                 alturaDeOjos = alturaP * escalaTamano;
             }
-            if (archivo.equals("objetosMDL/Intellect_Devour.mdl")){
+            if (archivo.equals("objetosMDL/Intellect_Devour.mdl")) {
                 nombreAnimacionCaminando = "intellect_devour:crun";
                 nombreAnimacionCaminando = "intellect_devour:cwalk";
                 nombreAnimacionQuieto = "intellect_devour:cpause1";
                 nombreAnimacionLuchando = "intellect_devour:ca1slashl";
-                
+
                 rotacionX = -1.5f;
                 rotacionZ = 3.14f;
                 alturaP = 1f;
@@ -191,13 +191,30 @@ public class EsferaMDL extends EntidadFisica {
                 case "girar": {
                     String option = params.get(0);
                     switch (option) {
-                        case "izquierda":
+                        case "izquierda": {
                             log("Girar izquierda");
-                            velocidad_angular.y += velocidad_giro;
-                            break;
-                        case "derecha":
+                            Transform trans = new Transform();
+                            Quat4f rotacion = new Quat4f();
+                            cuerpoRigido.getCenterOfMassTransform(trans);
+                            trans.getRotation(rotacion);
+                            rotacion.y += velocidad_giro;
+//                            System.out.println(rotacion);
+                            trans.setRotation(rotacion);
+                            cuerpoRigido.setCenterOfMassTransform(trans);
+                        }
+                        break;
+                        case "derecha": {
                             log("Girar derecha");
-                            velocidad_angular.y -= velocidad_giro;
+                            Transform trans = new Transform();
+                            Quat4f rotacion = new Quat4f();
+                            cuerpoRigido.getCenterOfMassTransform(trans);
+                            trans.getRotation(rotacion);
+                            rotacion.y -= velocidad_giro;
+//                            System.out.println(rotacion);
+                            trans.setRotation(rotacion);
+                            cuerpoRigido.setCenterOfMassTransform(trans);
+                        }
+                        break;
                     }
                     break;
                 }
@@ -229,11 +246,20 @@ public class EsferaMDL extends EntidadFisica {
         }
     }
 
-
     @Override
     public void actualizar() {
         super.actualizar();
-
+        
+        /* Resetear rotacion */
+        Transform trans = new Transform();
+        Quat4f rotacion = new Quat4f();
+        cuerpoRigido.getCenterOfMassTransform(trans);
+        trans.getRotation(rotacion);
+        rotacion.x = 0;
+        rotacion.z = 0;
+        trans.setRotation(rotacion);
+        cuerpoRigido.setCenterOfMassTransform(trans);
+        
         /* Si no estamos haciendo nada ponemos la animacion por defecto */
         if (!accionRealizada && !animacionActual.equals(nombreAnimacionQuieto)) {
             log("Animacion quieto");
