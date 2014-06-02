@@ -13,3 +13,19 @@ TrabajoVideojuegos
 - Opcional: distintos niveles o fases
 
 Unos atacan otros defienden ¿lo quieres más claro o te hago un croquis?
+
+
+**Javier**
+- [x] Teclado configurable
+- [x] Intérprete de la configuración del teclado
+- [ ] Comportamiento de los personajes
+
+**Nur**
+- [x] Parser de la estructura de datos Nur
+- [x] Giro del jugador por rotación absoluta
+
+**Sanjay**
+- [ ] Sistema de ataque (tiempo entre ataques) 
+
+**David**
+- [ ] Navegación del personaje (ir a un punto)
