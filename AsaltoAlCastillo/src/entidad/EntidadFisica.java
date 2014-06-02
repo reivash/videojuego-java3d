@@ -108,7 +108,6 @@ public class EntidadFisica extends EntidadJava3D {
         }
     }
 
-    @Override
     public void actualizar() {
         /* Sistema Marlónico */
         // Movimiento por fuerzas del jugador

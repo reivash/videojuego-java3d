@@ -10,11 +10,9 @@ import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import main.Juego;
-import util.Actualizable;
 import util.Log;
-import util.Mostrable;
 
-public abstract class EntidadJava3D extends Log implements Actualizable, Mostrable {
+public abstract class EntidadJava3D extends Log {
 
     protected int identificadorFigura;
     public int identificadorFisico;

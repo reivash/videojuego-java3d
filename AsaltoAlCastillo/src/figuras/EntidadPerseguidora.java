@@ -6,7 +6,7 @@ import javax.media.j3d.BranchGroup;
 import javax.vecmath.*;
 import main.Juego;
 
-public class EntidadInteligente extends entidad.EntidadFisica {
+public class EntidadPerseguidora extends Esfera {
 
     //atributos opcionales para dotar a la figura de cierta inteligencia
     public Vector3f localizacionObjetivo;
@@ -16,9 +16,10 @@ public class EntidadInteligente extends entidad.EntidadFisica {
     //Si adem‡s, hubiera que realizar uan accion particular (ej. Dispararle, darle alimento) se necesitaria otro atributo (ej. TareaObjetivo)
     float aceleracionMuscular;
 
-    public EntidadInteligente(Juego juego, BranchGroup conjunto) {
-        super(juego, conjunto);
+    public EntidadPerseguidora(float radio, String textura, BranchGroup conjunto, Juego juego) {
+        super(radio, textura, conjunto, juego);
     }
+
 
     public void actualizar() {
         super.actualizar();
