@@ -9,10 +9,10 @@ public class CreadorDeEstructuras {
 
     /* Se han de crear entidades fisicas y meterlas al branchgroup */
     /* Los tamaños se especifican en mitades */
-    private static float masa = 1f;
-    private static float elasticidad = 0.5f;
-    private static float dampingLineal = 0.5f;
-    private static float dampingAngular = 0.9f;
+    private static float masa = 1000f;
+    private static float elasticidad = 0.00005f;
+    private static float dampingLineal = 0.9995f;
+    private static float dampingAngular = 0.999f;
     
     private static float anchuraMuro = 10f;
     
@@ -70,10 +70,10 @@ public class CreadorDeEstructuras {
     {
         for(int i = 0; i < altura; i++){
             float angDesplazamiento = (float) (Math.PI/numeroBloques); 
-            for(float j = 0; j < 2*Math.PI; j+= 2*angDesplazamiento){
+            for(float j = 2*angDesplazamiento; j < 2*Math.PI; j+= 2*angDesplazamiento){
                  float desplNivel = (i&1)==0?0:angDesplazamiento;
-                 Vector3f posCentro = new Vector3f((float) (pos.x+radio*(Math.sin(j+desplNivel))), pos.y + i*1.05f, (float) (pos.x+radio*(Math.cos(j+desplNivel))));
-                 crearBloque(posCentro, new Vector3f(2,1,1), new Vector3f(0,j+desplNivel,0), conjunto, juego);
+                 Vector3f posCentro = new Vector3f((float) (pos.x+radio*(Math.sin(j+desplNivel))), pos.y + i*4f, (float) (pos.z+radio*(Math.cos(j+desplNivel))));
+                 crearBloque(posCentro, new Vector3f(3.5f,2,3.5f), new Vector3f(0, j+desplNivel,0), conjunto, juego);
             }
         }
     }
