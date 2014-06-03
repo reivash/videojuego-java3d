@@ -19,6 +19,7 @@ import entidad.DiccionarioEntidades;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import figuras.EsferaMDL;
+import mundo.TerrenoSimple;
 import util.Camara;
 
 public class Juego extends JFrame {
@@ -182,7 +183,7 @@ public class Juego extends JFrame {
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
-        terreno.TerrenoSimple terreno = new terreno.TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
+        mundo.TerrenoSimple terreno = new TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 
     public void actualizar(float dt) {

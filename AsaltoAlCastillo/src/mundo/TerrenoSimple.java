@@ -1,4 +1,4 @@
-package terreno;
+package mundo;
 
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.dynamics.*;
