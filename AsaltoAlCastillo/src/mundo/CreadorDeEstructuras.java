@@ -62,12 +62,20 @@ public class CreadorDeEstructuras {
     /* Creación de una torre cilíndrica */
     public static void crearTorre(
             Vector3f pos,
-            float altura,
+            float radio,
+            int altura,
             int numeroBloques,
-            Vector3f rotacion,
             BranchGroup conjunto,
-            Juego juego) {
-        /* ToDo: Implementar */
+            Juego juego) 
+    {
+        for(int i = 0; i < altura; i++){
+            float angDesplazamiento = (float) (Math.PI/numeroBloques); 
+            for(float j = 0; j < 2*Math.PI; j+= 2*angDesplazamiento){
+                 float desplNivel = (i&1)==0?0:angDesplazamiento;
+                 Vector3f posCentro = new Vector3f((float) (pos.x+radio*(Math.sin(j+desplNivel))), pos.y + i*1.05f, (float) (pos.x+radio*(Math.cos(j+desplNivel))));
+                 crearBloque(posCentro, new Vector3f(2,1,1), new Vector3f(0,j+desplNivel,0), conjunto, juego);
+            }
+        }
     }
     
 }

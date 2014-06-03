@@ -182,10 +182,13 @@ public class Juego extends JFrame {
         /* NPC */
         FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 
+        /* Crear una torre */
+        CreadorDeEstructuras.crearTorre(new Vector3f(3f, 3f, 10f), 12, 8, 8, conjunto, this);
+
 
         /* Crear muro trasero */
         CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 155f), new Vector3f(50f, .5f, 155f), 100, 10, conjunto, this);
-        
+
         /* Muros laterales */
         CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 55f), new Vector3f(-50f, .5f, 145f), 10, 10, conjunto, this);
         CreadorDeEstructuras.crearMuro(new Vector3f(50f, .5f, 55f), new Vector3f(50f, .5f, 145f), 10, 10, conjunto, this);
