@@ -40,7 +40,7 @@ public class Juego extends JFrame {
 
     /* Entrada por teclado */
     private Teclado teclado;
-    
+
     /* Tiempo de espera del loop */
     private float dt = 3f / 100f;
     private int tiempoDeEspera = (int) (dt * 1000);
@@ -78,9 +78,9 @@ public class Juego extends JFrame {
         universo.addBranchGraph(escena);
         universo.getViewer().getView().setBackClipDistance(10000);
         camara = new Camara(universo);
-        
+
         teclado = new Teclado(conjunto, "teclado.txt");
-        
+
     }
 
     public BranchGroup crearEscena() {
@@ -143,17 +143,17 @@ public class Juego extends JFrame {
         return mundoFisico;
     }
 
-    public Teclado getTeclado(){
+    public Teclado getTeclado() {
         return teclado;
     }
-    
+
     public void cargarContenido() {
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float masa = 1f;
         float radio = 1f;
         float posX = 5f;
-        float posY = 5f, posZ = 0f;
+        float posY = 5f, posZ = -50f;
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
@@ -161,13 +161,11 @@ public class Juego extends JFrame {
         jugador.crearPropiedades(masa, elasticidad, 0.1f, new Vector3f(posX, posY, posZ), new Vector3f());
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
-             
-        /* Crear bloque */
-        CreadorDeEstructuras.crearBloque(new Vector3f(3f,3f,10f), new Vector3f(1,2,3), new Vector3f(.7f, .7f, 0), conjunto, this);
+
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
         float fuerza_muscular = 20f;
         EntidadPerseguidora perseguidor;
-        
+
         /* Crea todas las que quieras cambiando el número */
         for (int i = 0; i < 1; i++) {
             if (i % 2 == 0) {
@@ -180,14 +178,25 @@ public class Juego extends JFrame {
             perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
             diccionarioEntidades.añadirEntidadFisica(perseguidor);
         }
-        
+
+        /* NPC */
         FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+
+
+        /* Crear muro trasero */
+        CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 155f), new Vector3f(50f, .5f, 155f), 100, 10, conjunto, this);
+        
+        /* Muros laterales */
+        CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 55f), new Vector3f(-50f, .5f, 145f), 10, 10, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(50f, .5f, 55f), new Vector3f(50f, .5f, 145f), 10, 10, conjunto, this);
+
+        /* Muro frontal (dos secciones) */
+        CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 45f), new Vector3f(-5f, .5f, 45f), 10, 5, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(5f, .5f, 45f), new Vector3f(50f, .5f, 45f), 10, 5, conjunto, this);
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
-        mundo.TerrenoSimple terreno = new TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
-        
-   
+        mundo.TerrenoSimple terreno = new TerrenoSimple(1000, 1000, -500, -3f, -500, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 
     public void actualizar(float dt) {
@@ -223,7 +232,7 @@ public class Juego extends JFrame {
         while (!peticionDeCierre) {
 
             teclado.actualizar();
-            
+
             actualizar(dt);
             mostrar();
 
