@@ -31,7 +31,7 @@ public class ComportamientoGuardian implements Comportamiento {
                 entidadControlada.ir(posicionInicial);
             } else {
                 /* Estar alerta por si se acercan fuerzas hostiles */
-                for (EntidadInteligente e : diccionarioEntidades.getEntidadesHostiles(objetivo)) {
+                for (EntidadInteligente e : diccionarioEntidades.getEntidadesHostiles(entidadControlada)) {
                     if (distancia(e.posiciones, posicionInicial) < minimaDistanciaPerseguir) {
                         objetivo = e;
                         break;
@@ -42,10 +42,6 @@ public class ComportamientoGuardian implements Comportamiento {
             if (distancia(objetivo.posiciones, posicionInicial) > maximaDistanciaPerseguir) {
                 /* Si el enemigo está demasiado lejos del punto guardado: volver */
                 objetivo = null;
-            } else if (distancia(objetivo.posiciones, posicionInicial) > objetivo.getDistanciaAtaque()) {
-                /* Si aún sigue dentro de nuestro radio de acción: perseguir */
-                entidadControlada.ir(posicionInicial);
-
             } else {
                 /* Si está al alcance: atacar */
                 entidadControlada.atacar(objetivo);

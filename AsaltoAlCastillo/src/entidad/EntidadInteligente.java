@@ -2,6 +2,7 @@ package entidad;
 
 import comportamiento.Comportamiento;
 import comportamiento.ComportamientoGuardian;
+import eventos.Evento;
 import figuras.EsferaMDL;
 import javax.media.j3d.BranchGroup;
 import main.Juego;
@@ -12,8 +13,15 @@ public class EntidadInteligente extends EsferaMDL{
 
     private Comportamiento comportamiento = null;
     
+    /* Sistema de ataque */
+    private float distanciaAtaque = 1.5f;
+    private float dañoAtaque = 2;
+    private float intervaloAtaque = 15;
+    private float siguienteAtaque = 0;
+    
     public EntidadInteligente(String ficheroMDL, float radio, BranchGroup conjunto, Juego juego, boolean esPersonaje) {
         super(ficheroMDL, radio, conjunto, juego, esPersonaje);
+        /* Comportamiento por defecto */
         comportamiento = new ComportamientoGuardian(this);
     }
     
@@ -21,6 +29,11 @@ public class EntidadInteligente extends EsferaMDL{
         super.actualizar();
         
         comportamiento.actualizar();
+        
+        /* Sistema de ataque */
+        if(siguienteAtaque > 0) {
+            siguienteAtaque--;
+        }
     }
     
     public void setComportamiento(Comportamiento comportamiento){
@@ -43,9 +56,13 @@ public class EntidadInteligente extends EsferaMDL{
     public void atacar(EntidadInteligente objetivo) {
         /* ToDo: Implementar */
         
-        /* Si podemos atacar: lo hacemos*/
+        /* Si podemos atacar y el enemigo está a nuestro alcance: lo hacemos */
         
-        /* Actualizar espera de ataque */
+        Evento e = new Evento();
+        e.setCommando("dañar");
+        e.setValor(dañoAtaque);
+        
+//        objetivo.procesarEvento(Evento e);
     }
 
     public float getDistanciaAtaque() {

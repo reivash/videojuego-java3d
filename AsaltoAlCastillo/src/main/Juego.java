@@ -16,8 +16,8 @@ import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import entidad.DiccionarioEntidades;
+import entidad.FactoriaEntidades;
 import entrada.Teclado;
-import figuras.Esfera;
 import figuras.EsferaMDL;
 import util.Camara;
 
@@ -164,7 +164,9 @@ public class Juego extends JFrame {
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
         float fuerza_muscular = 20f;
         EntidadPerseguidora perseguidor;
-        for (int i = 0; i < 10; i++) {
+        
+        /* Crea todas las que quieras cambiando el número */
+        for (int i = 0; i < 1; i++) {
             if (i % 2 == 0) {
                 perseguidor = new EntidadPerseguidora(radio, "res//texturas//balon.jpg", conjunto, this);
             } else {
@@ -175,6 +177,8 @@ public class Juego extends JFrame {
             perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
             diccionarioEntidades.añadirEntidadFisica(perseguidor);
         }
+        
+        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;

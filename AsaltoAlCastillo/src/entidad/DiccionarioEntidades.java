@@ -84,6 +84,6 @@ public class DiccionarioEntidades {
     public Iterable<EntidadInteligente> getEntidadesHostiles(EntidadInteligente objetivo) {
         /* ToDo: Implementar */
         /* Crear comprobaciones de hostilidad en un hashmap (si se considera como estructura de datos adecuada */
-        return null;
+        return new ArrayList();
     }
 }

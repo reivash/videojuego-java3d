@@ -21,12 +21,11 @@ public class EsferaMDL extends EntidadFisica {
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
     public String nombreAnimacionCorriendo, nombreAnimacionCaminando, nombreAnimacionQuieto, nombreAnimacionLuchando;
-    Vector3d direccion = new Vector3d(0, 0, 10);
     public float radio, alturaP, alturaDeOjos;
     boolean esPersonaje;
 
     /* Control de animaciones */
-    private float velocidad_giro = .08f;
+    private float velocidad_giro = 50f;
     private float velocidad_movimiento = 100;
 
     private String animacionActual = "";
@@ -128,7 +127,7 @@ public class EsferaMDL extends EntidadFisica {
                 rotacionZ = 3.14f;
                 alturaP = 1f;
                 escalaTamano = 6.0f;
-                desplazamientoY = -6.5f;
+                desplazamientoY = 0f;
                 alturaDeOjos = alturaP * escalaTamano;
             }
         } catch (Exception exc) {
@@ -193,26 +192,28 @@ public class EsferaMDL extends EntidadFisica {
                     switch (option) {
                         case "izquierda": {
                             log("Girar izquierda");
-                            Transform trans = new Transform();
-                            Quat4f rotacion = new Quat4f();
-                            cuerpoRigido.getCenterOfMassTransform(trans);
-                            trans.getRotation(rotacion);
-                            rotacion.y += velocidad_giro;
-//                            System.out.println(rotacion);
-                            trans.setRotation(rotacion);
-                            cuerpoRigido.setCenterOfMassTransform(trans);
+                            velocidad_angular.y += velocidad_giro;
+//                            Transform trans = new Transform();
+//                            Quat4f rotacion = new Quat4f();
+//                            cuerpoRigido.getCenterOfMassTransform(trans);
+//                            trans.getRotation(rotacion);
+//                            rotacion.y += velocidad_giro;
+////                            System.out.println(rotacion);
+//                            trans.setRotation(rotacion);
+//                            cuerpoRigido.setCenterOfMassTransform(trans);
                         }
                         break;
                         case "derecha": {
                             log("Girar derecha");
-                            Transform trans = new Transform();
-                            Quat4f rotacion = new Quat4f();
-                            cuerpoRigido.getCenterOfMassTransform(trans);
-                            trans.getRotation(rotacion);
-                            rotacion.y -= velocidad_giro;
-//                            System.out.println(rotacion);
-                            trans.setRotation(rotacion);
-                            cuerpoRigido.setCenterOfMassTransform(trans);
+                            velocidad_angular.y -= velocidad_giro;
+//                            Transform trans = new Transform();
+//                            Quat4f rotacion = new Quat4f();
+//                            cuerpoRigido.getCenterOfMassTransform(trans);
+//                            trans.getRotation(rotacion);
+//                            rotacion.y -= velocidad_giro;
+////                            System.out.println(rotacion);
+//                            trans.setRotation(rotacion);
+//                            cuerpoRigido.setCenterOfMassTransform(trans);
                         }
                         break;
                     }
