@@ -19,6 +19,7 @@ import entidad.DiccionarioEntidades;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import figuras.EsferaMDL;
+import mundo.CreadorDeEstructuras;
 import mundo.TerrenoSimple;
 import util.Camara;
 
@@ -148,7 +149,6 @@ public class Juego extends JFrame {
     
     public void cargarContenido() {
 
-
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float masa = 1f;
         float radio = 1f;
@@ -158,10 +158,12 @@ public class Juego extends JFrame {
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
         jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
-        jugador.crearPropiedades(masa, elasticidad, 0.1f, posX, posY, posZ);
+        jugador.crearPropiedades(masa, elasticidad, 0.1f, new Vector3f(posX, posY, posZ), new Vector3f());
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
-        
+             
+        /* Crear bloque */
+        CreadorDeEstructuras.crearBloque(new Vector3f(3f,3f,10f), new Vector3f(1,2,3), new Vector3f(.7f, .7f, 0), conjunto, this);
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
         float fuerza_muscular = 20f;
         EntidadPerseguidora perseguidor;
@@ -174,7 +176,7 @@ public class Juego extends JFrame {
                 perseguidor = new EntidadPerseguidora(radio, "res//texturas//hielo.jpg", conjunto, this);
             }
 
-            perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15);
+            perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(20, 4, -15), new Vector3f());
             perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
             diccionarioEntidades.añadirEntidadFisica(perseguidor);
         }
@@ -184,6 +186,8 @@ public class Juego extends JFrame {
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
         mundo.TerrenoSimple terreno = new TerrenoSimple(100, 100, -50, -3f, -50, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
+        
+   
     }
 
     public void actualizar(float dt) {

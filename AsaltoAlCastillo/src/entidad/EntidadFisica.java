@@ -9,6 +9,7 @@ import com.bulletphysics.linearmath.Transform;
 import java.util.List;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Transform3D;
+import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -36,12 +37,13 @@ public class EntidadFisica extends EntidadJava3D {
         this.mundoFisico = juego.getMundoFisico();
     }
 
-    public void crearPropiedades(float masa, float elasticidad, float dampingLineal, float posX, float posY, float posZ) {
-        //Creaciîn de un cuerpoRigido (o RigidBody) con sus propiedades fisicas 
+    public void crearPropiedades(float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f rotacion) {
+        //Creación de un cuerpoRigido (o RigidBody) con sus propiedades fisicas 
         this.masa = masa;
         Transform groundTransform = new Transform();
         groundTransform.setIdentity();
-        groundTransform.origin.set(new Vector3f(posX, posY, posZ));
+        groundTransform.origin.set(centro);
+        groundTransform.setRotation(new Quat4f(rotacion.x, rotacion.y, rotacion.z, 1));
         boolean isDynamic = (masa != 0f);
         Vector3f inerciaLocal = new Vector3f(0, 1, 0);
         if (isDynamic && !esMDL) { // 
@@ -65,13 +67,15 @@ public class EntidadFisica extends EntidadJava3D {
 
         //Presentaci—n inicial de la  figura visual asociada al cuerpo rigido
         Transform3D inip = new Transform3D();
-        inip.set(new Vector3f(posX, posY, posZ));
+        inip.set(centro);
+        /* ToDo: Necesita testearse */
+        inip.set(new Quat4f(rotacion.x, rotacion.y, rotacion.z, 1));
         desplazamiento.setTransform(inip);
 
         //Actualizacion de posicion. La rotacion se empezará a actualizar en el primer movimiento (ver final del metodo mostrar(rigidBody))
-        this.posiciones[0] = posX;
-        this.posiciones[1] = posY;
-        this.posiciones[2] = posZ;
+        this.posiciones[0] = centro.x;
+        this.posiciones[1] = centro.y;
+        this.posiciones[2] = centro.z;
     }
 
     public void remover() {
