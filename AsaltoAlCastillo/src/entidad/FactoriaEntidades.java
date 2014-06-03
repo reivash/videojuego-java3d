@@ -1,7 +1,7 @@
 package entidad;
 
-import figuras.EsferaMDL;
 import javax.media.j3d.BranchGroup;
+import javax.vecmath.Vector3f;
 import main.Juego;
 
 public class FactoriaEntidades {
@@ -22,7 +22,7 @@ public class FactoriaEntidades {
 
             case "perroListo":
                 EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .2f, conjunto, juego, true);
-                ei.crearPropiedades(masa, elasticidad, dampingLineal, 20, 4, -15);
+                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(20, 4, -15), new Vector3f());
                 diccionarioEntidades.añadirEntidadFisica(ei);
                 
                 break;
