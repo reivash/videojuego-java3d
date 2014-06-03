@@ -47,14 +47,15 @@ public class CreadorDeEstructuras {
             float radio,
             int altura,
             int numeroBloques,
-            BranchGroup conjunto) 
+            BranchGroup conjunto,
+            Juego juego) 
     {
         for(int i = 0; i < altura; i++){
             float angDesplazamiento = (float) (Math.PI/numeroBloques); 
             for(int j = 0; j < numeroBloques; j++){
                  float angulo = (float) (j==0?0:(2*Math.PI/j + (j&1)==0?0:angDesplazamiento));
                  Vector3f posCentro = new Vector3f((float) (pos.x+radio*(Math.sin(angulo))), pos.y + i, (float) (pos.x+radio*(Math.cos(angulo))));
-                 crearBloque(posCentro, new Vector3f(2,1,1), new Vector3f(0,angulo,0), conjunto);
+                 crearBloque(posCentro, new Vector3f(2,1,1), new Vector3f(0,angulo,0), conjunto, juego);
             }
         }
     }
