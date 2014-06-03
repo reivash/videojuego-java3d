@@ -164,6 +164,8 @@ public class Juego extends JFrame {
              
         /* Crear bloque */
         CreadorDeEstructuras.crearBloque(new Vector3f(3f,3f,10f), new Vector3f(1,2,3), new Vector3f(.7f, .7f, 0), conjunto, this);
+        /* Crear una torre */
+        CreadorDeEstructuras.crearTorre(new Vector3f(5f,5f,10f), 4, 3, 1, conjunto, this);
         //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
         float fuerza_muscular = 20f;
         EntidadPerseguidora perseguidor;
