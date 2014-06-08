@@ -182,7 +182,7 @@ public class Juego extends JFrame {
 //        }
 
         /* NPC */
-      FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 
         /* Torres del castillo traseras */
         float radioTorre = 12f;
@@ -200,16 +200,16 @@ public class Juego extends JFrame {
         float alturaMuros = 15f;
         int numPiezas = 10;
         float offset = 15f; // Ayuda a posicionar los muros de forma que no choquen con las torres y las tiren
-        CreadorDeEstructuras.crearMuro(new Vector3f(-200 + radioTorre / 2 + offset, 0, 400), new Vector3f(-radioTorre / 2 - offset, 0, 400), alturaMuros, numPiezas, conjunto, this);
-        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset, 0, 400), new Vector3f(radioTorre / 2 + offset, 0, 400), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-200 + radioTorre / 2 + offset*1.05f, 0, 400), new Vector3f(-radioTorre / 2 - offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset*1.05f, 0, 400), new Vector3f(radioTorre / 2 + offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
 
         /* Muros delanteros */
         CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
         CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
 
         /* Muros laterales */
-        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.5f), new Vector3f(-100 - radioTorre / 2 - offset, 0f, 150), alturaMuros, numPiezas, conjunto, this);
-        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.5f), new Vector3f(100 + radioTorre / 2 + offset, 0f, 150), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100 , 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
@@ -218,10 +218,8 @@ public class Juego extends JFrame {
 //        for (int i = 0; i < 8; i++) {
 //            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, -20f), new Vector3f(-300f + i*100f, 0f, -400f), 10, 5, conjunto, this);
 //        }
-        
         /* Bloque paralelo al eje X */
 //        CreadorDeEstructuras.crearBloque(new Vector3f(), new Vector3f(20, 1, 5), new Vector3f(), conjunto, this);
-
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
         mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);

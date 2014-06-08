@@ -75,7 +75,7 @@ public class CreadorDeEstructuras {
 //        System.out.println("dx/dx: " + (dx != 0 ? Math.abs(dx) / dx : 1));
 //        System.out.println("Angulo: " + Math.sin(dz / h));
 
-        Vector3f tamaño = new Vector3f(distancia / (numeroBloques + 1), altura, anchuraMuro);
+        Vector3f tamaño = new Vector3f(distancia / (numeroBloques + .02f), altura, anchuraMuro);
         tamaño.scale(.5f);
 //        System.out.println("Primero: " + centro);
         for (int i = 0; i <= numeroBloques; i++) {
