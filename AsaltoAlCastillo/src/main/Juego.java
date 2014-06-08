@@ -89,9 +89,11 @@ public class Juego extends JFrame {
         objRoot.addChild(conjunto);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+
+        /* Iluminación */
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f),
                 new Vector3f(1f, 0f, -1f));
-        BoundingSphere limitesLuz = new BoundingSphere(new Point3d(-15, 10, 15), 100.0); //Localizacion de fuente/paso de luz
+        BoundingSphere limitesLuz = new BoundingSphere(new Point3d(-15, 10, 15), 1000.0); //Localizacion de fuente/paso de luz
         objRoot.addChild(LuzDireccional);
         LuzDireccional.setInfluencingBounds(limitesLuz);
         Background bg = new Background();
@@ -99,42 +101,42 @@ public class Juego extends JFrame {
         bg.setColor(new Color3f(135f / 256, 206f / 256f, 250f / 256f));
         objRoot.addChild(bg);
 
-        //Es sencillo crearlos estaticos como se muestra a continuacion. Si desea que caigan, y se sometan a fuerzas, mejor crear una figura.
-        float radio = 2f;
-        float posY = -4f;
-
-        // Creación de un objeto (la piedra con textura de ladrillo)
-        // Componente gráfico
-        Appearance apariencia = new Appearance();
-        apariencia.setTexture(new TextureLoader(System.getProperty("user.dir") + "//res//texturas//ladrillo.jpg", this).getTexture());
-        TextureAttributes texAttr = new TextureAttributes();
-        texAttr.setTextureMode(TextureAttributes.MODULATE);
-        apariencia.setTextureAttributes(texAttr);
-        Sphere figuraVisual = new Sphere(radio, Sphere.GENERATE_TEXTURE_COORDS, 60, apariencia);
-        Transform3D desplazamiento2 = new Transform3D();
-        desplazamiento2.set(new Vector3f(0f, posY, 0));
-        TransformGroup TGesferaFija = new TransformGroup(desplazamiento2);
-        TGesferaFija.addChild(figuraVisual);
-        objRoot.addChild(TGesferaFija);
-
-        // Componente físico
-        float masa = 0f;                                                       //con masa =0 el objeto es estático
-        SphereShape figuraFisica = new SphereShape(radio);
-        CollisionObject ramaFisica = new CollisionObject();
-        ramaFisica.setCollisionShape(figuraFisica);
-        Transform groundTransform = new Transform();
-        groundTransform.setIdentity();
-        groundTransform.origin.set(new Vector3f(0, posY, 0));
-        Vector3f inerciaLocal = new Vector3f(0, 0, 0);
-        DefaultMotionState EstadoDeMovimiento = new DefaultMotionState(groundTransform);
-        RigidBodyConstructionInfo InformacionCuerpoR = new RigidBodyConstructionInfo(masa, EstadoDeMovimiento, figuraFisica, inerciaLocal);
-        RigidBody cuerpoRigido = new RigidBody(InformacionCuerpoR);
-        cuerpoRigido.setActivationState(RigidBody.DISABLE_DEACTIVATION);
-        mundoFisico.addRigidBody(cuerpoRigido); // add the body to the dynamics world
-
-        //Para crear objeto que se sometan a fisica, su masa debe seo >0 e invocar continuamente
-        // mundoFisico.stepSimulation(dt) y actualizar su objeto java3d a partir de su rigidBody.
-        //Mejor, usar la clase Figura simulada con el codigo del run(), mostrar() y actualizar()
+//        //Es sencillo crearlos estaticos como se muestra a continuacion. Si desea que caigan, y se sometan a fuerzas, mejor crear una figura.
+//        float radio = 2f;
+//        float posY = -4f;
+//
+//        // Creación de un objeto (la piedra con textura de ladrillo)
+//        // Componente gráfico
+//        Appearance apariencia = new Appearance();
+//        apariencia.setTexture(new TextureLoader(System.getProperty("user.dir") + "//res//texturas//ladrillo.jpg", this).getTexture());
+//        TextureAttributes texAttr = new TextureAttributes();
+//        texAttr.setTextureMode(TextureAttributes.MODULATE);
+//        apariencia.setTextureAttributes(texAttr);
+//        Sphere figuraVisual = new Sphere(radio, Sphere.GENERATE_TEXTURE_COORDS, 60, apariencia);
+//        Transform3D desplazamiento2 = new Transform3D();
+//        desplazamiento2.set(new Vector3f(0f, posY, 0));
+//        TransformGroup TGesferaFija = new TransformGroup(desplazamiento2);
+//        TGesferaFija.addChild(figuraVisual);
+//        objRoot.addChild(TGesferaFija);
+//
+//        // Componente físico
+//        float masa = 0f;                                                       //con masa =0 el objeto es estático
+//        SphereShape figuraFisica = new SphereShape(radio);
+//        CollisionObject ramaFisica = new CollisionObject();
+//        ramaFisica.setCollisionShape(figuraFisica);
+//        Transform groundTransform = new Transform();
+//        groundTransform.setIdentity();
+//        groundTransform.origin.set(new Vector3f(0, posY, 0));
+//        Vector3f inerciaLocal = new Vector3f(0, 0, 0);
+//        DefaultMotionState EstadoDeMovimiento = new DefaultMotionState(groundTransform);
+//        RigidBodyConstructionInfo InformacionCuerpoR = new RigidBodyConstructionInfo(masa, EstadoDeMovimiento, figuraFisica, inerciaLocal);
+//        RigidBody cuerpoRigido = new RigidBody(InformacionCuerpoR);
+//        cuerpoRigido.setActivationState(RigidBody.DISABLE_DEACTIVATION);
+//        mundoFisico.addRigidBody(cuerpoRigido); // add the body to the dynamics world
+//
+//        //Para crear objeto que se sometan a fisica, su masa debe seo >0 e invocar continuamente
+//        // mundoFisico.stepSimulation(dt) y actualizar su objeto java3d a partir de su rigidBody.
+//        //Mejor, usar la clase Figura simulada con el codigo del run(), mostrar() y actualizar()
         return objRoot;
     }
 
@@ -162,43 +164,67 @@ public class Juego extends JFrame {
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
 
-        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
-        float fuerza_muscular = 20f;
-        EntidadPerseguidora perseguidor;
-
-        /* Crea todas las que quieras cambiando el número */
-        for (int i = 0; i < 1; i++) {
-            if (i % 2 == 0) {
-                perseguidor = new EntidadPerseguidora(radio, "res//texturas//balon.jpg", conjunto, this);
-            } else {
-                perseguidor = new EntidadPerseguidora(radio, "res//texturas//hielo.jpg", conjunto, this);
-            }
-
-            perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(20, 4, -15), new Vector3f());
-            perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
-            diccionarioEntidades.añadirEntidadFisica(perseguidor);
-        }
+//        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
+//        float fuerza_muscular = 20f;
+//        EntidadPerseguidora perseguidor;
+//
+//        /* Crea todas las que quieras cambiando el número */
+//        for (int i = 0; i < 1; i++) {
+//            if (i % 2 == 0) {
+//                perseguidor = new EntidadPerseguidora(radio, "res//texturas//balon.jpg", conjunto, this);
+//            } else {
+//                perseguidor = new EntidadPerseguidora(radio, "res//texturas//hielo.jpg", conjunto, this);
+//            }
+//
+//            perseguidor.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(20, 4, -15), new Vector3f());
+//            perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
+//            diccionarioEntidades.añadirEntidadFisica(perseguidor);
+//        }
 
         /* NPC */
-        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+      FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 
-        /* Crear una torre */
-        CreadorDeEstructuras.crearTorre(new Vector3f(100f, 6f, -50f), 12f, 4, 8, conjunto, this);
+        /* Torres del castillo traseras */
+        float radioTorre = 12f;
+        int nivelesTorre = 5;
+        int numPiezasNivel = 8;
+        CreadorDeEstructuras.crearTorre(new Vector3f(0, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(-200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(+200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 
-        /* Crear muro trasero */
-        CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 155f), new Vector3f(50f, .5f, 155f), 100, 10, conjunto, this);
+        /* Torres del castillo delanteras */
+        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+
+        /* Muros traseros */
+        float alturaMuros = 15f;
+        int numPiezas = 10;
+        float offset = 15f; // Ayuda a posicionar los muros de forma que no choquen con las torres y las tiren
+        CreadorDeEstructuras.crearMuro(new Vector3f(-200 + radioTorre / 2 + offset, 0, 400), new Vector3f(-radioTorre / 2 - offset, 0, 400), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset, 0, 400), new Vector3f(radioTorre / 2 + offset, 0, 400), alturaMuros, numPiezas, conjunto, this);
+
+        /* Muros delanteros */
+        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
 
         /* Muros laterales */
-        CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 55f), new Vector3f(-50f, .5f, 145f), 10, 10, conjunto, this);
-        CreadorDeEstructuras.crearMuro(new Vector3f(50f, .5f, 55f), new Vector3f(50f, .5f, 145f), 10, 10, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.5f), new Vector3f(-100 - radioTorre / 2 - offset, 0f, 150), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.5f), new Vector3f(100 + radioTorre / 2 + offset, 0f, 150), alturaMuros, numPiezas, conjunto, this);
 
-        /* Muro frontal (dos secciones) */
-        CreadorDeEstructuras.crearMuro(new Vector3f(-50f, .5f, 45f), new Vector3f(-5f, .5f, 45f), 10, 5, conjunto, this);
-        CreadorDeEstructuras.crearMuro(new Vector3f(5f, .5f, 45f), new Vector3f(50f, .5f, 45f), 10, 5, conjunto, this);
+        /* Test de rotación de muros */
+//        for (int i = 0; i < 8; i++) {
+//            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);
+//        }
+//        for (int i = 0; i < 8; i++) {
+//            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, -20f), new Vector3f(-300f + i*100f, 0f, -400f), 10, 5, conjunto, this);
+//        }
+        
+        /* Bloque paralelo al eje X */
+//        CreadorDeEstructuras.crearBloque(new Vector3f(), new Vector3f(20, 1, 5), new Vector3f(), conjunto, this);
 
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
-        mundo.TerrenoSimple terreno = new TerrenoSimple(1000, 1000, -500, -3f, -500, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
+        mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 
     public void actualizar(float dt) {
@@ -252,7 +278,7 @@ public class Juego extends JFrame {
 
         /* Frame */
         juego.setTitle("Juego");
-        juego.setSize(1000, 800);
+        juego.setSize(1024, 768);
         juego.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         juego.setVisible(true);
 

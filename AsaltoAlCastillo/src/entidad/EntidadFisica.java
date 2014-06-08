@@ -43,7 +43,15 @@ public class EntidadFisica extends EntidadJava3D {
         Transform groundTransform = new Transform();
         groundTransform.setIdentity();
         groundTransform.origin.set(centro);
-        groundTransform.setRotation(new Quat4f(rotacion.x, rotacion.y, rotacion.z, 1));
+
+        /* Rotacion */
+        float qy = (float) Math.sin(rotacion.y / 2);
+        float qw = (float) Math.cos(rotacion.y / 2);
+        Quat4f rot = new Quat4f();
+        rot.y = qy;
+        rot.w = qw;
+        groundTransform.setRotation(rot);
+        
         boolean isDynamic = (masa != 0f);
         Vector3f inerciaLocal = new Vector3f(0, 1, 0);
         if (isDynamic && !esMDL) { // 
@@ -69,6 +77,7 @@ public class EntidadFisica extends EntidadJava3D {
         Transform3D inip = new Transform3D();
         inip.set(centro);
         /* ToDo: Necesita testearse */
+
         inip.set(new Quat4f(rotacion.x, rotacion.y, rotacion.z, 1));
         desplazamiento.setTransform(inip);
 
@@ -103,7 +112,7 @@ public class EntidadFisica extends EntidadJava3D {
             desplazamiento.setTransform(rot);
 
             //Actualizacion de Matriz de rotación y posiciones
-            rot.get(this.matrizRotacion);
+//            rot.get(this.matrizRotacion);
 
             /* Posicion */
             this.posiciones[0] = trans.origin.x;
@@ -138,11 +147,10 @@ public class EntidadFisica extends EntidadJava3D {
         cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * velocidad_lineal.x * 0.1f,
                 (float) direccionFrente.y,
                 (float) direccionFrente.z * velocidad_lineal.x * 0.1f));
-        
+
         /* Fuerza hacia arriba */
-        cuerpoRigido.applyCentralForce(new Vector3f(0,velocidad_lineal.y,0));
-        
-        
+        cuerpoRigido.applyCentralForce(new Vector3f(0, velocidad_lineal.y, 0));
+
         /* Rotación */
         cuerpoRigido.applyTorque(new Vector3f(0, velocidad_angular.y, 0));
 

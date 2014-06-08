@@ -21,8 +21,8 @@ public class FactoriaEntidades {
         switch (nombre) {
 
             case "perroListo":
-                EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .2f, conjunto, juego, true);
-                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(20, 4, -15), new Vector3f());
+                EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
+                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 1, 50), new Vector3f());
                 diccionarioEntidades.añadirEntidadFisica(ei);
                 
                 break;

@@ -92,7 +92,7 @@ public class Teclado
             interpretarDatos(data);
 
 //            System.out.println("The parsing worked: " + (data != null));
-            print(data);
+//            print(data);
 
         } catch (Exception e) {
             e.printStackTrace();

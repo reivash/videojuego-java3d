@@ -38,6 +38,10 @@ public class EsferaMDL extends EntidadFisica {
             boolean esPersonaje) {
 
         super(juego, conjunto);
+        
+        /* Sistema de log */
+        logEnabled = false;
+        
         this.esPersonaje = esPersonaje;
         //Creando una apariencia
         Appearance apariencia = new Appearance();
@@ -229,7 +233,7 @@ public class EsferaMDL extends EntidadFisica {
                     for (EntidadFisica ef : diccionarioEntidades.getEntidadesFisicas()) {
                         /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
                         if (!getId().equals(ef.getId()) && distancia(posiciones, ef.posiciones) < 10) {
-                            ef.velocidad_lineal.y += 500;
+                            ef.velocidad_lineal.y += 50000;
 //                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
                         }
                     }
