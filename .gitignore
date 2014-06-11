@@ -2,6 +2,10 @@
 ## NetBeans
 #################
 
+/nbproject/private/
+private.*
+nbproject\private\
+nbproject/private/*
 nbproject/private/
 build/
 nbbuild/
