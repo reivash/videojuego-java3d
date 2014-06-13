@@ -55,7 +55,7 @@ public class EntidadInteligente extends EsferaMDL {
         return comportamiento;
     }
 
-    /* Cuando este método esté hecho se discutirá si debe ir aquí o en EntidadFisica */
+    /* Sólo tiene en cuenta la dirección en el plano XZ */
     public void ir(float[] p) {
 
         /* Provisional (es demasiado fuerte) */
@@ -63,6 +63,7 @@ public class EntidadInteligente extends EsferaMDL {
         /* Cogemos la dirección y nos movemos a nuestra velocidad */
         if (dir.x > 0 || dir.y > 0 || dir.z > 0) {
             dir.normalize();
+            dir.y = 0; // Para no aplicar fuerzas verticales
             dir.scale(velocidad_movimiento * 3);
             cuerpoRigido.applyCentralForce(dir);
         }
@@ -70,7 +71,7 @@ public class EntidadInteligente extends EsferaMDL {
 
     public void atacar(EntidadInteligente objetivo) {
         /* Si el objetivo está lejos nos acercamos */
-        if (Maths.distancia(posiciones, objetivo.posiciones) > distanciaAtaque) {
+        if (Maths.distanciaHorizontal(posiciones, objetivo.posiciones) > distanciaAtaque) {
             ir(objetivo.posiciones);
         } else {
             /* Si hemos atacado recientemente nos esperamos */

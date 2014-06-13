@@ -16,7 +16,6 @@ import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import entidad.DiccionarioEntidades;
-import entidad.EtiquetaEntidad;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import figuras.EsferaMDL;
@@ -161,7 +160,7 @@ public class Juego extends JFrame {
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
         jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
-        jugador.añadirTipo(EtiquetaEntidad.JUGADOR);
+        jugador.añadirTipo("JUGADOR");
         jugador.crearPropiedades(masa, elasticidad, 0.1f, new Vector3f(posX, posY, posZ), new Vector3f());
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);

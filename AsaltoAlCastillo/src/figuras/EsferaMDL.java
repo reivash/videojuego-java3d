@@ -6,9 +6,10 @@ import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.loaders.Scene;
-import entidad.EntidadFisica;
+import entidad.Entidad;
 import eventos.Evento;
 import java.net.URL;
+import static java.rmi.server.LogStream.log;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.vecmath.*;
@@ -16,7 +17,7 @@ import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
 import static util.Maths.distancia;
 
-public class EsferaMDL extends EntidadFisica {
+public class EsferaMDL extends Entidad {
 
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
@@ -230,10 +231,10 @@ public class EsferaMDL extends EntidadFisica {
                         ab.setAnimationTimeScale(.5f);
                         animacionActual = nombreAnimacionLuchando;
                     }
-                    for (EntidadFisica ef : diccionarioEntidades.getEntidadesFisicas()) {
+                    for (Entidad ent : diccionarioEntidades.getEntidades()) {
                         /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
-                        if (!getId().equals(ef.getId()) && distancia(posiciones, ef.posiciones) < 10) {
-                            ef.velocidad_lineal.y += 50000;
+                        if (!getId().equals(ent.getId()) && distancia(posiciones, ent.posiciones) < 10) {
+                            ent.velocidad_lineal.y += 50000;
 //                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
                         }
                     }

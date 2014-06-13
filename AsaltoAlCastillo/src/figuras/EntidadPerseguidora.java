@@ -1,6 +1,6 @@
 package figuras;
 
-import entidad.EntidadJava3D;
+import entidad.Entidad;
 import java.util.ArrayList;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.*;
@@ -12,7 +12,7 @@ public class EntidadPerseguidora extends Esfera {
     public Vector3f localizacionObjetivo;
     public int estadoFigura;                    //Dependiendo del estado de la figura, su entorno, y del juego, la figura tiene un comportamiento dado.
     public int[] estadoEntornoFigura;      //El entorno alrededoar de la figura podria descrbirse con m‡s de un estado. Lloviendo y tengo poca energia
-    public EntidadJava3D objetivo;                      //El objetivo puede ser: localizar otra figura,
+    public Entidad objetivo;                      //El objetivo puede ser: localizar otra figura,
     //Si adem‡s, hubiera que realizar uan accion particular (ej. Dispararle, darle alimento) se necesitaria otro atributo (ej. TareaObjetivo)
     float aceleracionMuscular;
 
@@ -44,7 +44,7 @@ public class EntidadPerseguidora extends Esfera {
         }
     }
 
-    public void asignarObjetivo(EntidadJava3D objetivo, float aceleracionMuscular) {
+    public void asignarObjetivo(Entidad objetivo, float aceleracionMuscular) {
         this.objetivo = objetivo;
         this.localizacionObjetivo = new Vector3f(this.objetivo.posiciones[0], this.objetivo.posiciones[1], this.objetivo.posiciones[2]);
         this.aceleracionMuscular = aceleracionMuscular;

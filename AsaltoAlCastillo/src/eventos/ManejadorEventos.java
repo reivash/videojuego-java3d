@@ -1,8 +1,7 @@
 package eventos;
 
 import entidad.DiccionarioEntidades;
-import entidad.EntidadJava3D;
-import entidad.EtiquetaEntidad;
+import entidad.Entidad;
 
 import java.util.PriorityQueue;
 
@@ -43,12 +42,12 @@ public class ManejadorEventos {
 
     private void manejarEvento(Evento evento) {
 
-        EtiquetaEntidad objetivo = evento.getTipoObjetivo();
+        String objetivo = evento.getTipoObjetivo();
         if (!evento.getTargets().isEmpty()) {
             evento.setTargets(diccionarioEntidades.buscarIdEntidades(objetivo));
         }
 
-        EntidadJava3D entidad = null;
+        Entidad entidad = null;
         for (Integer id : evento.getTargets()) {
             entidad = diccionarioEntidades.getEntidad(id);
             if (entidad != null) {

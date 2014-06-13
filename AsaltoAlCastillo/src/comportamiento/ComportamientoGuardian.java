@@ -1,10 +1,9 @@
 package comportamiento;
 
 import entidad.DiccionarioEntidades;
-import entidad.EntidadFisica;
+import entidad.Entidad;
 import entidad.EntidadInteligente;
-import entidad.EntidadJava3D;
-import static util.Maths.distancia;
+import static util.Maths.*;
 
 public class ComportamientoGuardian implements Comportamiento {
 
@@ -29,12 +28,12 @@ public class ComportamientoGuardian implements Comportamiento {
     public void actualizar() {
         if (objetivo == null) {
             /* Si estamos aún de vuelta */
-            if (distancia(entidadControlada.posiciones, posicionInicial) > epsilon) {
+            if (distanciaHorizontal(entidadControlada.posiciones, posicionInicial) > epsilon) {
                 entidadControlada.ir(posicionInicial);
             } else {
                 /* Estar alerta por si se acercan fuerzas hostiles */
-                for (EntidadFisica e : diccionarioEntidades.getEntidadesHostiles(entidadControlada)) {
-                    if (distancia(e.posiciones, posicionInicial) < minimaDistanciaPerseguir) {
+                for (Entidad e : diccionarioEntidades.getEntidadesHostiles(entidadControlada)) {
+                    if (distanciaHorizontal(e.posiciones, posicionInicial) < minimaDistanciaPerseguir) {
                         objetivo = (EntidadInteligente) e; // Fusionaremos las clases y no habra que hacer casting
                         break;
                     }

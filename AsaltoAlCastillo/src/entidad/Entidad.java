@@ -6,16 +6,40 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
+import eventos.Evento;
+import java.util.ArrayList;
 import java.util.List;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Transform3D;
-import javax.vecmath.AxisAngle4f;
+import javax.media.j3d.TransformGroup;
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import main.Juego;
+import util.Log;
 
-public class EntidadFisica extends EntidadJava3D {
+public abstract class Entidad extends Log {
+
+    /* Identificadores */
+    protected int identificadorFigura;
+    public int identificadorFisico;
+
+    private static Integer id_seq = 0;
+    private Integer id = null;
+
+    protected Juego juego;
+
+    /* Java3D */
+    protected BranchGroup branchGroup;
+    protected Matrix3f matrizRotacion = new Matrix3f();
+    protected BranchGroup ramaVisible = new BranchGroup();
+    public TransformGroup desplazamiento = new TransformGroup();
+    public float[] posiciones = new float[3];
+    protected int[] posAnteriorMilimetros = new int[3];
+
+    /* El tipo nos ayuda a agrupar las entidades a nuestro antojo */
+    private List<String> etiquetas = new ArrayList<String>();
 
     /* Física */
     protected DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
@@ -33,10 +57,24 @@ public class EntidadFisica extends EntidadJava3D {
     public boolean esMDL;
 
     /* Constructor */
-    public EntidadFisica(Juego juego, BranchGroup branchGroup) {
-        super(juego, branchGroup);
+    public Entidad(Juego juego, BranchGroup branchGroup) {
+        
+        /* Java3D */
+        this.branchGroup = branchGroup;
+        this.juego = juego;
+
+        id = id_seq++;
+
+        desplazamiento.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        desplazamiento.setCapability(TransformGroup.ALLOW_CHILDREN_EXTEND);
+        desplazamiento.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        ramaVisible.setCapability(BranchGroup.ALLOW_DETACH);
+
+        /* Parte física */
         this.mundoFisico = juego.getMundoFisico();
-        posiInicial=new float[3];
+        posiInicial = new float[3];
+        
+        
     }
 
     public void crearPropiedades(float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f rotacion) {
@@ -75,7 +113,7 @@ public class EntidadFisica extends EntidadJava3D {
 
         //A–adiendo objetoVisual asociado al grafo de escea y a la lista de objetos fisicos visibles y situandolo
         branchGroup.addChild(ramaVisible);
-        diccionarioEntidades.añadirEntidadFisica(this);
+        diccionarioEntidades.añadirEntidad(this);
 
         //Presentaci—n inicial de la  figura visual asociada al cuerpo rigido
         Transform3D inip = new Transform3D();
@@ -96,13 +134,55 @@ public class EntidadFisica extends EntidadJava3D {
             mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
             mundoFisico.removeRigidBody(cuerpoRigido);
             branchGroup.removeChild(identificadorFigura);
-            diccionarioEntidades.eliminarEntidadFisica(this);
+            diccionarioEntidades.eliminarEntidad(this);
         } catch (Exception e) {
             System.out.println("Ya eliminado");
         }
     }
+    public Vector3d direccionFrontal() {
 
-    public void mostrar() {
+        /* Posición actual del personaje */
+        Transform3D transformActual = new Transform3D();
+        desplazamiento.getTransform(transformActual);
+
+        Vector3f posPersonaje = new Vector3f(0, 0, 0);
+        transformActual.get(posPersonaje);
+
+        /* Punto delante del personaje */
+        Transform3D t3DSonar = new Transform3D();
+        t3DSonar.set(new Vector3f(0.0f, 0, 10f));
+
+        Transform3D t3DDelante = new Transform3D(transformActual);
+        t3DDelante.mul(t3DSonar);
+        Vector3d puntoDeEnfrente = new Vector3d(0, 0, 0);
+        t3DDelante.get(puntoDeEnfrente);
+
+        /* Vector dirección frontal */
+        return new Vector3d(puntoDeEnfrente.x - posPersonaje.x, puntoDeEnfrente.y - posPersonaje.y, puntoDeEnfrente.z - posPersonaje.z);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+    /* ¿Debería ir aquí o en alguna subclase? */
+
+    public void recibirEvento(Evento e) {
+        //ToDo:
+    }
+
+    public List<String> getEtiquetas() {
+        return etiquetas;
+    }
+
+    public void añadirTipo(String ee) {
+        etiquetas.add(ee);
+    }
+
+    public void eliminarEtiqueta(String ee) {
+        etiquetas.remove(ee);
+    }
+    
+        public void mostrar() {
 
         CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
         RigidBody cuerpoRigido = RigidBody.upcast(objeto);
@@ -124,28 +204,10 @@ public class EntidadFisica extends EntidadJava3D {
             this.posiciones[2] = trans.origin.z;
         }
     }
-
+        
+        
     public void actualizar() {
-        /* Sistema Marlónico */
-        // Movimiento por fuerzas del jugador
-//        float fuerzaHaciaAdelante = 0, fuerzaLateral = 0, fuerzaHaciaArriba = 0f;
-//        if (adelante) {
-//            fuerzaHaciaAdelante = masa * 100f * 2.5f;
-//        }
-//        if (atras) {
-//            fuerzaHaciaAdelante = -masa * 100f * 2.5f;
-//        }
-//        if (derecha) {
-//            fuerzaLateral = -masa * 40f;
-//        }
-//        if (izquierda) {
-//            fuerzaLateral = masa * 40f;
-//        }
-//        if (arriba) {
-//            fuerzaHaciaArriba = masa * 40f;
-//        }
-
-        Vector3d direccionFrente = direccionFrontal();
+         Vector3d direccionFrente = direccionFrontal();
 
         /* Fuerza hacia delante */
         cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * velocidad_lineal.x * 0.1f,

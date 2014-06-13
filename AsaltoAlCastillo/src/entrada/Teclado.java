@@ -2,10 +2,8 @@ package entrada;
 
 import dataengine.DataGroup;
 import dataengine.DataNode;
-import static dataengine.DataTestMain.print;
 import dataengine.Yylex;
 import dataengine.parser;
-import entidad.EtiquetaEntidad;
 import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -25,11 +23,8 @@ import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
 import eventos.Evento;
 import figuras.EsferaMDL;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ConcurrentModificationException;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
@@ -106,7 +101,7 @@ public class Teclado
 
             String tecla = datosTecla.getIdentifier();
 
-            EtiquetaEntidad tipoObjetivo = EtiquetaEntidad.valueOf(datosTecla.getNodeByIndex(0).asValue().getValue().getDatum().toString().toUpperCase());
+            String tipoObjetivo = datosTecla.getNodeByIndex(0).asValue().getValue().getDatum().toString().toUpperCase();
             String comando = datosTecla.getNodeByIndex(1).asValue().getValue().getDatum().toString();
 
             /* Parámetros */
@@ -168,7 +163,7 @@ public class Teclado
                 /* Leer accion a realizar */
                 Evento e = new Evento();
                 try {
-                    e.setTipoObjetivo(EtiquetaEntidad.valueOf(scannerDeLinea.next().toUpperCase()));
+                    e.setTipoObjetivo(scannerDeLinea.next().toUpperCase());
 
                     e.setCommando(scannerDeLinea.next());
 
@@ -199,7 +194,7 @@ public class Teclado
 
                 /* El jugador es un caso especial. El teclado habla directamente con él */
                 if (e != null) {
-                    if (e.getTipoObjetivo().equals(EtiquetaEntidad.JUGADOR) && jugador != null) {
+                    if (e.getTipoObjetivo().equals("JUGADOR") && jugador != null) {
                         jugador.realizarAccion(e);
                     }
                 }

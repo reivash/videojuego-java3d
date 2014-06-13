@@ -1,7 +1,7 @@
 package util;
 
 import com.sun.j3d.utils.universe.SimpleUniverse;
-import entidad.EntidadJava3D;
+import entidad.Entidad;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Point3d;
@@ -32,7 +32,7 @@ public class Camara {
         }
     }
 
-    public void camaraAlPersonaje(EntidadJava3D personaje) {
+    public void camaraAlPersonaje(Entidad personaje) {
 
         /* Calcular posición y dirección */
         Transform3D t3dPersonaje = new Transform3D();

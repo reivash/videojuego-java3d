@@ -8,11 +8,11 @@ import java.util.Map;
 
 public class DiccionarioEntidades {
 
-    private Map<Integer, EntidadFisica> listaEntidadesFisicas = new HashMap<Integer, EntidadFisica>();
+    private Map<Integer, Entidad> listaEntidades = new HashMap<Integer, Entidad>();
     /* No se usa */
 //    private ArrayList<EntidadPerseguidora> listaObjetosNoFisicos = new ArrayList<EntidadPerseguidora>();
 
-    private Map<EtiquetaEntidad, List<EtiquetaEntidad>> mapHostilidades = new HashMap<EtiquetaEntidad, List<EtiquetaEntidad>>();
+    private Map<String, List<String>> mapHostilidades = new HashMap<String, List<String>>();
 
     private Integer index = new Integer(0);
 
@@ -21,13 +21,13 @@ public class DiccionarioEntidades {
      */
     private DiccionarioEntidades() {
         /* Creamos hostilidades por defecto */
-        ArrayList<EtiquetaEntidad> enemigosJugador = new ArrayList<EtiquetaEntidad>();
-        enemigosJugador.add(EtiquetaEntidad.ENEMIGO);
-        mapHostilidades.put(EtiquetaEntidad.JUGADOR, enemigosJugador);
+        ArrayList<String> enemigosJugador = new ArrayList<String>();
+        enemigosJugador.add("ENEMIGO");
+        mapHostilidades.put("JUGADOR", enemigosJugador);
 
-        ArrayList<EtiquetaEntidad> enemigosCastillo = new ArrayList<EtiquetaEntidad>();
-        enemigosCastillo.add(EtiquetaEntidad.JUGADOR);
-        mapHostilidades.put(EtiquetaEntidad.ENEMIGO, enemigosCastillo);
+        ArrayList<String> enemigosCastillo = new ArrayList<String>();
+        enemigosCastillo.add("JUGADOR");
+        mapHostilidades.put("ENEMIGO", enemigosCastillo);
 
     }
 
@@ -45,30 +45,30 @@ public class DiccionarioEntidades {
      */
     public void actualizar() {
         /* Actualizar las entidades */
-        for (EntidadFisica ef : listaEntidadesFisicas.values()) {
+        for (Entidad ef : listaEntidades.values()) {
             ef.actualizar();
         }
     }
 
     public void mostrar() {
         /* Mostrar las entidades */
-        for (EntidadFisica e : listaEntidadesFisicas.values()) {
+        for (Entidad e : listaEntidades.values()) {
             e.mostrar();
         }
     }
 
-    public void añadirEntidadFisica(EntidadFisica ef) {
-        listaEntidadesFisicas.put(ef.getId(), ef);
+    public void añadirEntidad(Entidad e) {
+        listaEntidades.put(e.getId(), e);
     }
 
-    public void eliminarEntidadFisica(EntidadFisica ef) {
-        listaEntidadesFisicas.remove(ef.getId());
+    public void eliminarEntidad(Entidad e) {
+        listaEntidades.remove(e.getId());
     }
 
     /* Buscar entidad por su tipo */
-    public List<EntidadJava3D> buscarEntidades(EtiquetaEntidad te) {
-        List<EntidadJava3D> objetivos = new ArrayList<EntidadJava3D>();
-        for (EntidadJava3D e : listaEntidadesFisicas.values()) {
+    public List<Entidad> buscarEntidades(String te) {
+        List<Entidad> objetivos = new ArrayList<Entidad>();
+        for (Entidad e : listaEntidades.values()) {
             if (e.getEtiquetas().contains(te)) {
                 objetivos.add(e);
             }
@@ -76,9 +76,9 @@ public class DiccionarioEntidades {
         return objetivos;
     }
 
-    public List<Integer> buscarIdEntidades(EtiquetaEntidad te) {
+    public List<Integer> buscarIdEntidades(String te) {
         List<Integer> objetivos = new ArrayList<Integer>();
-        for (EntidadJava3D e : listaEntidadesFisicas.values()) {
+        for (Entidad e : listaEntidades.values()) {
             if (e.getEtiquetas().contains(te)) {
                 objetivos.add(e.getId());
             }
@@ -86,8 +86,8 @@ public class DiccionarioEntidades {
         return objetivos;
     }
 
-    public EntidadJava3D getEntidad(Integer id) {
-        for (EntidadJava3D e : listaEntidadesFisicas.values()) {
+    public Entidad getEntidad(Integer id) {
+        for (Entidad e : listaEntidades.values()) {
             if (e.getId().equals(id)) {
                 return e;
             }
@@ -95,21 +95,21 @@ public class DiccionarioEntidades {
         return null;
     }
 
-    public Collection<EntidadFisica> getEntidadesFisicas() {
-        return listaEntidadesFisicas.values();
+    public Collection<Entidad> getEntidades() {
+        return listaEntidades.values();
     }
 
-    public Iterable<EntidadFisica> getEntidadesHostiles(EntidadJava3D objetivo) {
-        List<EtiquetaEntidad> etiquetas = objetivo.getEtiquetas();
-        ArrayList<EntidadFisica> entidadesHostiles = new ArrayList<EntidadFisica>();
+    public Iterable<Entidad> getEntidadesHostiles(Entidad objetivo) {
+        List<String> etiquetas = objetivo.getEtiquetas();
+        ArrayList<Entidad> entidadesHostiles = new ArrayList<Entidad>();
 
         /* Si alguna de nuestras etiquetas tiene como hostil 
          alguna de sus etiquetas 
          entonces es una entidad hostil */
         boolean hostil = false;
-        for (EntidadFisica ef : listaEntidadesFisicas.values()) {
-            for (EtiquetaEntidad ee : etiquetas) {
-                for (EtiquetaEntidad ee2 : ef.getEtiquetas()) {
+        for (Entidad ef : listaEntidades.values()) {
+            for (String ee : etiquetas) {
+                for (String ee2 : ef.getEtiquetas()) {
                     if (mapHostilidades.get(ee).contains(ee2)) {
                         hostil = true;
                         entidadesHostiles.add(ef);

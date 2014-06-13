@@ -8,12 +8,12 @@ import com.sun.j3d.loaders.Scene;
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.Sphere;
-import entidad.EntidadFisica;
+import entidad.Entidad;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import net.sf.nwn.loader.AnimationBehavior;
 
-public class Bloque extends EntidadFisica {
+public class Bloque extends Entidad {
 
     public Scene escenaPersonaje1;
     AnimationBehavior ab = null;
