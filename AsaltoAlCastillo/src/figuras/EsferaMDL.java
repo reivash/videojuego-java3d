@@ -26,7 +26,7 @@ public class EsferaMDL extends EntidadFisica {
 
     /* Control de animaciones */
     private float velocidad_giro = 50f;
-    private float velocidad_movimiento = 100;
+    protected float velocidad_movimiento = 100;
 
     private String animacionActual = "";
     private boolean accionRealizada = false;

@@ -24,6 +24,7 @@ public class EntidadFisica extends EntidadJava3D {
     protected CollisionObject ramaFisica;
     public float masa, elasticidad;
     protected float[] velocidades = new float[3];
+    public float[] posiInicial;
 
     /* La velocidad lineal es relativa a la posicion del jugador, siendo hacia delante el eje x positivo */
     public Vector3f velocidad_lineal = new Vector3f(0f, 0f, 0f);
@@ -35,6 +36,7 @@ public class EntidadFisica extends EntidadJava3D {
     public EntidadFisica(Juego juego, BranchGroup branchGroup) {
         super(juego, branchGroup);
         this.mundoFisico = juego.getMundoFisico();
+        posiInicial=new float[3];
     }
 
     public void crearPropiedades(float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f rotacion) {
@@ -43,7 +45,9 @@ public class EntidadFisica extends EntidadJava3D {
         Transform groundTransform = new Transform();
         groundTransform.setIdentity();
         groundTransform.origin.set(centro);
-
+        posiInicial[0]=centro.x;
+        posiInicial[1]=centro.y;
+        posiInicial[2]=centro.z;
         /* Rotacion */
         float qy = (float) Math.sin(rotacion.y / 2);
         float qw = (float) Math.cos(rotacion.y / 2);

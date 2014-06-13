@@ -46,11 +46,15 @@ public class EntidadInteligente extends EsferaMDL {
 
     /* Cuando este método esté hecho se discutirá si debe ir aquí o en EntidadFisica */
     public void ir(float[] p) {
-        
+
         /* Provisional (es demasiado fuerte) */
-        Vector3f vel = new Vector3f(p[0] - posiciones[0], p[1] - posiciones[1], p[2] - posiciones[2]);
-        vel.scale(20);
-        cuerpoRigido.applyCentralForce(vel);
+        Vector3f dir = new Vector3f(p[0] - posiciones[0], p[1] - posiciones[1], p[2] - posiciones[2]);
+        if (dir.x>0 || dir.y>0 || dir.z>0) {
+            dir.normalize();
+            dir.scale(velocidad_movimiento * 3);
+            cuerpoRigido.applyCentralForce(dir);
+        }
+        /*nomalizar luego escalarlo*/
     }
 
     public void atacar(EntidadFisica objetivo) {
