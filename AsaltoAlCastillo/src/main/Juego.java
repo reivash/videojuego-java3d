@@ -1,24 +1,25 @@
 package main;
 
-import figuras.EntidadPerseguidora;
-import java.awt.*;
-import javax.swing.*;
-import javax.media.j3d.*;
-import javax.vecmath.*;
-import com.sun.j3d.utils.universe.SimpleUniverse;
-import com.bulletphysics.dynamics.*;
 import com.bulletphysics.collision.broadphase.AxisSweep3;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.SphereShape;
+import com.bulletphysics.dynamics.*;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
+import com.sun.j3d.utils.universe.SimpleUniverse;
 import entidad.DiccionarioEntidades;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
+import figuras.Bola;
+import figuras.EntidadPerseguidora;
 import figuras.EsferaMDL;
+import java.awt.*;
+import javax.media.j3d.*;
+import javax.swing.*;
+import javax.vecmath.*;
 import mundo.CreadorDeEstructuras;
 import mundo.TerrenoSimple;
 import util.Camara;
@@ -212,6 +213,10 @@ public class Juego extends JFrame {
         CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
         CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100 , 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 
+        /* Prueba de bola */
+        Bola b = new Bola(8, 128, new Vector3f(2000000,0,0), "res//texturas//bola.jpg", conjunto, this);
+        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
+        
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
 //            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);
@@ -227,9 +232,8 @@ public class Juego extends JFrame {
     }
 
     public void actualizar(float dt) {
-
+        diccionarioEntidades.eliminarEncolados();
         diccionarioEntidades.actualizar();
-
         /* Actualizar la física del mundo */
         try {
             mundoFisico.stepSimulation(dt);

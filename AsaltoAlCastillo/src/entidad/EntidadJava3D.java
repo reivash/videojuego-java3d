@@ -32,7 +32,7 @@ public abstract class EntidadJava3D extends Log {
     private Integer id = null;
 
     /* El tipo nos ayuda a agrupar las entidades a nuestro antojo */
-    private List<EtiquetaEntidad> etiquetas = new ArrayList<EtiquetaEntidad>();
+    //private List<EtiquetaEntidad> etiquetas = new ArrayList<EtiquetaEntidad>();
 
     /* Constructor */
     public EntidadJava3D(Juego juego, BranchGroup branchGroup) {
@@ -77,7 +77,7 @@ public abstract class EntidadJava3D extends Log {
     public void recibirEvento(Evento e) {
         //ToDo:
     }
-
+/*
     public List<EtiquetaEntidad> getEtiquetas() {
         return etiquetas;
     }
@@ -88,5 +88,5 @@ public abstract class EntidadJava3D extends Log {
 
     public void eliminarEtiqueta(EtiquetaEntidad ee) {
         etiquetas.remove(ee);
-    }
+    }*/
 }

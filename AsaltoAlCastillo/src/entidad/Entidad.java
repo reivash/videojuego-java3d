@@ -131,14 +131,25 @@ public abstract class Entidad extends Log {
 
     public void remover() {
         try {
+            diccionarioEntidades.eliminarEntidad(this);
             mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
             mundoFisico.removeRigidBody(cuerpoRigido);
             branchGroup.removeChild(identificadorFigura);
-            diccionarioEntidades.eliminarEntidad(this);
         } catch (Exception e) {
             System.out.println("Ya eliminado");
         }
     }
+    public void marcarParaEliminar() {
+        try {
+            diccionarioEntidades.marcarParaEliminar(this);
+            mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
+            mundoFisico.removeRigidBody(cuerpoRigido);
+            branchGroup.removeChild(identificadorFigura);
+        } catch (Exception e) {
+            System.out.println("Ya eliminado");
+        }
+    }
+    
     public Vector3d direccionFrontal() {
 
         /* Posición actual del personaje */
@@ -183,7 +194,6 @@ public abstract class Entidad extends Log {
     }
     
         public void mostrar() {
-
         CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
         RigidBody cuerpoRigido = RigidBody.upcast(objeto);
 
