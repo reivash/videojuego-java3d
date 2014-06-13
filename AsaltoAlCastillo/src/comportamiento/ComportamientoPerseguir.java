@@ -14,7 +14,8 @@ public class ComportamientoPerseguir implements Comportamiento {
     private EntidadInteligente entidadControlada = null;
     private final float[] posicionInicial;
     private float minimaDistanciaPerseguir = 5f;
-    private float maximaDistanciaPerseguir = 50f;
+    private float maximaDistanciaPerseguir = 10f;
+    float[] posi; //posicion inicial de la entidad
 
     /* No tienes porque estar exactamente en la posición inicial */
     private float epsilon = 1f;
@@ -24,14 +25,17 @@ public class ComportamientoPerseguir implements Comportamiento {
     public ComportamientoPerseguir(EntidadInteligente objetivo) {
         this.entidadControlada = objetivo;
         posicionInicial = objetivo.posiciones;
+        posi=entidadControlada.posiInicial;
         this.objetivo = diccionarioEntidades.buscarEntidades(EtiquetaEntidad.JUGADOR).get(0);
         System.out.println("Objetivo: " + objetivo);
     }
 
     public void actualizar() {
-        System.out.println(distancia(objetivo.posiciones, posicionInicial) + " d: "+  maximaDistanciaPerseguir);
+        System.out.println("Distancia al perro:" +distancia(objetivo.posiciones, posicionInicial) + " pos"+  posicionInicial[0]);
         if (distancia(objetivo.posiciones, posicionInicial) < maximaDistanciaPerseguir) {
                 entidadControlada.ir(objetivo.posiciones);
+        }else{
+            entidadControlada.ir(posi);
         }
     }
 }

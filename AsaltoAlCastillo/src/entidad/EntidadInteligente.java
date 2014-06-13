@@ -37,7 +37,7 @@ public class EntidadInteligente extends EsferaMDL {
             //ToDo: Implementar
             // Eliminar del juego o dejar quieto
         }
-        
+
         comportamiento.actualizar();
 
         /* Sistema de ataque */
@@ -60,9 +60,12 @@ public class EntidadInteligente extends EsferaMDL {
 
         /* Provisional (es demasiado fuerte) */
         Vector3f dir = new Vector3f(p[0] - posiciones[0], p[1] - posiciones[1], p[2] - posiciones[2]);
-        dir.normalize();
-        dir.scale(velocidad_movimiento);
-        cuerpoRigido.applyCentralForce(dir);
+        /* Cogemos la dirección y nos movemos a nuestra velocidad */
+        if (dir.x > 0 || dir.y > 0 || dir.z > 0) {
+            dir.normalize();
+            dir.scale(velocidad_movimiento * 3);
+            cuerpoRigido.applyCentralForce(dir);
+        }
     }
 
     public void atacar(EntidadInteligente objetivo) {
