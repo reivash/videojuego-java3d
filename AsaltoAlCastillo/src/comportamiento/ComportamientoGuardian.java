@@ -19,7 +19,7 @@ public class ComportamientoGuardian implements Comportamiento {
     private float epsilon = 1f;
 
     /* El supuesto enemigo */
-    private EntidadFisica objetivo = null;
+    private EntidadInteligente objetivo = null;
 
     public ComportamientoGuardian(EntidadInteligente objetivo) {
         this.entidadControlada = objetivo;
@@ -35,7 +35,7 @@ public class ComportamientoGuardian implements Comportamiento {
                 /* Estar alerta por si se acercan fuerzas hostiles */
                 for (EntidadFisica e : diccionarioEntidades.getEntidadesHostiles(entidadControlada)) {
                     if (distancia(e.posiciones, posicionInicial) < minimaDistanciaPerseguir) {
-                        objetivo = e;
+                        objetivo = (EntidadInteligente) e; // Fusionaremos las clases y no habra que hacer casting
                         break;
                     }
                 }
@@ -49,6 +49,5 @@ public class ComportamientoGuardian implements Comportamiento {
                 entidadControlada.atacar(objetivo);
             }
         }
-
     }
 }
