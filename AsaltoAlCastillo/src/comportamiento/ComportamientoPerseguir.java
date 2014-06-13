@@ -35,8 +35,7 @@ public class ComportamientoPerseguir implements Comportamiento {
     }
 
     public void actualizar() {
-        System.out.println("Distancia jugador al punto defendido:" + distancia(objetivo.posiciones, puntoDefendido));
-        System.out.println("Posición del perro: " + entidadControlada.posiciones.toString());
+//        System.out.println("Distancia jugador al punto defendido:" + distancia(objetivo.posiciones, puntoDefendido));
 
         /* Si el enemigo está mu cerca vamos hacia él */
         if (distanciaHorizontal(objetivo.posiciones, puntoDefendido) < distanciaMinima) {
@@ -48,5 +47,7 @@ public class ComportamientoPerseguir implements Comportamiento {
                 entidadControlada.ir(puntoDefendido);
             }
         }
+        
+//        System.out.println("El jugador esta mirando al perro: " + objetivo.estaMirando(entidadControlada.posiciones));
     }
 }

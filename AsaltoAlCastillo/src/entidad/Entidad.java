@@ -39,7 +39,7 @@ public abstract class Entidad extends Log {
     protected int[] posAnteriorMilimetros = new int[3];
 
     /* El tipo nos ayuda a agrupar las entidades a nuestro antojo */
-    private List<String> etiquetas = new ArrayList<String>();
+    protected List<String> etiquetas = new ArrayList<String>();
 
     /* Física */
     protected DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
@@ -56,9 +56,12 @@ public abstract class Entidad extends Log {
 
     public boolean esMDL;
 
+    /* Visión */
+    private float epsilon = .2f;
+
     /* Constructor */
     public Entidad(Juego juego, BranchGroup branchGroup) {
-        
+
         /* Java3D */
         this.branchGroup = branchGroup;
         this.juego = juego;
@@ -73,8 +76,7 @@ public abstract class Entidad extends Log {
         /* Parte física */
         this.mundoFisico = juego.getMundoFisico();
         posiInicial = new float[3];
-        
-        
+
     }
 
     public void crearPropiedades(float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f rotacion) {
@@ -83,9 +85,9 @@ public abstract class Entidad extends Log {
         Transform groundTransform = new Transform();
         groundTransform.setIdentity();
         groundTransform.origin.set(centro);
-        posiInicial[0]=centro.x;
-        posiInicial[1]=centro.y;
-        posiInicial[2]=centro.z;
+        posiInicial[0] = centro.x;
+        posiInicial[1] = centro.y;
+        posiInicial[2] = centro.z;
         /* Rotacion */
         float qy = (float) Math.sin(rotacion.y / 2);
         float qw = (float) Math.cos(rotacion.y / 2);
@@ -93,7 +95,7 @@ public abstract class Entidad extends Log {
         rot.y = qy;
         rot.w = qw;
         groundTransform.setRotation(rot);
-        
+
         boolean isDynamic = (masa != 0f);
         Vector3f inerciaLocal = new Vector3f(0, 1, 0);
         if (isDynamic && !esMDL) { // 
@@ -139,7 +141,8 @@ public abstract class Entidad extends Log {
             System.out.println("Ya eliminado");
         }
     }
-    public Vector3d direccionFrontal() {
+
+    public Vector3f direccionFrontal() {
 
         /* Posición actual del personaje */
         Transform3D transformActual = new Transform3D();
@@ -158,7 +161,63 @@ public abstract class Entidad extends Log {
         t3DDelante.get(puntoDeEnfrente);
 
         /* Vector dirección frontal */
-        return new Vector3d(puntoDeEnfrente.x - posPersonaje.x, puntoDeEnfrente.y - posPersonaje.y, puntoDeEnfrente.z - posPersonaje.z);
+        Vector3f dir = new Vector3f(new Vector3d(puntoDeEnfrente.x - posPersonaje.x, puntoDeEnfrente.y - posPersonaje.y, puntoDeEnfrente.z - posPersonaje.z));
+        if(dir.x != 0 || dir.y != 0 || dir.z != 0) dir.normalize();
+        return dir;
+    }
+
+    public void mirarA(float[] p) {  
+        Vector3f direccionAlPunto = new Vector3f(
+                p[0] - posiciones[0],
+                p[1] - posiciones[1],
+                p[2] - posiciones[2]);
+        
+        double angle = Math.acos(direccionAlPunto.dot(direccionFrontal()));
+        if(angle > 0) {
+            velocidad_angular.y += 0.5;
+        } else {
+            velocidad_angular.y -= 0.5;
+        }
+    }
+
+    public boolean estaMirando(float[] p) {
+
+//        System.out.println("p: (" + p[0] + ", " + p[2] + ")");
+//        System.out.println("posicionActual: (" + posiciones[0] + ", " + posiciones[2] + ")");
+        
+        Vector3f direccionAlPunto = new Vector3f(
+                p[0] - posiciones[0],
+                p[1] - posiciones[1],
+                p[2] - posiciones[2]);
+        
+        if (direccionAlPunto.x == 0 &&
+                direccionAlPunto.y == 0 && 
+                direccionAlPunto.z == 0) {
+            return true;
+        }
+        
+        direccionAlPunto.normalize();
+        
+        float[] a = new float[] {
+            posiciones[0] + direccionAlPunto.x,
+            posiciones[1] + direccionAlPunto.y,
+            posiciones[2] + direccionAlPunto.z            
+        };
+        
+        Vector3f direccionVista = direccionFrontal();
+        float[] b = new float[] {
+            posiciones[0] + direccionVista.x,
+            posiciones[1] + direccionVista.y,
+            posiciones[2] + direccionVista.z            
+        };
+
+        Vector3f distancia = new Vector3f(a[0] - b[0], 0, a[2] - b[2]);
+        
+//        System.out.println("a: (" + a[0] + ", " + a[2] + ")");
+//        System.out.println("b: (" + b[0] + ", " + b[2] + ")");
+//        System.out.println("Distancia: " + distancia.length());
+        boolean res = distancia.length() < epsilon;
+        return res;
     }
 
     public Integer getId() {
@@ -181,8 +240,8 @@ public abstract class Entidad extends Log {
     public void eliminarEtiqueta(String ee) {
         etiquetas.remove(ee);
     }
-    
-        public void mostrar() {
+
+    public void mostrar() {
 
         CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
         RigidBody cuerpoRigido = RigidBody.upcast(objeto);
@@ -204,15 +263,14 @@ public abstract class Entidad extends Log {
             this.posiciones[2] = trans.origin.z;
         }
     }
-        
-        
+
     public void actualizar() {
-         Vector3d direccionFrente = direccionFrontal();
+        Vector3f direccionFrente = direccionFrontal();
 
         /* Fuerza hacia delante */
-        cuerpoRigido.applyCentralForce(new Vector3f((float) direccionFrente.x * velocidad_lineal.x * 0.1f,
-                (float) direccionFrente.y,
-                (float) direccionFrente.z * velocidad_lineal.x * 0.1f));
+        cuerpoRigido.applyCentralForce(new Vector3f(direccionFrente.x * velocidad_lineal.x * 0.1f,
+                direccionFrente.y,
+                direccionFrente.z * velocidad_lineal.x * 0.1f));
 
         /* Fuerza hacia arriba */
         cuerpoRigido.applyCentralForce(new Vector3f(0, velocidad_lineal.y, 0));

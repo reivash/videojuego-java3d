@@ -41,8 +41,8 @@ public class Camara {
         t3dPersonaje.get(posPersonaje);
 
         double[] c = new double[]{posPersonaje.x, posPersonaje.y, posPersonaje.z};
-        Vector3d dir = personaje.direccionFrontal();
-        dir.scale(1.5);
+        Vector3f dir = personaje.direccionFrontal();
+        dir.scale(12f);
         Point3d posicionCamara = new Point3d(c[0] - dir.x, c[1] + 4, c[2] - dir.z);
 
         /* Colocar en la espalda encima del jugador */

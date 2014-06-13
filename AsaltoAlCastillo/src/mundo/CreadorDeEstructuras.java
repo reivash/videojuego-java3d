@@ -1,6 +1,6 @@
 package mundo;
 
-import figuras.Bloque;
+import entidad.Bloque;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Vector3f;
 import main.Juego;
