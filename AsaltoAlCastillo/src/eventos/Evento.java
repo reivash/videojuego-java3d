@@ -1,7 +1,7 @@
 package eventos;
 
 import dataengine.DataGroup;
-import entidad.TipoEntidad;
+import entidad.EtiquetaEntidad;
 import java.util.ArrayList;
 import java.util.List;
 import javax.vecmath.Vector3f;
@@ -9,7 +9,7 @@ import javax.vecmath.Vector3f;
 public class Evento implements Comparable {
 
     /* Objetivos */
-    private TipoEntidad tipoObjetivo = null;
+    private EtiquetaEntidad tipoObjetivo = null;
     private List<Integer> objetivos = new ArrayList<Integer>();
     private long tiempo = 0;
     private Integer emisor = -1;
@@ -116,12 +116,12 @@ public class Evento implements Comparable {
         return "Evento\n\t[Target type: " + tipoObjetivo + ",\n\tObjetivos: " + objetivos.toString() + ",\n\tTiempo: " + tiempo + ",\n\tComando: " + comando + ",\n\tParámetros: " + params.toString() + "]";
     }
 
-    public Evento setTipoObjetivo(TipoEntidad tipo) {
+    public Evento setTipoObjetivo(EtiquetaEntidad tipo) {
         this.tipoObjetivo = tipo;
         return this;
     }
 
-    public TipoEntidad getTipoObjetivo() {
+    public EtiquetaEntidad getTipoObjetivo() {
         return tipoObjetivo;
     }
 }

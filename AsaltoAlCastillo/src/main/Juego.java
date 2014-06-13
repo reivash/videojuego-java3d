@@ -16,6 +16,7 @@ import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import entidad.DiccionarioEntidades;
+import entidad.EtiquetaEntidad;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import figuras.EsferaMDL;
@@ -160,10 +161,11 @@ public class Juego extends JFrame {
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9f;
         jugador = new EsferaMDL("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
+        jugador.añadirTipo(EtiquetaEntidad.JUGADOR);
         jugador.crearPropiedades(masa, elasticidad, 0.1f, new Vector3f(posX, posY, posZ), new Vector3f());
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
-
+        System.out.println("Jugador: " + jugador);
 //        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
 //        float fuerza_muscular = 20f;
 //        EntidadPerseguidora perseguidor;
@@ -235,7 +237,7 @@ public class Juego extends JFrame {
         } catch (Exception e) {
             System.out.println("JBullet forzado. No debe crearPropiedades de solidoRigidos durante la actualizacion stepSimulation");
         }
-
+        
         tiempoJuego = tiempoJuego + dt;
     }
 
@@ -261,9 +263,13 @@ public class Juego extends JFrame {
 
             actualizar(dt);
             mostrar();
-
+            
             camara.camaraAlPersonaje(jugador);
-
+            
+//            System.out.println("Hostiles al jugador: " + diccionarioEntidades.getEntidadesHostiles(jugador));
+//            System.out.println("Hostiles al perro: " + diccionarioEntidades.getEntidadesHostiles(
+//                    diccionarioEntidades.getEntidad(2)));
+//            System.out.println("Jugador: " + jugador);
             esperar();
         }
     }

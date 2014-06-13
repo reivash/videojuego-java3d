@@ -1,6 +1,7 @@
 package comportamiento;
 
 import entidad.DiccionarioEntidades;
+import entidad.EntidadFisica;
 import entidad.EntidadInteligente;
 import entidad.EntidadJava3D;
 import static util.Maths.distancia;
@@ -17,7 +18,8 @@ public class ComportamientoGuardian implements Comportamiento {
     /* No tienes porque estar exactamente en la posición inicial */
     private float epsilon = 1f;
 
-    private EntidadInteligente objetivo = null;
+    /* El supuesto enemigo */
+    private EntidadFisica objetivo = null;
 
     public ComportamientoGuardian(EntidadInteligente objetivo) {
         this.entidadControlada = objetivo;
@@ -31,7 +33,7 @@ public class ComportamientoGuardian implements Comportamiento {
                 entidadControlada.ir(posicionInicial);
             } else {
                 /* Estar alerta por si se acercan fuerzas hostiles */
-                for (EntidadInteligente e : diccionarioEntidades.getEntidadesHostiles(entidadControlada)) {
+                for (EntidadFisica e : diccionarioEntidades.getEntidadesHostiles(entidadControlada)) {
                     if (distancia(e.posiciones, posicionInicial) < minimaDistanciaPerseguir) {
                         objetivo = e;
                         break;

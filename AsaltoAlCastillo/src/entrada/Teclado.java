@@ -5,7 +5,7 @@ import dataengine.DataNode;
 import static dataengine.DataTestMain.print;
 import dataengine.Yylex;
 import dataengine.parser;
-import entidad.TipoEntidad;
+import entidad.EtiquetaEntidad;
 import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -106,7 +106,7 @@ public class Teclado
 
             String tecla = datosTecla.getIdentifier();
 
-            TipoEntidad tipoObjetivo = TipoEntidad.valueOf(datosTecla.getNodeByIndex(0).asValue().getValue().getDatum().toString().toUpperCase());
+            EtiquetaEntidad tipoObjetivo = EtiquetaEntidad.valueOf(datosTecla.getNodeByIndex(0).asValue().getValue().getDatum().toString().toUpperCase());
             String comando = datosTecla.getNodeByIndex(1).asValue().getValue().getDatum().toString();
 
             /* Parámetros */
@@ -168,7 +168,7 @@ public class Teclado
                 /* Leer accion a realizar */
                 Evento e = new Evento();
                 try {
-                    e.setTipoObjetivo(TipoEntidad.valueOf(scannerDeLinea.next().toUpperCase()));
+                    e.setTipoObjetivo(EtiquetaEntidad.valueOf(scannerDeLinea.next().toUpperCase()));
 
                     e.setCommando(scannerDeLinea.next());
 
@@ -199,7 +199,7 @@ public class Teclado
 
                 /* El jugador es un caso especial. El teclado habla directamente con él */
                 if (e != null) {
-                    if (e.getTipoObjetivo().equals(TipoEntidad.JUGADOR) && jugador != null) {
+                    if (e.getTipoObjetivo().equals(EtiquetaEntidad.JUGADOR) && jugador != null) {
                         jugador.realizarAccion(e);
                     }
                 }
