@@ -6,13 +6,23 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
+import com.sun.j3d.utils.image.TextureLoader;
 import eventos.Evento;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Font3D;
+import javax.media.j3d.FontExtrusion;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Text3D;
+import javax.media.j3d.Texture;
+import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Matrix3f;
+import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -57,7 +67,10 @@ public abstract class Entidad extends Log {
     public boolean esMDL;
 
     /* Visión */
-    private float epsilon = .2f;
+    private float epsilon = .05f;
+
+    /* Muere al llamarse el método remover */
+    protected boolean muerto = false;
 
     /* Constructor */
     public Entidad(Juego juego, BranchGroup branchGroup) {
@@ -132,13 +145,54 @@ public abstract class Entidad extends Log {
     }
 
     public void remover() {
-        try {
-            mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
-            mundoFisico.removeRigidBody(cuerpoRigido);
-            branchGroup.removeChild(identificadorFigura);
-            diccionarioEntidades.eliminarEntidad(this);
-        } catch (Exception e) {
-            System.out.println("Ya eliminado");
+        if (!muerto) {
+            if (etiquetas.contains("JUGADOR")) {
+                BranchGroup gameOverBG = new BranchGroup();
+
+                Font3D font3d = new Font3D(new Font("Helvetica", Font.PLAIN, 2), new FontExtrusion());
+//                Vector3f centro = new Vector3f(
+//                        posiciones[0],
+//                        posiciones[1] + 3,
+//                        posiciones[2]);
+//                Vector3f dir = direccionFrontal();
+//                dir.scale(10);
+//                centro.add(dir);
+                Text3D textGeom = new Text3D(font3d, "GAME OVER", new Point3f(0, 4, -5f));
+                textGeom.setAlignment(Text3D.ALIGN_CENTER);
+                Shape3D textShape = new Shape3D(textGeom);
+
+                Appearance apariencia = new Appearance();
+                Texture tex = new TextureLoader("res/texturas/balon.jpg", null).getTexture();
+                apariencia.setTexture(tex);
+                TextureAttributes texAttr = new TextureAttributes();
+                texAttr.setTextureMode(TextureAttributes.MODULATE);
+                apariencia.setTextureAttributes(texAttr);
+
+                textShape.setAppearance(apariencia);
+                
+                TransformGroup gameOverTG = new TransformGroup();
+                Transform3D gameOverT3D = new Transform3D();
+                gameOverT3D.rotY(Math.PI);
+                gameOverTG.setTransform(gameOverT3D);
+
+                gameOverTG.addChild(textShape);
+                gameOverBG.addChild(gameOverTG);
+                desplazamiento.addChild(gameOverBG);
+            } else {
+                try {
+                    mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
+                    mundoFisico.removeRigidBody(cuerpoRigido);
+                    branchGroup.removeChild(identificadorFigura);
+
+                    /* Así no puede ser buscado más veces */
+                    diccionarioEntidades.eliminarEntidad(this);
+                } catch (Exception e) {
+                    System.out.println("Ya eliminado");
+                }
+            }
+
+            /* A veces se llama a remover varias veces, esto lo evita */
+            muerto = true;
         }
     }
 
@@ -161,62 +215,95 @@ public abstract class Entidad extends Log {
         t3DDelante.get(puntoDeEnfrente);
 
         /* Vector dirección frontal */
-        Vector3f dir = new Vector3f(new Vector3d(puntoDeEnfrente.x - posPersonaje.x, puntoDeEnfrente.y - posPersonaje.y, puntoDeEnfrente.z - posPersonaje.z));
-        if(dir.x != 0 || dir.y != 0 || dir.z != 0) dir.normalize();
+        Vector3f dir = new Vector3f(new Vector3d(
+                puntoDeEnfrente.x - posPersonaje.x,
+                puntoDeEnfrente.y - posPersonaje.y,
+                puntoDeEnfrente.z - posPersonaje.z));
+        if (dir.x != 0 || dir.y != 0 || dir.z != 0) {
+            dir.normalize();
+        }
         return dir;
     }
 
-    public void mirarA(float[] p) {  
-        Vector3f direccionAlPunto = new Vector3f(
-                p[0] - posiciones[0],
-                p[1] - posiciones[1],
-                p[2] - posiciones[2]);
-        
-        double angle = Math.acos(direccionAlPunto.dot(direccionFrontal()));
-        if(angle > 0) {
-            velocidad_angular.y += 0.5;
-        } else {
-            velocidad_angular.y -= 0.5;
+    public boolean mirarA(float[] p) {
+        if (!estaMirando(p)) {
+            Vector3f direccionAlPunto = new Vector3f(
+                    p[0] - posiciones[0],
+                    p[1] - posiciones[1],
+                    p[2] - posiciones[2]);
+
+            direccionAlPunto.normalize();
+
+            float[] a = new float[]{
+                posiciones[0] + direccionAlPunto.x,
+                posiciones[1] + direccionAlPunto.y,
+                posiciones[2] + direccionAlPunto.z
+            };
+
+            Vector3f direccionVista = direccionFrontal();
+            float[] b = new float[]{
+                posiciones[0] + direccionVista.x,
+                posiciones[1] + direccionVista.y,
+                posiciones[2] + direccionVista.z
+            };
+
+            Vector3f distancia = new Vector3f(a[0] - b[0], 0, a[2] - b[2]);
+
+            double angle = Math.acos(direccionAlPunto.dot(direccionFrontal()));
+            if (angle > 0) {
+                velocidad_angular.y += Math.pow(distancia.length(), 3);
+            } else {
+                velocidad_angular.y -= Math.pow(distancia.length(), 3);
+            }
+            return false;
         }
+        /* Devolveremos true cuando ya estemos mirando al objetivo */
+        return true;
     }
 
     public boolean estaMirando(float[] p) {
 
 //        System.out.println("p: (" + p[0] + ", " + p[2] + ")");
 //        System.out.println("posicionActual: (" + posiciones[0] + ", " + posiciones[2] + ")");
-        
         Vector3f direccionAlPunto = new Vector3f(
                 p[0] - posiciones[0],
                 p[1] - posiciones[1],
                 p[2] - posiciones[2]);
-        
-        if (direccionAlPunto.x == 0 &&
-                direccionAlPunto.y == 0 && 
-                direccionAlPunto.z == 0) {
+
+        if (direccionAlPunto.x == 0
+                && direccionAlPunto.y == 0
+                && direccionAlPunto.z == 0) {
             return true;
         }
-        
+
         direccionAlPunto.normalize();
-        
-        float[] a = new float[] {
+
+        float[] a = new float[]{
             posiciones[0] + direccionAlPunto.x,
             posiciones[1] + direccionAlPunto.y,
-            posiciones[2] + direccionAlPunto.z            
+            posiciones[2] + direccionAlPunto.z
         };
-        
+
         Vector3f direccionVista = direccionFrontal();
-        float[] b = new float[] {
+        float[] b = new float[]{
             posiciones[0] + direccionVista.x,
             posiciones[1] + direccionVista.y,
-            posiciones[2] + direccionVista.z            
+            posiciones[2] + direccionVista.z
         };
 
         Vector3f distancia = new Vector3f(a[0] - b[0], 0, a[2] - b[2]);
-        
+
 //        System.out.println("a: (" + a[0] + ", " + a[2] + ")");
 //        System.out.println("b: (" + b[0] + ", " + b[2] + ")");
 //        System.out.println("Distancia: " + distancia.length());
         boolean res = distancia.length() < epsilon;
+        if (res) {
+            /* Eliminamos velocidad de rotación en Y si estamos mirándole */
+            Vector3f angularVelocity = new Vector3f();
+            cuerpoRigido.getAngularVelocity(angularVelocity);
+            angularVelocity.y = 0;
+            cuerpoRigido.setAngularVelocity(angularVelocity);
+        }
         return res;
     }
 

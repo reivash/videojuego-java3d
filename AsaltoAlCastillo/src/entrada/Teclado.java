@@ -22,7 +22,7 @@ import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
 import eventos.Evento;
-import figuras.EsferaMDL;
+import figuras.Personaje;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ConcurrentModificationException;
@@ -43,7 +43,7 @@ public class Teclado
     private WakeupCriterion[] continueArray = new WakeupCriterion[2];
 
     private BranchGroup branchGroup = new BranchGroup();
-    private EsferaMDL jugador;
+    private Personaje jugador;
 
     /* Para cuando processStimulus es llamado (asíncronamente) y estamos en actualizar revisando las teclas */
     private boolean iterando = false;
@@ -205,7 +205,7 @@ public class Teclado
         iterando = false;
     }
 
-    public void setJugador(EsferaMDL jugador) {
+    public void setJugador(Personaje jugador) {
         this.jugador = jugador;
     }
 

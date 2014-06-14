@@ -1,5 +1,6 @@
 package entidad;
 
+import figuras.Personaje;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -99,28 +100,30 @@ public class DiccionarioEntidades {
         return listaEntidades.values();
     }
 
-    public Iterable<Entidad> getEntidadesHostiles(Entidad objetivo) {
+    public Iterable<Personaje> getPersonajesHostiles(Entidad objetivo) {
         List<String> etiquetas = objetivo.getEtiquetas();
-        ArrayList<Entidad> entidadesHostiles = new ArrayList<Entidad>();
+        ArrayList<Personaje> entidadesHostiles = new ArrayList<Personaje>();
 
         /* Si alguna de nuestras etiquetas tiene como hostil 
          alguna de sus etiquetas 
          entonces es una entidad hostil */
         boolean hostil = false;
         for (Entidad ef : listaEntidades.values()) {
-            for (String ee : etiquetas) {
-                for (String ee2 : ef.getEtiquetas()) {
-                    if (mapHostilidades.get(ee).contains(ee2)) {
-                        hostil = true;
-                        entidadesHostiles.add(ef);
+            if (ef.getClass().equals(Personaje.class)) {
+                for (String ee : etiquetas) {
+                    for (String ee2 : ef.getEtiquetas()) {
+                        if (mapHostilidades.get(ee).contains(ee2)) {
+                            hostil = true;
+                            entidadesHostiles.add((Personaje) ef);
+                            break;
+                        }
+                    }
+                    if (hostil) {
                         break;
                     }
                 }
-                if (hostil) {
-                    break;
-                }
+                hostil = false;
             }
-            hostil = false;
         }
         return entidadesHostiles;
     }

@@ -23,7 +23,7 @@ public class FactoriaEntidades {
 
             case "perroListo":
                 EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
-                ei.setComportamiento(new ComportamientoPerseguir(ei));
+//                ei.setComportamiento(new ComportamientoPerseguir(ei));
                 ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 1, 50), new Vector3f());
                 ei.añadirTipo("ENEMIGO");
                 diccionarioEntidades.añadirEntidad(ei);
