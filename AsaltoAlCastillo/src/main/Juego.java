@@ -158,6 +158,7 @@ public class Juego extends JFrame {
         jugador.crearPropiedades(masa, elasticidad, 0.1f, new Vector3f(posX, posY, posZ), new Vector3f());
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
+        jugador.cuerpoRigido.setFriction(0.6f);
         System.out.println("Jugador: " + jugador);
 //        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
 //        float fuerza_muscular = 20f;
