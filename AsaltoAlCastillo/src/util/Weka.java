@@ -7,9 +7,11 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Random;
 import weka.classifiers.Classifier;
-import weka.classifiers.trees.M5P;
-import weka.core.Instances;
+import weka.classifiers.Evaluation;
+import weka.classifiers.trees.*;
+import weka.core.*;
 
 /**
  *
@@ -30,5 +32,29 @@ public class Weka {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public double resultadoEsperado(Instance casoADecidir) throws Exception {
+        return conocimiento.classifyInstance(casoADecidir);
+    }
+
+    public Instance casoADecidir(double... atributos) {
+        Instance casoAdecidir = new Instance(casosEntrenamiento.numAttributes());
+        casoAdecidir.setDataset(casosEntrenamiento);
+        for (int i = 0; i < atributos.length; i++) {
+            casoAdecidir.setValue(i, atributos[i]);
+        }
+        return casoAdecidir;
+    }
+
+    public void fijarAprendizaje(Instance casoAdecidir, double resultadoRealObservado) throws Exception {
+        casoAdecidir.setClassValue(resultadoRealObservado);
+        casosEntrenamiento.add(casoAdecidir);
+        for (int i = 0; i < casosEntrenamiento.numInstances() - this.maximoNumeroCasosEntrenamiento; i++) {
+            casosEntrenamiento.delete(0);  //Si hay muchos ejemplos borrar el más antiguo
+        }
+        conocimiento.buildClassifier(casosEntrenamiento);
+        Evaluation evaluador = new Evaluation(casosEntrenamiento);
+        evaluador.crossValidateModel(conocimiento, casosEntrenamiento, 10, new Random(1));
     }
 }
