@@ -1,6 +1,6 @@
 package main;
 
-import figuras.Personaje;
+import entidad.Personaje;
 import com.bulletphysics.collision.broadphase.AxisSweep3;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.dynamics.*;
@@ -9,7 +9,7 @@ import com.sun.j3d.utils.universe.SimpleUniverse;
 import entidad.DiccionarioEntidades;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
-import figuras.Bola;
+import entidad.Bola;
 import java.awt.*;
 import javax.media.j3d.*;
 import javax.swing.*;
@@ -208,8 +208,8 @@ public class Juego extends JFrame {
 //        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100 , 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 
         /* Prueba de bola */
-        Bola b = new Bola(8, 128, new Vector3f(2000000,0,0), "res//texturas//bola.jpg", conjunto, this);
-        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
+//        Bola b = new Bola(8, 128, new Vector3f(2000000,0,0), "res//texturas//bola.jpg", conjunto, this);
+//        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
         
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {

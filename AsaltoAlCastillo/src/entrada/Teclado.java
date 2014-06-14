@@ -22,7 +22,7 @@ import javax.media.j3d.WakeupCriterion;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOr;
 import eventos.Evento;
-import figuras.Personaje;
+import entidad.Personaje;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ConcurrentModificationException;

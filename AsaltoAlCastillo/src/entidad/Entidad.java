@@ -169,7 +169,7 @@ public abstract class Entidad extends Log {
                 apariencia.setTextureAttributes(texAttr);
 
                 textShape.setAppearance(apariencia);
-                
+
                 TransformGroup gameOverTG = new TransformGroup();
                 Transform3D gameOverT3D = new Transform3D();
                 gameOverT3D.rotY(Math.PI);
@@ -206,7 +206,7 @@ public abstract class Entidad extends Log {
             System.out.println("Ya eliminado");
         }
     }
-    
+
     public Vector3f direccionFrontal() {
 
         /* Posición actual del personaje */
@@ -260,11 +260,14 @@ public abstract class Entidad extends Log {
 
             Vector3f distancia = new Vector3f(a[0] - b[0], 0, a[2] - b[2]);
 
-            double angle = Math.acos(direccionAlPunto.dot(direccionFrontal()));
-            if (angle > 0) {
-                velocidad_angular.y += Math.pow(distancia.length(), 3);
+            /* From: http://math.stackexchange.com/questions/74307/two-2d-vector-angle-clockwise-predicate */
+            float c = direccionAlPunto.x * direccionVista.z 
+                    - direccionAlPunto.z * direccionVista.x;
+            
+            if (c > 0) {
+                velocidad_angular.y += 5;
             } else {
-                velocidad_angular.y -= Math.pow(distancia.length(), 3);
+                velocidad_angular.y -= 5;
             }
             return false;
         }
@@ -338,7 +341,6 @@ public abstract class Entidad extends Log {
     public void eliminarEtiqueta(String ee) {
         etiquetas.remove(ee);
     }
-
 
     public void mostrar() {
 

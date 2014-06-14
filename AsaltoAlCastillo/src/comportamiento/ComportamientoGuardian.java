@@ -3,7 +3,7 @@ package comportamiento;
 import entidad.DiccionarioEntidades;
 import entidad.Entidad;
 import entidad.EntidadInteligente;
-import figuras.Personaje;
+import entidad.Personaje;
 import static util.Maths.*;
 
 public class ComportamientoGuardian implements Comportamiento {
@@ -12,7 +12,7 @@ public class ComportamientoGuardian implements Comportamiento {
 
     private EntidadInteligente entidadControlada = null;
     private final float[] puntoDefendido;
-    private float minimaDistanciaPerseguir = 30f;
+    private float minimaDistanciaPerseguir = 40f;
     private float maximaDistanciaPerseguir = 50f;
 
 
@@ -31,10 +31,7 @@ public class ComportamientoGuardian implements Comportamiento {
     public void actualizar() {
 //        System.out.println("distancia al objetivo: " + (objetivo != null ? distancia(objetivo.posiciones, posicionInicial) : "NULL"));
         if (objetivo == null) {
-            /* Si estamos aún de vuelta */
-            if (!entidadControlada.ir(puntoDefendido)) {
-                System.out.println("Volviendo al punto defendido");
-            } else {
+            if (entidadControlada.ir(puntoDefendido)) {
                 /* Estar alerta por si se acercan fuerzas hostiles */
                 for (Personaje e : diccionarioEntidades.getPersonajesHostiles(entidadControlada)) {
                     if (distancia(e.posiciones, puntoDefendido) < maximaDistanciaPerseguir) {
@@ -47,14 +44,14 @@ public class ComportamientoGuardian implements Comportamiento {
             if (distancia(objetivo.posiciones, puntoDefendido) > maximaDistanciaPerseguir) {
                 /* Si el enemigo está demasiado lejos del punto guardado lo olvidamos */
                 objetivo = null;
-                System.out.println("Objetivo fuera del perímetro");
+//                System.out.println("Objetivo fuera del perímetro");
             } else if (distancia(objetivo.posiciones, puntoDefendido) > minimaDistanciaPerseguir) {
                 /* Si está dentro del máximo le miramos */
                 entidadControlada.mirarA(objetivo.posiciones);
-                System.out.println("Objetivo dentro del perímetro exterior");
+//                System.out.println("Objetivo dentro del perímetro exterior");
             } else {
                 /* Si está dentro del mínimo le atacamos*/
-                System.out.println("Atacando al objetivo");
+//                System.out.println("Atacando al objetivo");
                 entidadControlada.atacar(objetivo);
             }
         }

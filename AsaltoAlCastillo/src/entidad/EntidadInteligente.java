@@ -3,7 +3,6 @@ package entidad;
 import comportamiento.Comportamiento;
 import comportamiento.ComportamientoGuardian;
 import eventos.Evento;
-import figuras.Personaje;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
