@@ -196,6 +196,17 @@ public abstract class Entidad extends Log {
         }
     }
 
+    public void marcarParaEliminar() {
+        try {
+            diccionarioEntidades.marcarParaEliminar(this);
+            mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
+            mundoFisico.removeRigidBody(cuerpoRigido);
+            branchGroup.removeChild(identificadorFigura);
+        } catch (Exception e) {
+            System.out.println("Ya eliminado");
+        }
+    }
+    
     public Vector3f direccionFrontal() {
 
         /* Posición actual del personaje */
@@ -327,6 +338,7 @@ public abstract class Entidad extends Log {
     public void eliminarEtiqueta(String ee) {
         etiquetas.remove(ee);
     }
+
 
     public void mostrar() {
 

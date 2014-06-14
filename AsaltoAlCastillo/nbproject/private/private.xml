@@ -12,19 +12,29 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group name="ProgVideojuegos">
+            <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/EntidadInteligente.java</file>
+            <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/comportamiento/ComportamientoPerseguir.java</file>
+        </group>
         <group>
-            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/eventos/ManejadorEventos.java</file>
-            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/EntidadFisica.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/Entidad.java</file>
             <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/main/Juego.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/DiccionarioEntidades.java</file>
             <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/EntidadJava3D.java</file>
             <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/EsferaMDL.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/Bloque.java</file>
             <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/mundo/CreadorDeEstructuras.java</file>
+<<<<<<< HEAD
         </group>
         <group name="ProgVideojuegos">
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/Personaje.java</file>
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/main/Juego.java</file>
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/comportamiento/ComportamientoGuardian.java</file>
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/comportamiento/ComportamientoPerseguir.java</file>
+=======
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/EntidadPerseguidora.java</file>
+            <file>file:/C:/Users/Nur/Documents/GitHub/TrabajoVideojuegos/AsaltoAlCastillo/src/figuras/Bola.java</file>
+>>>>>>> origin/master
         </group>
     </open-files>
 </project-private>

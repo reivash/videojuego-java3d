@@ -14,7 +14,8 @@ public class DiccionarioEntidades {
 //    private ArrayList<EntidadPerseguidora> listaObjetosNoFisicos = new ArrayList<EntidadPerseguidora>();
 
     private Map<String, List<String>> mapHostilidades = new HashMap<String, List<String>>();
-
+    private List<Entidad> colaEliminacion = new ArrayList<Entidad>();
+    
     private Integer index = new Integer(0);
 
     /**
@@ -98,6 +99,17 @@ public class DiccionarioEntidades {
 
     public Collection<Entidad> getEntidades() {
         return listaEntidades.values();
+    }
+    
+    public void eliminarEncolados(){
+        for(Entidad e : colaEliminacion){
+            this.eliminarEntidad(e);
+        }
+        colaEliminacion.clear();
+    }
+    
+    public void marcarParaEliminar(Entidad e){
+        colaEliminacion.add(e);
     }
 
     public Iterable<Personaje> getPersonajesHostiles(Entidad objetivo) {
