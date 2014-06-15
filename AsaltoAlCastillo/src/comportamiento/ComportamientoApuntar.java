@@ -48,6 +48,11 @@ public class ComportamientoApuntar implements Comportamiento {
                         weka.generarCasoADecidir(distanciaObjetivo); //inicializamos el weka con la distancia al objetivo
                         double fuerzaEstimada = weka.resultadoEsperado();
                         // fuerzaEstimada es la fuerza que calcula WEKA que habrá que utilizar. Ahora hay que crear y lanzar la bola.
+                        Vector3f vectorFuerza = new Vector3f();
+                        // TODO falta darle un valor a vectorFuerza segun fuerzaEstimada
+                        Bola bolazo = new Bola(0.5f, 5, vectorFuerza, "res//texturas//bola.jpg", entidadControlada.branchGroup, entidadControlada.juego);
+                        bolazo.setWeka(weka, fuerzaEstimada);
+                        
                         System.out.println("Bolillazo");
                         tiempoUltimoAtaque = System.currentTimeMillis();
                     }
