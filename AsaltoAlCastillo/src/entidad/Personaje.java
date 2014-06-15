@@ -132,9 +132,9 @@ public class Personaje extends Entidad {
                 nombreAnimacionQuieto = "pixie:cpause1";
                 rotacionX = -1.5f;
                 rotacionZ = 3.14f;
-                alturaP = 1f;
-                escalaTamano = 6.0f;
-                desplazamientoY = -6.5f;
+                alturaP = 0.4f;
+                escalaTamano = 12.0f;
+                desplazamientoY = -11.5f;
                 alturaDeOjos = alturaP * escalaTamano;
             }
             if (archivo.equals("objetosMDL/Intellect_Devour.mdl")) {

@@ -178,7 +178,8 @@ public class Juego extends JFrame {
 //        }
 
         /* NPC */
-        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+        //FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 
         /* CASTILLO */
         /* Torres del castillo traseras */
