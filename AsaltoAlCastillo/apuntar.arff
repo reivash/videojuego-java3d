@@ -1,0 +1,5 @@
+@relation 'fuerza'
+@attribute Distancia real
+@attribute Fuerza real
+@data
+0, 0

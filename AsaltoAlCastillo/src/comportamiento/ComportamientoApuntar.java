@@ -24,7 +24,7 @@ public class ComportamientoApuntar implements Comportamiento {
     
     public ComportamientoApuntar(EntidadInteligente objetivo) {
         this.entidadControlada = objetivo;
-        weka = new Weka("apuntar.csv");
+        weka = new Weka("apuntar.arff");
     }
 
     public void actualizar() {
