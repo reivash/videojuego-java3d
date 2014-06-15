@@ -7,6 +7,7 @@ import entidad.EntidadInteligente;
 import entidad.Personaje;
 import javax.vecmath.Vector3f;
 import static util.Maths.*;
+import util.Weka;
 
 public class ComportamientoApuntar implements Comportamiento {
     public static final long TIEMPO_ESPERA_ATAQUES = 1000;
@@ -19,8 +20,11 @@ public class ComportamientoApuntar implements Comportamiento {
     /* El supuesto enemigo */
     private Personaje objetivo = null;
 
+    private Weka weka;
+    
     public ComportamientoApuntar(EntidadInteligente objetivo) {
         this.entidadControlada = objetivo;
+        weka = new Weka("apuntar.csv");
     }
 
     public void actualizar() {
@@ -33,14 +37,17 @@ public class ComportamientoApuntar implements Comportamiento {
                 }
             }
         } else {
-            if (distancia(objetivo.posiciones, entidadControlada.posiciones) > maximaRangoDistancia) {
+            float distanciaObjetivo = distancia(objetivo.posiciones, entidadControlada.posiciones);
+            if (distanciaObjetivo > maximaRangoDistancia) {
                 /* Si el enemigo está demasiado lejos del punto guardado lo olvidamos */
                 objetivo = null;
 //                System.out.println("Objetivo fuera del perímetro");
             } else {
                 if(entidadControlada.estaMirando(objetivo.posiciones)){
                     if(tiempoUltimoAtaque+TIEMPO_ESPERA_ATAQUES<System.currentTimeMillis()){
-                        // Crear bola aquí con weka
+                        weka.generarCasoADecidir(distanciaObjetivo); //inicializamos el weka con la distancia al objetivo
+                        double fuerzaEstimada = weka.resultadoEsperado();
+                        // fuerzaEstimada es la fuerza que calcula WEKA que habrá que utilizar. Ahora hay que crear y lanzar la bola.
                         System.out.println("Bolillazo");
                         tiempoUltimoAtaque = System.currentTimeMillis();
                     }

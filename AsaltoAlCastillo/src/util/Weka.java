@@ -22,6 +22,7 @@ public class Weka {
     Classifier conocimiento = null;
     Instances casosEntrenamiento = null;
     int maximoNumeroCasosEntrenamiento = 200;
+    Instance caso;
 
     public Weka(String FicheroEntrenamiento) {
         try {
@@ -34,8 +35,22 @@ public class Weka {
         }
     }
 
-    public double resultadoEsperado(Instance casoADecidir) throws Exception {
-        return conocimiento.classifyInstance(casoADecidir);
+    public double resultadoEsperado() {
+        return resultadoEsperado(caso);
+    }
+
+    public double resultadoEsperado(Instance casoADecidir) {
+        double resultado = 0;
+        try {
+            resultado = conocimiento.classifyInstance(casoADecidir);
+        } catch (Exception e) {
+            // meter al log el error, supongo
+        }
+        return resultado;
+    }
+
+    public void generarCasoADecidir(double... atributos) {
+        caso = casoADecidir(atributos);
     }
 
     public Instance casoADecidir(double... atributos) {
@@ -47,14 +62,22 @@ public class Weka {
         return casoAdecidir;
     }
 
-    public void fijarAprendizaje(Instance casoAdecidir, double resultadoRealObservado) throws Exception {
+    public void fijarAprendizaje(double fuerza, double resultadoRealObservado) {
+        fijarAprendizaje(casoADecidir(fuerza), resultadoRealObservado);
+    }
+
+    public void fijarAprendizaje(Instance casoAdecidir, double resultadoRealObservado) {
         casoAdecidir.setClassValue(resultadoRealObservado);
         casosEntrenamiento.add(casoAdecidir);
         for (int i = 0; i < casosEntrenamiento.numInstances() - this.maximoNumeroCasosEntrenamiento; i++) {
             casosEntrenamiento.delete(0);  //Si hay muchos ejemplos borrar el más antiguo
         }
-        conocimiento.buildClassifier(casosEntrenamiento);
-        Evaluation evaluador = new Evaluation(casosEntrenamiento);
-        evaluador.crossValidateModel(conocimiento, casosEntrenamiento, 10, new Random(1));
+        try {
+            conocimiento.buildClassifier(casosEntrenamiento);
+            Evaluation evaluador = new Evaluation(casosEntrenamiento);
+            evaluador.crossValidateModel(conocimiento, casosEntrenamiento, 10, new Random(1));
+        } catch (Exception e) {
+            // meter el error al log
+        }
     }
 }
