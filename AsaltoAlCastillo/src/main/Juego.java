@@ -216,7 +216,7 @@ public class Juego extends JFrame {
 //        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100 , 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 
         /* Prueba de bola */
-//        Bola b = new Bola(8, 128, new Vector3f(2000000,0,0), "res//texturas//bola.jpg", conjunto, this);
+//        entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
 //        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
