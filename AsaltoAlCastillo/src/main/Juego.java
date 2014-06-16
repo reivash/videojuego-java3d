@@ -152,7 +152,7 @@ public class Juego extends JFrame {
         float posY = 5f, posZ = -50f;
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
-        float dampingAngular = 0.9f;
+        float dampingAngular = 0.9999998f;
         jugador = new Personaje("objetosMDL/Iron_Golem.mdl", radio, conjunto, this, true);
         jugador.añadirTipo("JUGADOR");
         jugador.crearPropiedades(masa, elasticidad, 0.1f, new Vector3f(posX, posY, posZ), new Vector3f());
