@@ -142,12 +142,15 @@ public abstract class Entidad extends Log {
                 juego.procesarEvento(e);
             } else {
                 try {
+                     /* Así no puede ser buscado más veces */
+                    diccionarioEntidades.eliminarEntidad(this);
+                    
+                    /* Limpiar sus contenidos */
+                    //ramaVisible.removeAllChildren();
+                    ramaVisible.detach();
+                    System.out.println("Eliminando: " + identificadorFigura);
                     mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
                     mundoFisico.removeRigidBody(cuerpoRigido);
-                    branchGroup.removeChild(identificadorFigura);
-
-                    /* Así no puede ser buscado más veces */
-                    diccionarioEntidades.eliminarEntidad(this);
                 } catch (Exception e) {
                     System.out.println("Ya eliminado");
                 }
@@ -159,14 +162,7 @@ public abstract class Entidad extends Log {
     }
 
     public void marcarParaEliminar() {
-        try {
-            diccionarioEntidades.marcarParaEliminar(this);
-            mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
-            mundoFisico.removeRigidBody(cuerpoRigido);
-            branchGroup.removeChild(identificadorFigura);
-        } catch (Exception e) {
-            System.out.println("Ya eliminado");
-        }
+        diccionarioEntidades.marcarParaEliminar(this);
     }
 
     public Vector3f direccionFrontal() {
@@ -201,7 +197,6 @@ public abstract class Entidad extends Log {
     public boolean mirarA(float[] p) {
 //        if(distancia(posiciones, p) < 1) return true;
 
-       
         if (!estaMirando(p)) {
             Vector3f direccionAlPunto = new Vector3f(
                     p[0] - posiciones[0],

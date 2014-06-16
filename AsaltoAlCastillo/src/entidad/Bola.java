@@ -91,5 +91,4 @@ public class Bola extends Entidad {
         }
         cuerpoRigido.getCenterOfMassPosition(posicion);
     }
-
 }

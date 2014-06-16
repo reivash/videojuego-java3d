@@ -122,6 +122,7 @@ public class Juego extends JFrame {
         objRoot.addChild(conjunto);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        conjunto.setCapability(BranchGroup.ALLOW_DETACH);
 
         /* Iluminación */
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f),
@@ -214,8 +215,8 @@ public class Juego extends JFrame {
         /* NPCs */
 //        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
-        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
-//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+//        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
+        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 
         /* CASTILLO */
         /* Torres del castillo traseras */
@@ -248,6 +249,7 @@ public class Juego extends JFrame {
         /* Prueba de bola */
         entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
         b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
+
 
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
@@ -312,6 +314,7 @@ public class Juego extends JFrame {
 
     public void actualizar(float dt) {
         diccionarioEntidades.eliminarEncolados();
+        diccionarioEntidades.creaEncolados();
         diccionarioEntidades.actualizar();
         /* Actualizar la física del mundo */
         try {
