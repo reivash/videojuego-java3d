@@ -189,8 +189,9 @@ public class Juego extends JFrame {
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
         jugador.cuerpoRigido.setFriction(0.6f);
-
 //        System.out.println("Jugador: " + jugador);
+        
+        /* Sonido */
         Sonido.init(conjunto, universo);
         
 //        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
@@ -247,6 +248,7 @@ public class Juego extends JFrame {
         /* Prueba de bola */
         entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
         b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
+
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
 //            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);

@@ -18,7 +18,6 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import main.Juego;
 import util.Log;
-import static util.Maths.distancia;
 
 public abstract class Entidad extends Log {
 
