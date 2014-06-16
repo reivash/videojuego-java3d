@@ -18,6 +18,7 @@ import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
 import util.Maths;
 import static util.Maths.distancia;
+import util.Sonido;
 
 public class Personaje extends Entidad {
 
@@ -199,6 +200,7 @@ public class Personaje extends Entidad {
                                 ab.playAnimation(nombreAnimacionCaminando, true);
                                 ab.setAnimationTimeScale(.5f);
                                 animacionActual = nombreAnimacionCaminando;
+                                Sonido.reproducirSonido("walk");
                             }
                             velocidad_lineal.x += velocidad_movimiento;
                             break;
@@ -207,6 +209,8 @@ public class Personaje extends Entidad {
                                 ab.playAnimation(nombreAnimacionCaminando, true);
                                 ab.setAnimationTimeScale(.5f);
                                 animacionActual = nombreAnimacionCaminando;
+                                Sonido.reproducirSonido("walk");
+
                             }
                             log("Ir atras");
                             velocidad_lineal.x -= velocidad_movimiento;
@@ -252,6 +256,7 @@ public class Personaje extends Entidad {
                         ab.playAnimation(nombreAnimacionLuchando, true);
                         ab.setAnimationTimeScale(.5f);
                         animacionActual = nombreAnimacionLuchando;
+                        Sonido.reproducirSonido("attack");
                     }
                     for (Entidad ent : diccionarioEntidades.getEntidades()) {
                         /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
@@ -308,7 +313,6 @@ public class Personaje extends Entidad {
 
     /* Sólo tiene en cuenta la dirección en el plano XZ */
     public boolean ir(float[] p) {
-
         if (distancia(posiciones, p) < epsilonIr) {
             /* Nos paramos */
             System.out.println("Punto alcanzado");

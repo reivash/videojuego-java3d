@@ -19,6 +19,7 @@ import javax.swing.*;
 import javax.vecmath.*;
 import mundo.TerrenoSimple;
 import util.Camara;
+import util.Sonido;
 
 public class Juego extends JFrame {
 
@@ -160,6 +161,7 @@ public class Juego extends JFrame {
         teclado.setJugador(jugador);
         jugador.cuerpoRigido.setFriction(0.6f);
         System.out.println("Jugador: " + jugador);
+        Sonido.init(conjunto, universo);
 //        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
 //        float fuerza_muscular = 20f;
 //        EntidadPerseguidora perseguidor;
