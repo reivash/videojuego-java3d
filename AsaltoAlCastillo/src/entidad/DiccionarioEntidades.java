@@ -77,7 +77,11 @@ public class DiccionarioEntidades {
     public void mostrar() {
         /* Mostrar las entidades */
         for (Entidad e : listaEntidades.values()) {
-            e.mostrar();
+            if(colaEliminacion.size()==0 || !colaEliminacion.contains(e)){
+                e.mostrar();
+            } else {
+                System.out.println(">>>>>>> No mostrando: " + e);
+            }
         }
     }
 

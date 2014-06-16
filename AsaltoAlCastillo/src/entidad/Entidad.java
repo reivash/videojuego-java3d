@@ -142,13 +142,15 @@ public abstract class Entidad extends Log {
                 juego.procesarEvento(e);
             } else {
                 try {
-                    System.out.println("Eliminando " + identificadorFigura);
+                     /* Así no puede ser buscado más veces */
+                    diccionarioEntidades.eliminarEntidad(this);
+                    
+                    /* Limpiar sus contenidos */
+                    //ramaVisible.removeAllChildren();
+                    ramaVisible.detach();
+                    System.out.println("Eliminando: " + identificadorFigura);
                     mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
                     mundoFisico.removeRigidBody(cuerpoRigido);
-                    branchGroup.removeChild(identificadorFigura);
-
-                    /* Así no puede ser buscado más veces */
-                    diccionarioEntidades.eliminarEntidad(this);
                 } catch (Exception e) {
                     System.out.println("Ya eliminado");
                 }

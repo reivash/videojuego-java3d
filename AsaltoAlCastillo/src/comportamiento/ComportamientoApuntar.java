@@ -53,7 +53,7 @@ public class ComportamientoApuntar implements Comportamiento {
                         // fuerzaEstimada es la fuerza que calcula WEKA que habrá que utilizar. Ahora hay que crear y lanzar la bola.
                         Vector3f vectorFuerza = new Vector3f(entidadControlada.direccionFrontal());
                         vectorFuerza.set(vectorFuerza.x * fuerzaEstimada, fuerzaEstimada / 2f, vectorFuerza.z * fuerzaEstimada);
-                        Bola bolazo = new Bola(0.5f, 5, vectorFuerza, "res//texturas//bola.jpg", entidadControlada.branchGroup, entidadControlada.juego);
+                        Bola bolazo = new Bola(0.5f, 16, vectorFuerza, "res//texturas//bola.jpg", entidadControlada.branchGroup, entidadControlada.juego);
                         bolazo.setWeka(weka, fuerzaEstimada);
                         Vector3f vectorPosicion = new Vector3f(entidadControlada.posiciones);
                         Vector3f desplazamiento = new Vector3f(entidadControlada.direccionFrontal());
