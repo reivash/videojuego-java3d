@@ -7,15 +7,17 @@ import com.bulletphysics.dynamics.*;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import disparadores.Disparador;
+import disparadores.DisparadorRectangular;
 import entidad.DiccionarioEntidades;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import eventos.Evento;
 import java.awt.*;
+import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.vecmath.*;
-import mundo.CreadorDeEstructuras;
 import mundo.TerrenoSimple;
 import util.Camara;
 import util.Sonido;
@@ -53,6 +55,7 @@ public class Juego extends JFrame {
 
     /* Constructor */
     public Juego() {
+        System.out.println("*** Cargando juego ***");
         inicializarJBullet();
         inicializarJava3D();
         new Thread() {
@@ -192,6 +195,8 @@ public class Juego extends JFrame {
         teclado.setJugador(jugador);
         jugador.cuerpoRigido.setFriction(0.6f);
         jugador.setVida(5000);
+        jugador.setDistanciaAtaque(14);
+        
 //        System.out.println("Jugador: " + jugador);
         
         /* Sonido */
@@ -217,7 +222,7 @@ public class Juego extends JFrame {
         /* NPCs */
 //        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
-        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
+//        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 
         /* CASTILLO */
@@ -230,8 +235,8 @@ public class Juego extends JFrame {
 //        CreadorDeEstructuras.crearTorre(new Vector3f(+200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Torres del castillo delanteras */
-        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
-        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+//        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+//        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Muros traseros */
         float alturaMuros = 15f;
@@ -241,8 +246,8 @@ public class Juego extends JFrame {
 //        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset*1.05f, 0, 400), new Vector3f(radioTorre / 2 + offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
 //
 //        /* Muros delanteros */
-        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
-        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+//        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+//        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
 //
 //        /* Muros laterales */
 //        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
@@ -266,12 +271,17 @@ public class Juego extends JFrame {
         float friccion = 4f;
         mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
 
+        /* Crear tesoro */
+        FactoriaEntidades.crearEntidad("tesoro", conjunto, this);
+        
+        
+        
         /* Disparador */
-//        Evento evento = new Evento();
-//        evento.setComando("VICTORIA");
-//        ArrayList<String> objetivos = new ArrayList<String>();
-//        objetivos.add("JUGADOR");
-//        Disparador d = new DisparadorRectangular(objetivos, this, evento, 50, 50, -25, -25);
+        Evento evento = new Evento();
+        evento.setComando("VICTORIA");
+        ArrayList<String> objetivos = new ArrayList<String>();
+        objetivos.add("TESORO");
+        Disparador d = new DisparadorRectangular(objetivos, this, evento, -1000, 50, 1000, -500);
     }
 
     /* Getters y setters */

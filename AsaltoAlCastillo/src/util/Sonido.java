@@ -114,7 +114,7 @@ public class Sonido {
     
     protected static void addObjectSound(TransformGroup tg, PointSound sound,
             String soundFile, float edge) {
-        System.out.println(soundFile);
+//        System.out.println(soundFile);
         //First we get the current transform so that we can
         //position the sound in the same place
         Transform3D objXfm = new Transform3D();

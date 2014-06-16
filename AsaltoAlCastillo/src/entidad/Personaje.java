@@ -338,7 +338,7 @@ public class Personaje extends Entidad {
                     ((EntidadInteligente) ent).procesarEvento(e);
                 }
                 brazoPoderoso.normalize();
-                brazoPoderoso.scale(5000);
+                brazoPoderoso.scale(20000);
                 brazoPoderoso.y += 500;
                 ent.cuerpoRigido.applyCentralForce(brazoPoderoso);
 //                System.out.println("Fuerza aplicada!");
@@ -376,6 +376,10 @@ public class Personaje extends Entidad {
         }
     }
 
+    public void setDistanciaAtaque(float d) {
+        this.distanciaAtaque = d;
+    }
+    
     public void procesarEvento(Evento e) {
         switch (e.getComando()) {
             case "dañar":
