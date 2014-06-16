@@ -326,9 +326,10 @@ public class Juego extends JFrame {
     }
 
     public void actualizar(float dt) {
+        
+        diccionarioEntidades.actualizar();
         diccionarioEntidades.eliminarEncolados();
         diccionarioEntidades.creaEncolados();
-        diccionarioEntidades.actualizar();
         /* Actualizar la física del mundo */
         try {
             mundoFisico.stepSimulation(dt);

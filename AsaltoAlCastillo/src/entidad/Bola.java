@@ -57,7 +57,7 @@ public class Bola extends Entidad {
         this.branchGroup = conjunto;
     }
 
-    public void setWeka (Weka _weka, double fuerza){
+    public void setWeka (Weka _weka, double fuerza, Vector3f posicion){
         weka = _weka;
         fuerzaInicial = fuerza;
         posicionInicial = posicion;
@@ -72,7 +72,7 @@ public class Bola extends Entidad {
             framesComprobados++;
             if (framesComprobados >= NUMERO_FRAMES_COMPROBAR) {
                 Vector3f distancia = new Vector3f(0,0,0);
-                distancia.sub(posicionInicial, posicion);
+                distancia.sub(posicionInicial, nuevaPos);
                 if(weka!=null){
                     weka.fijarAprendizaje(fuerzaInicial, distancia.length());
                 }
