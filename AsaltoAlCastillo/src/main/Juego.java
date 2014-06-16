@@ -52,6 +52,10 @@ public class Juego extends JFrame {
         inicializarJava3D();
     }
 
+    public Personaje getJugador(){
+        return jugador;
+    }
+    
     public void inicializarJBullet() {
         CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
         CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
@@ -65,7 +69,7 @@ public class Juego extends JFrame {
 
     public void inicializarJava3D() {
         Container GranPanel = getContentPane();
-        Canvas3D zonaDibujo = new Canvas3D(SimpleUniverse.getPreferredConfiguration());
+        JuegoCanvas zonaDibujo = new JuegoCanvas(SimpleUniverse.getPreferredConfiguration(), this);
         zonaDibujo.setPreferredSize(new Dimension(800, 600));
         GranPanel.add(zonaDibujo, BorderLayout.CENTER);
         universo = new SimpleUniverse(zonaDibujo);
@@ -139,6 +143,22 @@ public class Juego extends JFrame {
         return objRoot;
     }
 
+<<<<<<< HEAD
+=======
+    /* Getters y setters */
+    public DiscreteDynamicsWorld getMundoFisico() {
+        return mundoFisico;
+    }
+
+    public void añadirLineaAlChat(String linea){
+        ((JuegoCanvas)universo.getCanvas()).addLineToChat(linea);
+    }
+    
+    public Teclado getTeclado() {
+        return teclado;
+    }
+
+>>>>>>> origin/master
     public void cargarContenido() {
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
@@ -182,6 +202,7 @@ public class Juego extends JFrame {
         objetivos.add("JUGADOR");
         Disparador d = new DisparadorRectangular(objetivos, this, evento, 50, 50, -25, -25);
        
+
         /* CASTILLO */
         /* Torres del castillo traseras */
 //        float radioTorre = 12f;
