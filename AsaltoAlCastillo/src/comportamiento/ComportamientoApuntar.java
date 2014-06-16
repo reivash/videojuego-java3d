@@ -59,7 +59,7 @@ public class ComportamientoApuntar implements Comportamiento {
                         Vector3f desplazamiento = new Vector3f(entidadControlada.direccionFrontal());
                         desplazamiento.scale(3f);
                         vectorPosicion.add(desplazamiento);                        
-                        Propiedades propiedades = new Propiedades(bolazo, 100, 0, 0.5f, vectorPosicion, vectorFuerza);
+                        Propiedades propiedades = new Propiedades(bolazo, 100, 0, 0.5f, vectorPosicion, new Vector3f());
                         diccionarioEntidades.encolar(propiedades);
                         System.out.println("Bolillazo");
                         tiempoUltimoAtaque = System.currentTimeMillis();

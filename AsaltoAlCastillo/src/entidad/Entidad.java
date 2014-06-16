@@ -80,8 +80,6 @@ public abstract class Entidad extends Log {
         this.mundoFisico = juego.getMundoFisico();
         posiInicial = new float[3];
         
-        /* Nos añadimos al diccionario */
-        diccionarioEntidades.añadirEntidad(this);
     }
 
     public void crearPropiedades(float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f rotacion) {
