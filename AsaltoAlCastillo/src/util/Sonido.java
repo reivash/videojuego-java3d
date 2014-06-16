@@ -35,6 +35,7 @@ public class Sonido {
     public static PointSound victorySound = new PointSound();
     public static PointSound walkingSound = new PointSound();
     public static PointSound explosionSound = new PointSound();
+    public static PointSound backgroundSound = new PointSound();
     
     public static TransformGroup tgSound = new TransformGroup();
     public static BranchGroup bgSound = new BranchGroup();
@@ -67,7 +68,8 @@ public class Sonido {
             addObjectSound(tgSound, victorySound, "file:./sonido/victory.wav", 1);
             addObjectSound(tgSound, walkingSound, "file:./sonido/walking.wav", 1);
             addObjectSound(tgSound, explosionSound, "file:./sonido/explosion.wav", 1);
-
+            addObjectSound(tgSound, backgroundSound, "file:./sonido/background.wav", 1);
+            backgroundSound.setEnable(true);
         } catch (javax.media.j3d.SoundException re) {
             System.out.println("Media Exception");
             re.printStackTrace();
@@ -147,7 +149,7 @@ public class Sonido {
         BackgroundSound drone = new BackgroundSound(droneContainer, 1.0f);
         drone.setSchedulingBounds( new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0));
         drone.setEnable(false);
-        drone.setLoop(1);
+        drone.setLoop(Integer.MAX_VALUE);
         b.addChild(drone);
 
     }
