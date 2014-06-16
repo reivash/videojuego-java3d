@@ -18,7 +18,6 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import main.Juego;
 import util.Log;
-import static util.Maths.distancia;
 
 public abstract class Entidad extends Log {
 
@@ -143,6 +142,7 @@ public abstract class Entidad extends Log {
                 juego.procesarEvento(e);
             } else {
                 try {
+                    System.out.println("Eliminando " + identificadorFigura);
                     mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
                     mundoFisico.removeRigidBody(cuerpoRigido);
                     branchGroup.removeChild(identificadorFigura);
@@ -160,14 +160,7 @@ public abstract class Entidad extends Log {
     }
 
     public void marcarParaEliminar() {
-        try {
-            diccionarioEntidades.marcarParaEliminar(this);
-            mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
-            mundoFisico.removeRigidBody(cuerpoRigido);
-            branchGroup.removeChild(identificadorFigura);
-        } catch (Exception e) {
-            System.out.println("Ya eliminado");
-        }
+        diccionarioEntidades.marcarParaEliminar(this);
     }
 
     public Vector3f direccionFrontal() {
@@ -202,7 +195,6 @@ public abstract class Entidad extends Log {
     public boolean mirarA(float[] p) {
 //        if(distancia(posiciones, p) < 1) return true;
 
-       
         if (!estaMirando(p)) {
             Vector3f direccionAlPunto = new Vector3f(
                     p[0] - posiciones[0],

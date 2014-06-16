@@ -5,13 +5,14 @@ import entidad.DiccionarioEntidades;
 import entidad.Entidad;
 import entidad.EntidadInteligente;
 import entidad.Personaje;
+import entidad.Propiedades;
 import javax.vecmath.Vector3f;
 import static util.Maths.*;
 import util.Weka;
 
 public class ComportamientoApuntar implements Comportamiento {
 
-    public static final long TIEMPO_ESPERA_ATAQUES = 1000;
+    public static final long TIEMPO_ESPERA_ATAQUES = 5000;
     private static DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
 
     private EntidadInteligente entidadControlada = null;
@@ -48,12 +49,18 @@ public class ComportamientoApuntar implements Comportamiento {
                     if (tiempoUltimoAtaque + TIEMPO_ESPERA_ATAQUES < System.currentTimeMillis()) {
                         weka.generarCasoADecidir(distanciaObjetivo); //inicializamos el weka con la distancia al objetivo
                         float fuerzaEstimada = (float) weka.resultadoEsperado();
+                        System.out.println(fuerzaEstimada);
                         // fuerzaEstimada es la fuerza que calcula WEKA que habrá que utilizar. Ahora hay que crear y lanzar la bola.
                         Vector3f vectorFuerza = new Vector3f(entidadControlada.direccionFrontal());
                         vectorFuerza.set(vectorFuerza.x * fuerzaEstimada, fuerzaEstimada / 2f, vectorFuerza.z * fuerzaEstimada);
                         Bola bolazo = new Bola(0.5f, 5, vectorFuerza, "res//texturas//bola.jpg", entidadControlada.branchGroup, entidadControlada.juego);
                         bolazo.setWeka(weka, fuerzaEstimada);
-
+                        Vector3f vectorPosicion = new Vector3f(entidadControlada.posiciones);
+                        Vector3f desplazamiento = new Vector3f(entidadControlada.direccionFrontal());
+                        desplazamiento.scale(3f);
+                        vectorPosicion.add(desplazamiento);                        
+                        Propiedades propiedades = new Propiedades(bolazo, 100, 0, 0.5f, vectorPosicion, vectorFuerza);
+                        diccionarioEntidades.encolar(propiedades);
                         System.out.println("Bolillazo");
                         tiempoUltimoAtaque = System.currentTimeMillis();
                     }

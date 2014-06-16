@@ -15,6 +15,7 @@ public class DiccionarioEntidades {
 
     private Map<String, List<String>> mapHostilidades = new HashMap<String, List<String>>();
     private List<Entidad> colaEliminacion = new ArrayList<Entidad>();
+    private List<Propiedades> colaCreacion = new ArrayList<Propiedades>();
     private Integer index = new Integer(0);
 
     private List<Disparador> disparadores = new ArrayList<Disparador>();
@@ -36,6 +37,17 @@ public class DiccionarioEntidades {
 
     public void añadirDisparador(Disparador d) {
         disparadores.add(d);
+    }
+
+    public void encolar(Propiedades propiedades) {
+        colaCreacion.add(propiedades);
+    }
+
+    public void creaEncolados() {
+        for (Propiedades p : colaCreacion) {
+            p.registrar();
+        }
+        colaCreacion.clear();
     }
 
     private static class EntityDictionaryHolder {
@@ -113,7 +125,7 @@ public class DiccionarioEntidades {
 
     public void eliminarEncolados() {
         for (Entidad e : colaEliminacion) {
-            this.eliminarEntidad(e);
+            e.remover();
         }
         colaEliminacion.clear();
     }
