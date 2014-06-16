@@ -147,37 +147,9 @@ public abstract class Entidad extends Log {
     public void remover() {
         if (!muerto) {
             if (etiquetas.contains("JUGADOR")) {
-                BranchGroup gameOverBG = new BranchGroup();
-
-                Font3D font3d = new Font3D(new Font("Helvetica", Font.PLAIN, 2), new FontExtrusion());
-//                Vector3f centro = new Vector3f(
-//                        posiciones[0],
-//                        posiciones[1] + 3,
-//                        posiciones[2]);
-//                Vector3f dir = direccionFrontal();
-//                dir.scale(10);
-//                centro.add(dir);
-                Text3D textGeom = new Text3D(font3d, "GAME OVER", new Point3f(0, 4, -5f));
-                textGeom.setAlignment(Text3D.ALIGN_CENTER);
-                Shape3D textShape = new Shape3D(textGeom);
-
-                Appearance apariencia = new Appearance();
-                Texture tex = new TextureLoader("res/texturas/balon.jpg", null).getTexture();
-                apariencia.setTexture(tex);
-                TextureAttributes texAttr = new TextureAttributes();
-                texAttr.setTextureMode(TextureAttributes.MODULATE);
-                apariencia.setTextureAttributes(texAttr);
-
-                textShape.setAppearance(apariencia);
-
-                TransformGroup gameOverTG = new TransformGroup();
-                Transform3D gameOverT3D = new Transform3D();
-                gameOverT3D.rotY(Math.PI);
-                gameOverTG.setTransform(gameOverT3D);
-
-                gameOverTG.addChild(textShape);
-                gameOverBG.addChild(gameOverTG);
-                desplazamiento.addChild(gameOverBG);
+                Evento e = new Evento();
+                e.setComando("GAME_OVER");
+                juego.procesarEvento(e);
             } else {
                 try {
                     mundoFisico.getCollisionObjectArray().remove(identificadorFisico);

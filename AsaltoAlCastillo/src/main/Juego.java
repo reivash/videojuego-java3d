@@ -5,12 +5,15 @@ import com.bulletphysics.collision.broadphase.AxisSweep3;
 import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.dynamics.*;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
+import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import disparadores.Disparador;
+import disparadores.DisparadorRectangular;
 import entidad.DiccionarioEntidades;
-import entidad.FactoriaEntidades;
 import entrada.Teclado;
-import entidad.Bola;
+import eventos.Evento;
 import java.awt.*;
+import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.vecmath.*;
@@ -40,6 +43,8 @@ public class Juego extends JFrame {
     private int tiempoDeEspera = (int) (dt * 1000);
 
     private boolean peticionDeCierre = false;
+
+    private boolean partidaAcabada = false;
 
     public Juego() {
 
@@ -134,15 +139,6 @@ public class Juego extends JFrame {
         return objRoot;
     }
 
-    /* Getters y setters */
-    public DiscreteDynamicsWorld getMundoFisico() {
-        return mundoFisico;
-    }
-
-    public Teclado getTeclado() {
-        return teclado;
-    }
-
     public void cargarContenido() {
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
@@ -177,10 +173,15 @@ public class Juego extends JFrame {
 //            diccionarioEntidades.añadirEntidadFisica(perseguidor);
 //        }
 
-        /* NPC */
-        //FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-
+        /* NPCs */
+//        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        Evento evento = new Evento();
+        evento.setComando("VICTORIA");
+        ArrayList<String> objetivos = new ArrayList<String>();
+        objetivos.add("JUGADOR");
+        Disparador d = new DisparadorRectangular(objetivos, this, evento, 50, 50, -25, -25);
+       
         /* CASTILLO */
         /* Torres del castillo traseras */
 //        float radioTorre = 12f;
@@ -212,7 +213,6 @@ public class Juego extends JFrame {
         /* Prueba de bola */
 //        Bola b = new Bola(8, 128, new Vector3f(2000000,0,0), "res//texturas//bola.jpg", conjunto, this);
 //        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
-        
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
 //            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);
@@ -227,6 +227,60 @@ public class Juego extends JFrame {
         mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
     }
 
+    /* Getters y setters */
+    public DiscreteDynamicsWorld getMundoFisico() {
+        return mundoFisico;
+    }
+
+    public Teclado getTeclado() {
+        return teclado;
+    }
+
+    public void procesarEvento(Evento e) {
+        switch (e.getComando()) {
+
+            case "VICTORIA":
+                if (!partidaAcabada) {
+                    añadirTitulo("VICTORIA");
+                    partidaAcabada = true;
+                }
+                break;
+            case "GAME_OVER":
+                if (!partidaAcabada) {
+                    añadirTitulo("GAME OVER");
+                    partidaAcabada = true;
+                }
+                break;
+        }
+    }
+
+    public void añadirTitulo(String titulo) {
+        BranchGroup tituloBG = new BranchGroup();
+
+        Font3D font3d = new Font3D(new Font("Helvetica", Font.PLAIN, 2), new FontExtrusion());
+        Text3D textGeom = new Text3D(font3d, titulo, new Point3f(0, 4, -5f));
+        textGeom.setAlignment(Text3D.ALIGN_CENTER);
+        Shape3D textShape = new Shape3D(textGeom);
+
+        Appearance apariencia = new Appearance();
+        Texture tex = new TextureLoader("res/texturas/balon.jpg", null).getTexture();
+        apariencia.setTexture(tex);
+        TextureAttributes texAttr = new TextureAttributes();
+        texAttr.setTextureMode(TextureAttributes.MODULATE);
+        apariencia.setTextureAttributes(texAttr);
+
+        textShape.setAppearance(apariencia);
+
+        TransformGroup tituloTG = new TransformGroup();
+        Transform3D tituloT3D = new Transform3D();
+        tituloT3D.rotY(Math.PI);
+        tituloTG.setTransform(tituloT3D);
+
+        tituloTG.addChild(textShape);
+        tituloBG.addChild(tituloTG);
+        jugador.desplazamiento.addChild(tituloBG);
+    }
+
     public void actualizar(float dt) {
         diccionarioEntidades.eliminarEncolados();
         diccionarioEntidades.actualizar();
@@ -236,7 +290,7 @@ public class Juego extends JFrame {
         } catch (Exception e) {
             System.out.println("JBullet forzado. No debe crearPropiedades de solidoRigidos durante la actualizacion stepSimulation");
         }
-        
+
         tiempoJuego = tiempoJuego + dt;
     }
 
@@ -262,9 +316,9 @@ public class Juego extends JFrame {
 
             actualizar(dt);
             mostrar();
-            
+
             camara.camaraAlPersonaje(jugador);
-            
+
 //            System.out.println("Hostiles al jugador: " + diccionarioEntidades.getEntidadesHostiles(jugador));
 //            System.out.println("Hostiles al perro: " + diccionarioEntidades.getEntidadesHostiles(
 //                    diccionarioEntidades.getEntidad(2)));

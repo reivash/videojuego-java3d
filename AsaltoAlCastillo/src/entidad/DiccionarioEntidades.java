@@ -1,5 +1,6 @@
 package entidad;
 
+import disparadores.Disparador;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,8 +15,9 @@ public class DiccionarioEntidades {
 
     private Map<String, List<String>> mapHostilidades = new HashMap<String, List<String>>();
     private List<Entidad> colaEliminacion = new ArrayList<Entidad>();
-    
     private Integer index = new Integer(0);
+
+    private List<Disparador> disparadores = new ArrayList<Disparador>();
 
     /**
      * ************ On demand holder initialization *************
@@ -30,6 +32,10 @@ public class DiccionarioEntidades {
         enemigosCastillo.add("JUGADOR");
         mapHostilidades.put("ENEMIGO", enemigosCastillo);
 
+    }
+
+    public void añadirDisparador(Disparador d) {
+        disparadores.add(d);
     }
 
     private static class EntityDictionaryHolder {
@@ -48,6 +54,11 @@ public class DiccionarioEntidades {
         /* Actualizar las entidades */
         for (Entidad ef : listaEntidades.values()) {
             ef.actualizar();
+        }
+
+        /* Actualizar disparadores */
+        for (Disparador d : disparadores) {
+            d.actualizar();
         }
     }
 
@@ -99,15 +110,15 @@ public class DiccionarioEntidades {
     public Collection<Entidad> getEntidades() {
         return listaEntidades.values();
     }
-    
-    public void eliminarEncolados(){
-        for(Entidad e : colaEliminacion){
+
+    public void eliminarEncolados() {
+        for (Entidad e : colaEliminacion) {
             this.eliminarEntidad(e);
         }
         colaEliminacion.clear();
     }
-    
-    public void marcarParaEliminar(Entidad e){
+
+    public void marcarParaEliminar(Entidad e) {
         colaEliminacion.add(e);
     }
 

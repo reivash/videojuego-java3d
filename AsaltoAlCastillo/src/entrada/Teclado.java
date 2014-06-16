@@ -112,7 +112,7 @@ public class Teclado
 
             Evento e = new Evento();
             e.setTipoObjetivo(tipoObjetivo);
-            e.setCommando(comando);
+            e.setComando(comando);
             e.setParams(parametros);
 
             map.put(tecla, e);
@@ -165,7 +165,7 @@ public class Teclado
                 try {
                     e.setTipoObjetivo(scannerDeLinea.next().toUpperCase());
 
-                    e.setCommando(scannerDeLinea.next());
+                    e.setComando(scannerDeLinea.next());
 
                     if (scannerDeLinea.hasNext()) {
                         ArrayList<String> params = new ArrayList<>();

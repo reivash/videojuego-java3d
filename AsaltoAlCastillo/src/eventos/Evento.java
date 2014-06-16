@@ -61,11 +61,11 @@ public class Evento implements Comparable {
         return this;
     }
 
-    public String getCommando() {
+    public String getComando() {
         return comando;
     }
 
-    public Evento setCommando(String commando) {
+    public Evento setComando(String commando) {
         this.comando = commando;
         return this;
     }

@@ -184,7 +184,7 @@ public class Personaje extends Entidad {
         ab.setAnimationTimeScale(.5f);
 
         try {
-            String command = e.getCommando();
+            String command = e.getComando();
             ArrayList<String> params = e.getParams();
             switch (command) {
                 case "mover": {
@@ -298,9 +298,9 @@ public class Personaje extends Entidad {
             siguienteAtaque--;
         }
         
-//        if(etiquetas.contains("JUGADOR")){
-//            System.out.println("Jugador (x,z) = (" + posiciones[0] + ", " + posiciones[2] + ")");
-//        }
+        if(etiquetas.contains("JUGADOR")){
+            System.out.println("Jugador (x,z) = (" + posiciones[0] + ", " + posiciones[2] + ")");
+        }
     }
 
     /* Sólo tiene en cuenta la dirección en el plano XZ */
@@ -337,7 +337,7 @@ public class Personaje extends Entidad {
             /* Si hemos atacado recientemente nos esperamos */
             if (siguienteAtaque <= 0) {
                 Evento e = new Evento();
-                e.setCommando("dañar");
+                e.setComando("dañar");
                 e.setValor(dañoAtaque);
                 objetivo.procesarEvento(e);
                 System.out.println("Ataque realizado!");
@@ -349,7 +349,7 @@ public class Personaje extends Entidad {
     }
 
     public void procesarEvento(Evento e) {
-        switch (e.getCommando()) {
+        switch (e.getComando()) {
             case "dañar":
                 vida -= e.getValor();
                 if (vida <= 0) {
