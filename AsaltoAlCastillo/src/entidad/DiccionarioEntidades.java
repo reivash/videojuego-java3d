@@ -142,14 +142,18 @@ public class DiccionarioEntidades {
         List<String> etiquetas = objetivo.getEtiquetas();
         ArrayList<Personaje> entidadesHostiles = new ArrayList<Personaje>();
 
+//        System.out.println("Contenido diccionario: " + listaEntidades.values());
+//        System.out.println("Buscando personajes hostiles para entidad con etiquetas: " + etiquetas.toString());
         /* Si alguna de nuestras etiquetas tiene como hostil 
          alguna de sus etiquetas 
          entonces es una entidad hostil */
         boolean hostil = false;
         for (Entidad ef : listaEntidades.values()) {
-            if (ef.getClass().equals(Personaje.class)) {
+            if (ef.getClass().equals(EntidadInteligente.class) || ef.getClass().equals(Personaje.class)) {
+//                System.out.println("Entidad: " + ef.getEtiquetas().toString());
                 for (String ee : etiquetas) {
                     for (String ee2 : ef.getEtiquetas()) {
+//                        System.out.println("nuestras etiquetas: "+ etiquetas.toString() + " sus etiquetas: " + ef.getEtiquetas().toString());
                         if (mapHostilidades.get(ee).contains(ee2)) {
                             hostil = true;
                             entidadesHostiles.add((Personaje) ef);

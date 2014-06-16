@@ -1,13 +1,11 @@
 package entidad;
 
+import com.bulletphysics.linearmath.Transform;
 import comportamiento.Comportamiento;
 import comportamiento.ComportamientoGuardian;
-import eventos.Evento;
 import javax.media.j3d.BranchGroup;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Quat4f;
 import main.Juego;
-import util.Maths;
 
 /* Funcionalidad: vida, sistema de ataque y comportamiento */
 public class EntidadInteligente extends Personaje {
@@ -22,8 +20,24 @@ public class EntidadInteligente extends Personaje {
 
     public void actualizar() {
         super.actualizar();
-        if(comportamiento!=null){
+        if (comportamiento != null) {
             comportamiento.actualizar();
+        }
+
+        if (!muerto && vida <= 0) {
+            muerto = true;
+            
+            /* Tumbar */
+            Transform trans = new Transform();
+            Quat4f rotacion = new Quat4f();
+            cuerpoRigido.getCenterOfMassTransform(trans);
+            trans.getRotation(rotacion);
+            rotacion.x = 0;
+            rotacion.z = 1;
+            trans.setRotation(rotacion);
+            cuerpoRigido.setCenterOfMassTransform(trans);
+
+            comportamiento = null;
         }
     }
 

@@ -15,6 +15,7 @@ import java.awt.*;
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.vecmath.*;
+import mundo.CreadorDeEstructuras;
 import mundo.TerrenoSimple;
 import util.Camara;
 import util.Sonido;
@@ -190,6 +191,7 @@ public class Juego extends JFrame {
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
         jugador.cuerpoRigido.setFriction(0.6f);
+        jugador.setVida(5000);
 //        System.out.println("Jugador: " + jugador);
         
         /* Sonido */
@@ -215,40 +217,40 @@ public class Juego extends JFrame {
         /* NPCs */
 //        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
-//        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
+//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 
         /* CASTILLO */
         /* Torres del castillo traseras */
-//        float radioTorre = 12f;
-//        int nivelesTorre = 5;
-//        int numPiezasNivel = 8;
+        float radioTorre = 12f;
+        int nivelesTorre = 5;
+        int numPiezasNivel = 8;
 //        CreadorDeEstructuras.crearTorre(new Vector3f(0, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //        CreadorDeEstructuras.crearTorre(new Vector3f(-200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //        CreadorDeEstructuras.crearTorre(new Vector3f(+200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Torres del castillo delanteras */
-//        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
-//        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Muros traseros */
-//        float alturaMuros = 15f;
-//        int numPiezas = 10;
-//        float offset = 15f; // Ayuda a posicionar los muros de forma que no choquen con las torres y las tiren
+        float alturaMuros = 15f;
+        int numPiezas = 10;
+        float offset = 15f; // Ayuda a posicionar los muros de forma que no choquen con las torres y las tiren
 //        CreadorDeEstructuras.crearMuro(new Vector3f(-200 + radioTorre / 2 + offset*1.05f, 0, 400), new Vector3f(-radioTorre / 2 - offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
 //        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset*1.05f, 0, 400), new Vector3f(radioTorre / 2 + offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
 //
 //        /* Muros delanteros */
-//        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
-//        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
 //
 //        /* Muros laterales */
 //        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 //        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100 , 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 
         /* Prueba de bola */
-        entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
-        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
+//        entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
+//        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
 
 
         /* Test de rotación de muros */

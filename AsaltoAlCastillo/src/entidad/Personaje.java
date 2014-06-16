@@ -25,6 +25,7 @@ public class Personaje extends Entidad {
     /* Animación */
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
+
     public String nombreAnimacionCorriendo, nombreAnimacionCaminando, nombreAnimacionQuieto, nombreAnimacionLuchando;
     public float radio, alturaP, alturaDeOjos;
     boolean esPersonaje;
@@ -74,13 +75,13 @@ public class Personaje extends Entidad {
         //nombre = "figura_MDL_" + identificador;
         //Sphere figuraVisual = new Sphere(radio);
         TransformGroup figuraVisual = crearObjetoMDL(ficheroMDL, radio * 2);
-        SphereShape figuraFisica = new SphereShape(radio*2f);
+        SphereShape figuraFisica = new SphereShape(radio * 2f);
         ramaFisica = new CollisionObject();
         ramaFisica.setCollisionShape(figuraFisica);
         ramaVisible.addChild(desplazamiento);
         desplazamiento.addChild(figuraVisual);
         ab.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0));
-        
+
         ab.setAnimationTimeScale(.6f);
 
     }
@@ -101,7 +102,7 @@ public class Personaje extends Entidad {
             CapabilitiesMDL.setCapabilities(RamaMDL, this.identificadorFigura);
             //Para cada Objeto MDL dar nombre las animaciones de la figura. Dar rotaciones a la figuraMDL (suelen venir giradas)
             ab = (AnimationBehavior) escenaPersonaje1.getNamedObjects().get("AnimationBehavior");
-            
+
             if (archivo.equals("objetosMDL/Iron_Golem.mdl")) {
                 nombreAnimacionCorriendo = "iron_golem:crun";
                 nombreAnimacionCaminando = "iron_golem:cwalk";
@@ -257,19 +258,16 @@ public class Personaje extends Entidad {
                 }
                 case "atacar": {
                     log("Atacando");
-                    if (!animacionActual.equals(nombreAnimacionLuchando)) {
-                        ab.playAnimation(nombreAnimacionLuchando, true);
-                        ab.setAnimationTimeScale(.5f);
-                        animacionActual = nombreAnimacionLuchando;
-                        Sonido.reproducirSonido("attack");
-                    }
-                    for (Entidad ent : diccionarioEntidades.getEntidades()) {
-                        /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
-                        if (!getId().equals(ent.getId())) {
-                            ent.velocidad_lineal.y += 50000;
-//                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
-                        }
-                    }
+                    ataqueArea();
+
+                    /* Empuje vertical a las entidades cercanas */
+//                    for (Entidad ent : diccionarioEntidades.getEntidades()) {
+//                        /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
+//                        if (!getId().equals(ent.getId())) {
+//                            ent.velocidad_lineal.y += 50000;
+////                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
+//                        }
+//                    }
                     break;
                 }
                 /* Porque puedo */
@@ -319,6 +317,44 @@ public class Personaje extends Entidad {
         return false;
     }
 
+    public void ataqueArea() {
+        if (siguienteAtaque <= 0) {
+            Evento e = new Evento();
+            e.setComando("dañar");
+            e.setValor(dañoAtaque);
+            Vector3f brazoPoderoso = null;
+            for (Entidad ent : diccionarioEntidades.getEntidades()) {
+                if (ent.getId().equals(id)) {
+                    continue;
+                }
+                brazoPoderoso = new Vector3f(
+                        ent.posiciones[0] - posiciones[0],
+                        ent.posiciones[1] - posiciones[1],
+                        ent.posiciones[2] - posiciones[2]);
+                if (brazoPoderoso.length() > distanciaAtaque) {
+                    continue;
+                }
+                if (ent.getClass().equals(EntidadInteligente.class)) {
+                    ((EntidadInteligente) ent).procesarEvento(e);
+                }
+                brazoPoderoso.normalize();
+                brazoPoderoso.scale(5000);
+                brazoPoderoso.y += 500;
+                ent.cuerpoRigido.applyCentralForce(brazoPoderoso);
+//                System.out.println("Fuerza aplicada!");
+            }
+//                System.out.println("Ataque realizado!");
+            siguienteAtaque = intervaloAtaque;
+            if (!animacionActual.equals(nombreAnimacionLuchando)) {
+                ab.playAnimation(nombreAnimacionLuchando, false);
+                animacionActual = nombreAnimacionLuchando;
+                Sonido.reproducirSonido("attack");
+            }
+            accionRealizada = true;
+        }
+
+    }
+
     public void atacar(Personaje objetivo) {
         /* Si el objetivo está lejos nos acercamos */
         if (ir(objetivo.posiciones) && mirarA(objetivo.posiciones)) {
@@ -344,12 +380,13 @@ public class Personaje extends Entidad {
         switch (e.getComando()) {
             case "dañar":
                 vida -= e.getValor();
-                if (vida <= 0) {
-                    remover();
-                }
 //                System.out.println("La entidad con etiquetas: " + etiquetas.toString() + " ha perdido todos sus puntos de vida");
                 break;
         }
+    }
+
+    public void setVida(int vida) {
+        this.vida = vida;
     }
 
     @Override
@@ -357,17 +394,18 @@ public class Personaje extends Entidad {
         super.actualizar();
 
         /* Resetear rotacion */
-        Transform trans = new Transform();
-        Quat4f rotacion = new Quat4f();
-        cuerpoRigido.getCenterOfMassTransform(trans);
-        trans.getRotation(rotacion);
-        rotacion.x = 0;
-        rotacion.z = 0;
-        trans.setRotation(rotacion);
-        cuerpoRigido.setCenterOfMassTransform(trans);
-
+        if (!muerto) {
+            Transform trans = new Transform();
+            Quat4f rotacion = new Quat4f();
+            cuerpoRigido.getCenterOfMassTransform(trans);
+            trans.getRotation(rotacion);
+            rotacion.x = 0;
+            rotacion.z = 0;
+            trans.setRotation(rotacion);
+            cuerpoRigido.setCenterOfMassTransform(trans);
+        }
         /* Si no estamos haciendo nada ponemos la animacion por defecto */
-        if (!accionRealizada && !animacionActual.equals(nombreAnimacionQuieto)) {
+        if (!accionRealizada && !animacionActual.equals(nombreAnimacionQuieto) && siguienteAtaque <= 0) {
             log("Animacion quieto");
             ab.playAnimation(nombreAnimacionQuieto, true);
             animacionActual = nombreAnimacionQuieto;
