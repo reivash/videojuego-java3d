@@ -52,10 +52,10 @@ public class Juego extends JFrame {
         inicializarJava3D();
     }
 
-    public Personaje getJugador(){
+    public Personaje getJugador() {
         return jugador;
     }
-    
+
     public void inicializarJBullet() {
         CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
         CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
@@ -143,22 +143,6 @@ public class Juego extends JFrame {
         return objRoot;
     }
 
-<<<<<<< HEAD
-=======
-    /* Getters y setters */
-    public DiscreteDynamicsWorld getMundoFisico() {
-        return mundoFisico;
-    }
-
-    public void añadirLineaAlChat(String linea){
-        ((JuegoCanvas)universo.getCanvas()).addLineToChat(linea);
-    }
-    
-    public Teclado getTeclado() {
-        return teclado;
-    }
-
->>>>>>> origin/master
     public void cargarContenido() {
 
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
@@ -201,7 +185,7 @@ public class Juego extends JFrame {
         ArrayList<String> objetivos = new ArrayList<String>();
         objetivos.add("JUGADOR");
         Disparador d = new DisparadorRectangular(objetivos, this, evento, 50, 50, -25, -25);
-       
+
 
         /* CASTILLO */
         /* Torres del castillo traseras */
@@ -255,6 +239,10 @@ public class Juego extends JFrame {
 
     public Teclado getTeclado() {
         return teclado;
+    }
+
+    public void añadirLineaAlChat(String linea) {
+        ((JuegoCanvas) universo.getCanvas()).addLineToChat(linea);
     }
 
     public void procesarEvento(Evento e) {
