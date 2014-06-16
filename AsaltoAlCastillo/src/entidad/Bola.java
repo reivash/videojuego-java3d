@@ -19,7 +19,7 @@ public class Bola extends Entidad {
     Vector3f posicion = new Vector3f();
     private Weka weka;
     private double fuerzaInicial;
-    private Vector3f posicionInicial;
+    private Vector3f posicionInicial = new Vector3f();
 
     public Bola(
             float radio,
@@ -69,6 +69,9 @@ public class Bola extends Entidad {
         if (posicion.length() < DISTANCIA_MINIMA_ACTIVA) {
             framesComprobados++;
             if (framesComprobados >= NUMERO_FRAMES_COMPROBAR) {
+                Vector3f distancia = new Vector3f(0,0,0);
+                distancia.sub(posicionInicial, posicion);
+                weka.fijarAprendizaje(fuerzaInicial, distancia.length());
                 /* Pseudocódigo (todavía no hemos implementado sistemas de HP)
                     
                  FOR EACH CHAR IN CHARACTERS:
@@ -76,9 +79,6 @@ public class Bola extends Entidad {
                  DAÑAR(CHAR)
                  */
                 marcarParaEliminar();
-                Vector3f distancia = new Vector3f();
-                distancia.sub(posicionInicial, posicion);
-                weka.fijarAprendizaje(fuerzaInicial, distancia.length());
             }
         } else {
             framesComprobados = 0;
