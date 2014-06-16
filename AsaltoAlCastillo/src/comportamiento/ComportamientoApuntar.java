@@ -10,6 +10,7 @@ import static util.Maths.*;
 import util.Weka;
 
 public class ComportamientoApuntar implements Comportamiento {
+
     public static final long TIEMPO_ESPERA_ATAQUES = 1000;
     private static DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
 
@@ -21,7 +22,7 @@ public class ComportamientoApuntar implements Comportamiento {
     private Personaje objetivo = null;
 
     private Weka weka;
-    
+
     public ComportamientoApuntar(EntidadInteligente objetivo) {
         this.entidadControlada = objetivo;
         weka = new Weka("apuntar.arff");
@@ -43,22 +44,22 @@ public class ComportamientoApuntar implements Comportamiento {
                 objetivo = null;
 //                System.out.println("Objetivo fuera del perímetro");
             } else {
-                if(entidadControlada.estaMirando(objetivo.posiciones)){
-                    if(tiempoUltimoAtaque+TIEMPO_ESPERA_ATAQUES<System.currentTimeMillis()){
+                if (entidadControlada.estaMirando(objetivo.posiciones)) {
+                    if (tiempoUltimoAtaque + TIEMPO_ESPERA_ATAQUES < System.currentTimeMillis()) {
                         weka.generarCasoADecidir(distanciaObjetivo); //inicializamos el weka con la distancia al objetivo
-                        double fuerzaEstimada = weka.resultadoEsperado();
+                        float fuerzaEstimada = (float) weka.resultadoEsperado();
                         // fuerzaEstimada es la fuerza que calcula WEKA que habrá que utilizar. Ahora hay que crear y lanzar la bola.
-                        Vector3f vectorFuerza = new Vector3f();
-                        // TODO falta darle un valor a vectorFuerza segun fuerzaEstimada
+                        Vector3f vectorFuerza = new Vector3f(entidadControlada.direccionFrontal());
+                        vectorFuerza.set(vectorFuerza.x * fuerzaEstimada, fuerzaEstimada / 2f, vectorFuerza.z * fuerzaEstimada);
                         Bola bolazo = new Bola(0.5f, 5, vectorFuerza, "res//texturas//bola.jpg", entidadControlada.branchGroup, entidadControlada.juego);
                         bolazo.setWeka(weka, fuerzaEstimada);
-                        
+
                         System.out.println("Bolillazo");
                         tiempoUltimoAtaque = System.currentTimeMillis();
                     }
                 } else {
                     entidadControlada.mirarA(objetivo.posiciones);
-                }      
+                }
             }
         }
     }
