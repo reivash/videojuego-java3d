@@ -36,7 +36,10 @@ public class Personaje extends Entidad {
     private boolean accionRealizada = false;
 
     /* Sistema vida */
-    private int vida = 100;
+    public int vida = 100;
+    
+    /* Booleano de tener el tesoro */
+    public boolean tieneTesoro = false;
 
     /* Sistema de ataque */
     protected float distanciaAtaque = 7f;
