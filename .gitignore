@@ -2,6 +2,10 @@
 ## NetBeans
 #################
 
+/nbproject/private/
+private.*
+nbproject\private\
+nbproject/private/*
 nbproject/private/
 build/
 nbbuild/
@@ -228,3 +232,4 @@ pip-log.txt
 .mr.developer.cfg
 /TrabajoVideojuegos/nbproject/private/
 /AsaltoAlCastillo/nbproject/private/
+AsaltoAlCastillo/nbproject/private/private.xml

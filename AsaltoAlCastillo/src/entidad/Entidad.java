@@ -38,10 +38,10 @@ public abstract class Entidad extends Log {
     private static Integer id_seq = 0;
     private Integer id = null;
 
-    protected Juego juego;
+    public Juego juego;
 
     /* Java3D */
-    protected BranchGroup branchGroup;
+    public BranchGroup branchGroup;
     protected Matrix3f matrizRotacion = new Matrix3f();
     protected BranchGroup ramaVisible = new BranchGroup();
     public TransformGroup desplazamiento = new TransformGroup();

@@ -8,13 +8,19 @@ import entidad.Entidad;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import main.Juego;
+import util.Weka;
 
 public class Bola extends Entidad {
+
     public static final float DISTANCIA_MINIMA_ACTIVA = 0.125f;
     public static final int NUMERO_FRAMES_COMPROBAR = 16;
     float radio, radioDeteccion;
     int framesComprobados;
     Vector3f posicion = new Vector3f();
+    private Weka weka;
+    private double fuerzaInicial;
+    private Vector3f posicionInicial;
+
     public Bola(
             float radio,
             float radioDetec,
@@ -25,12 +31,12 @@ public class Bola extends Entidad {
 
         // Si se desea programar una clase Esfera, su constrctor tendr’a esta linea
         super(juego, conjunto);
-        
+
         // Aplicar la fuerza inicial (¿se llama velocidad? absurdo)
         this.radio = radio;
         this.radioDeteccion = radioDetec;
         this.velocidad_lineal = fuerza;
-        
+
         // Creando una apariencia
         // Creacion de formas visuales y fisicas
         Appearance ap = new Appearance();
@@ -49,26 +55,35 @@ public class Bola extends Entidad {
         this.branchGroup = conjunto;
     }
 
-        public void actualizar() {
-            super.actualizar();
-            Vector3f nuevaPos = new Vector3f();
-            cuerpoRigido.getCenterOfMassPosition(nuevaPos);
-            posicion.sub(nuevaPos);
-            if(posicion.length()<DISTANCIA_MINIMA_ACTIVA){
-                framesComprobados++;
-                if(framesComprobados>=NUMERO_FRAMES_COMPROBAR){
-                    /* Pseudocódigo (todavía no hemos implementado sistemas de HP)
-                    
-                        FOR EACH CHAR IN CHARACTERS:
-                            IF DISTANCE (CHAR, NUEVAPOS) < RADIO_COMPROBAR:
-                                DAÑAR(CHAR)
-                    */
-                    marcarParaEliminar();
-                }
-            } else {
-                framesComprobados = 0;
-            }
-            cuerpoRigido.getCenterOfMassPosition(posicion);
-        }
+    public void setWeka (Weka _weka, double fuerza){
+        weka = _weka;
+        fuerzaInicial = fuerza;
+        posicionInicial = posicion;
+    }
     
+    public void actualizar() {
+        super.actualizar();
+        Vector3f nuevaPos = new Vector3f();
+        cuerpoRigido.getCenterOfMassPosition(nuevaPos);
+        posicion.sub(nuevaPos);
+        if (posicion.length() < DISTANCIA_MINIMA_ACTIVA) {
+            framesComprobados++;
+            if (framesComprobados >= NUMERO_FRAMES_COMPROBAR) {
+                /* Pseudocódigo (todavía no hemos implementado sistemas de HP)
+                    
+                 FOR EACH CHAR IN CHARACTERS:
+                 IF DISTANCE (CHAR, NUEVAPOS) < RADIO_COMPROBAR:
+                 DAÑAR(CHAR)
+                 */
+                marcarParaEliminar();
+                Vector3f distancia = new Vector3f();
+                distancia.sub(posicionInicial, posicion);
+                weka.fijarAprendizaje(fuerzaInicial, distancia.length());
+            }
+        } else {
+            framesComprobados = 0;
+        }
+        cuerpoRigido.getCenterOfMassPosition(posicion);
+    }
+
 }

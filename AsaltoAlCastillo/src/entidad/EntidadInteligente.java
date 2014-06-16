@@ -14,8 +14,6 @@ public class EntidadInteligente extends Personaje {
 
     private Comportamiento comportamiento = null;
 
-
-
     public EntidadInteligente(String ficheroMDL, float radio, BranchGroup conjunto, Juego juego, boolean esPersonaje) {
         super(ficheroMDL, radio, conjunto, juego, esPersonaje);
         /* Comportamiento por defecto */
@@ -24,8 +22,9 @@ public class EntidadInteligente extends Personaje {
 
     public void actualizar() {
         super.actualizar();
-
-        comportamiento.actualizar();
+        if(comportamiento!=null){
+            comportamiento.actualizar();
+        }
     }
 
     public void setComportamiento(Comportamiento comportamiento) {
