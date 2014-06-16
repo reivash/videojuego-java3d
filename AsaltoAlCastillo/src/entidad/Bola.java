@@ -5,13 +5,15 @@ import com.bulletphysics.collision.shapes.*;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import entidad.Entidad;
+import eventos.Evento;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import main.Juego;
+import util.Maths;
 import util.Weka;
 
 public class Bola extends Entidad {
-
+    public static final int DAÑO_MAXIMO_CENTRO = 200;
     public static final float DISTANCIA_MINIMA_ACTIVA = 0.125f;
     public static final int NUMERO_FRAMES_COMPROBAR = 16;
     float radio, radioDeteccion;
@@ -19,7 +21,7 @@ public class Bola extends Entidad {
     Vector3f posicion = new Vector3f();
     private Weka weka;
     private double fuerzaInicial;
-    private Vector3f posicionInicial;
+    private Vector3f posicionInicial = new Vector3f();
 
     public Bola(
             float radio,
@@ -69,16 +71,20 @@ public class Bola extends Entidad {
         if (posicion.length() < DISTANCIA_MINIMA_ACTIVA) {
             framesComprobados++;
             if (framesComprobados >= NUMERO_FRAMES_COMPROBAR) {
-                /* Pseudocódigo (todavía no hemos implementado sistemas de HP)
-                    
-                 FOR EACH CHAR IN CHARACTERS:
-                 IF DISTANCE (CHAR, NUEVAPOS) < RADIO_COMPROBAR:
-                 DAÑAR(CHAR)
-                 */
-                marcarParaEliminar();
-                Vector3f distancia = new Vector3f();
+                Vector3f distancia = new Vector3f(0,0,0);
                 distancia.sub(posicionInicial, posicion);
-                weka.fijarAprendizaje(fuerzaInicial, distancia.length());
+                if(weka!=null){
+                    weka.fijarAprendizaje(fuerzaInicial, distancia.length());
+                }
+                float[] posComprobar = {posicion.x, posicion.y, posicion.z};
+                float dist  = Maths.distancia(juego.getJugador().posiciones, posComprobar);
+                if(dist<=radioDeteccion){
+                    Evento e = new Evento();
+                    e.setComando("dañar");
+                    e.setValor(200*dist/radioDeteccion);
+                    juego.getJugador().procesarEvento(e);
+                }
+                marcarParaEliminar();
             }
         } else {
             framesComprobados = 0;
