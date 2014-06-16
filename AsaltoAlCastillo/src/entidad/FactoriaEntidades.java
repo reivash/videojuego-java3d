@@ -49,14 +49,16 @@ public class FactoriaEntidades {
                         EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
                         ei.añadirTipo("ENEMIGO");
                         ei.setComportamiento(new ComportamientoAtacar(ei, jugador));
-                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f((i - 2) * 30, 1, 500 + j * 10), new Vector3f());
+                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f((i - 2) * 30, 1, 300 + j * 10), new Vector3f());
                     }
                 }
+                break;
             }
             case "tesoro": {
                 Bloque b = new Bloque(new Vector3f(10, 4, 4), "res//texturas//balon.jpg", conjunto, juego);
                 b.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 2, 350), new Vector3f());
                 b.añadirTipo("TESORO");
+                break;
             }
         }
     }

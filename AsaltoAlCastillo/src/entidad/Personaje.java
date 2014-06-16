@@ -393,6 +393,9 @@ public class Personaje extends Entidad {
         this.vida = vida;
     }
 
+    public void setIntervaloAtaque(int v) {
+        this.intervaloAtaque = v;
+    }
     @Override
     public void actualizar() {
         super.actualizar();
