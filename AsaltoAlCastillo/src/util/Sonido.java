@@ -9,6 +9,8 @@ package util;
 import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.audioengines.javasound.JavaSoundMixer;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import java.io.File;
+import java.net.URL;
 import javax.media.j3d.BackgroundSound;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
@@ -60,11 +62,11 @@ public class Sonido {
             JavaSoundMixer objetoMezcladorSonidos = new JavaSoundMixer(pe);
             objetoMezcladorSonidos.initialize();
             universo.getViewer().getView().setPhysicalEnvironment(pe);
-            addObjectSound(tgSound, screamSound, "file:C:\\Users\\Sanjay\\Desktop\\VideoJuego\\AsaltoAlCastillo\\scream.wav", 1);
-            addObjectSound(tgSound, attackSound, "file:C:\\Users\\Sanjay\\Desktop\\VideoJuego\\AsaltoAlCastillo\\attack.wav", 1);
-            addObjectSound(tgSound, victorySound, "file:C:\\Users\\Sanjay\\Desktop\\VideoJuego\\AsaltoAlCastillo\\victory.wav", 1);
-            addObjectSound(tgSound, walkingSound, "file:C:\\Users\\Sanjay\\Desktop\\VideoJuego\\AsaltoAlCastillo\\walking.wav", 1);
-            addObjectSound(tgSound, explosionSound, "file:C:\\Users\\Sanjay\\Desktop\\VideoJuego\\AsaltoAlCastillo\\explosion.wav", 1);
+            addObjectSound(tgSound, screamSound, "file:./sonido/scream.wav", 1);
+            addObjectSound(tgSound, attackSound, "file:./sonido/attack.wav", 1);
+            addObjectSound(tgSound, victorySound, "file:./sonido/victory.wav", 1);
+            addObjectSound(tgSound, walkingSound, "file:./sonido/walking.wav", 1);
+            addObjectSound(tgSound, explosionSound, "file:./sonido/explosion.wav", 1);
 
         } catch (javax.media.j3d.SoundException re) {
             System.out.println("Media Exception");
@@ -110,6 +112,7 @@ public class Sonido {
     
     protected static void addObjectSound(TransformGroup tg, PointSound sound,
             String soundFile, float edge) {
+        System.out.println(soundFile);
         //First we get the current transform so that we can
         //position the sound in the same place
         Transform3D objXfm = new Transform3D();
