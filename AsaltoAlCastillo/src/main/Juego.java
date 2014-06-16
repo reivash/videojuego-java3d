@@ -7,13 +7,11 @@ import com.bulletphysics.dynamics.*;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
-import disparadores.Disparador;
-import disparadores.DisparadorRectangular;
 import entidad.DiccionarioEntidades;
+import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import eventos.Evento;
 import java.awt.*;
-import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.vecmath.*;
@@ -27,7 +25,7 @@ public class Juego extends JFrame {
     private BranchGroup conjunto = new BranchGroup();
     private DiscreteDynamicsWorld mundoFisico;
     private float tiempoJuego;
-    private BoundingSphere limitesBackground = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+    private BoundingSphere limitesBackground = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0);
 
     private Camara camara = null;
 
@@ -46,14 +44,20 @@ public class Juego extends JFrame {
 
     private boolean partidaAcabada = false;
 
-    public Juego() {
+    /* Texto3D */
+    private BranchGroup tituloBG = null;
+    private Font3D font3d = new Font3D(new Font("Helvetica", Font.PLAIN, 2), new FontExtrusion());
+    private Text3D textGeom;
 
+    /* Constructor */
+    public Juego() {
         inicializarJBullet();
         inicializarJava3D();
-    }
-
-    public Personaje getJugador() {
-        return jugador;
+        new Thread() {
+            public void run() {
+                inicializarTexto3D();
+            }
+        }.start();
     }
 
     public void inicializarJBullet() {
@@ -86,6 +90,31 @@ public class Juego extends JFrame {
 
     }
 
+    private void inicializarTexto3D() {
+        tituloBG = new BranchGroup();
+
+        textGeom = new Text3D(font3d, "", new Point3f(0, 4, -5f));
+        textGeom.setAlignment(Text3D.ALIGN_CENTER);
+        Shape3D textShape = new Shape3D(textGeom);
+
+        Appearance apariencia = new Appearance();
+        Texture tex = new TextureLoader("res/texturas/balon.jpg", null).getTexture();
+        apariencia.setTexture(tex);
+        TextureAttributes texAttr = new TextureAttributes();
+        texAttr.setTextureMode(TextureAttributes.MODULATE);
+        apariencia.setTextureAttributes(texAttr);
+
+        textShape.setAppearance(apariencia);
+
+        TransformGroup tituloTG = new TransformGroup();
+        Transform3D tituloT3D = new Transform3D();
+        tituloT3D.rotY(Math.PI);
+        tituloTG.setTransform(tituloT3D);
+
+        tituloTG.addChild(textShape);
+        tituloBG.addChild(tituloTG);
+    }
+
     public BranchGroup crearEscena() {
         BranchGroup objRoot = new BranchGroup();
         conjunto = new BranchGroup();
@@ -96,7 +125,7 @@ public class Juego extends JFrame {
         /* Iluminación */
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f),
                 new Vector3f(1f, 0f, -1f));
-        BoundingSphere limitesLuz = new BoundingSphere(new Point3d(-15, 10, 15), 1000.0); //Localizacion de fuente/paso de luz
+        BoundingSphere limitesLuz = new BoundingSphere(new Point3d(-15, 10, 15), 10000.0); //Localizacion de fuente/paso de luz
         objRoot.addChild(LuzDireccional);
         LuzDireccional.setInfluencingBounds(limitesLuz);
         Background bg = new Background();
@@ -159,7 +188,7 @@ public class Juego extends JFrame {
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
         jugador.cuerpoRigido.setFriction(0.6f);
-        System.out.println("Jugador: " + jugador);
+//        System.out.println("Jugador: " + jugador);
 //        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
 //        float fuerza_muscular = 20f;
 //        EntidadPerseguidora perseguidor;
@@ -179,13 +208,9 @@ public class Juego extends JFrame {
 
         /* NPCs */
 //        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+//        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
+        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-        Evento evento = new Evento();
-        evento.setComando("VICTORIA");
-        ArrayList<String> objetivos = new ArrayList<String>();
-        objetivos.add("JUGADOR");
-        Disparador d = new DisparadorRectangular(objetivos, this, evento, 50, 50, -25, -25);
-
 
         /* CASTILLO */
         /* Torres del castillo traseras */
@@ -230,6 +255,13 @@ public class Juego extends JFrame {
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
         mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
+
+        /* Disparador */
+//        Evento evento = new Evento();
+//        evento.setComando("VICTORIA");
+//        ArrayList<String> objetivos = new ArrayList<String>();
+//        objetivos.add("JUGADOR");
+//        Disparador d = new DisparadorRectangular(objetivos, this, evento, 50, 50, -25, -25);
     }
 
     /* Getters y setters */
@@ -239,6 +271,10 @@ public class Juego extends JFrame {
 
     public Teclado getTeclado() {
         return teclado;
+    }
+
+    public Personaje getJugador() {
+        return jugador;
     }
 
     public void añadirLineaAlChat(String linea) {
@@ -264,29 +300,7 @@ public class Juego extends JFrame {
     }
 
     public void añadirTitulo(String titulo) {
-        BranchGroup tituloBG = new BranchGroup();
-
-        Font3D font3d = new Font3D(new Font("Helvetica", Font.PLAIN, 2), new FontExtrusion());
-        Text3D textGeom = new Text3D(font3d, titulo, new Point3f(0, 4, -5f));
-        textGeom.setAlignment(Text3D.ALIGN_CENTER);
-        Shape3D textShape = new Shape3D(textGeom);
-
-        Appearance apariencia = new Appearance();
-        Texture tex = new TextureLoader("res/texturas/balon.jpg", null).getTexture();
-        apariencia.setTexture(tex);
-        TextureAttributes texAttr = new TextureAttributes();
-        texAttr.setTextureMode(TextureAttributes.MODULATE);
-        apariencia.setTextureAttributes(texAttr);
-
-        textShape.setAppearance(apariencia);
-
-        TransformGroup tituloTG = new TransformGroup();
-        Transform3D tituloT3D = new Transform3D();
-        tituloT3D.rotY(Math.PI);
-        tituloTG.setTransform(tituloT3D);
-
-        tituloTG.addChild(textShape);
-        tituloBG.addChild(tituloTG);
+        textGeom.setString(titulo);
         jugador.desplazamiento.addChild(tituloBG);
     }
 
@@ -351,4 +365,5 @@ public class Juego extends JFrame {
         /* Bucle del juego */
         juego.empezar();
     }
+
 }

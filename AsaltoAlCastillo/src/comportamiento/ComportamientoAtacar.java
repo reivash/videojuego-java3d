@@ -6,14 +6,14 @@ import entidad.Entidad;
 import entidad.Personaje;
 import static util.Maths.*;
 
-public class ComportamientoPerseguir implements Comportamiento {
+public class ComportamientoAtacar implements Comportamiento {
 
     private static DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
 
     private EntidadInteligente entidadControlada = null;
-    private Entidad objetivo = null;
+    private Personaje objetivo = null;
 
-    public ComportamientoPerseguir(EntidadInteligente entidadControlada, Entidad personaje) {
+    public ComportamientoAtacar(EntidadInteligente entidadControlada, Personaje personaje) {
         this.entidadControlada = entidadControlada;
 
         /* Ponemos al jugador como enemigo fijo */
@@ -22,6 +22,6 @@ public class ComportamientoPerseguir implements Comportamiento {
     }
 
     public void actualizar() {
-        entidadControlada.ir(objetivo.posiciones);
+        entidadControlada.atacar(objetivo);
     }
 }

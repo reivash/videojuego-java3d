@@ -1,6 +1,7 @@
 package entidad;
 
 import comportamiento.ComportamientoApuntar;
+import comportamiento.ComportamientoAtacar;
 import comportamiento.ComportamientoPerseguir;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Vector3f;
@@ -20,21 +21,37 @@ public class FactoriaEntidades {
 
     public static void crearEntidad(String nombre, BranchGroup conjunto, Juego juego) {
         switch (nombre) {
-            case "perroListo":{
+            case "perroListo": {
                 EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
-//                ei.setComportamiento(new ComportamientoPerseguir(ei));
+                 ei.añadirTipo("ENEMIGO");
                 ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 1, 50), new Vector3f());
-                ei.añadirTipo("ENEMIGO");
-                diccionarioEntidades.añadirEntidad(ei);
                 break;
             }
-            case "tiraBolas":{
+            case "perroPerseguidor": {
+                EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
+                   ei.añadirTipo("ENEMIGO");
+                Personaje jugador = (Personaje) diccionarioEntidades.buscarEntidades("JUGADOR").get(0);
+                ei.setComportamiento(new ComportamientoPerseguir(ei, jugador));
+                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 1, 50), new Vector3f());
+                break;
+            }
+            case "tiraBolas": {
                 EntidadInteligente ei = new EntidadInteligente("objetosMDL/pixie.mdl", .5f, conjunto, juego, true);
                 ei.setComportamiento(new ComportamientoApuntar(ei));
                 ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 0, 30), new Vector3f());
                 ei.añadirTipo("ENEMIGO");
-                diccionarioEntidades.añadirEntidad(ei);
-                break; 
+                break;
+            }
+            case "jauria": {
+                Personaje jugador = (Personaje) diccionarioEntidades.buscarEntidades("JUGADOR").get(0);
+                for (int j = 0; j < 3; j++) {
+                    for (int i = 0; i < 5; i++) {
+                        EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
+                        ei.añadirTipo("ENEMIGO");
+                        ei.setComportamiento(new ComportamientoAtacar(ei, jugador));
+                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f((i - 2) * 30, 1, 500 + j * 10), new Vector3f());
+                    }
+                }
             }
         }
     }

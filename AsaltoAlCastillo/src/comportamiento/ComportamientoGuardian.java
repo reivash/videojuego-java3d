@@ -29,7 +29,7 @@ public class ComportamientoGuardian implements Comportamiento {
     }
 
     public void actualizar() {
-//        System.out.println("distancia al objetivo: " + (objetivo != null ? distancia(objetivo.posiciones, posicionInicial) : "NULL"));
+//        System.out.println("distancia al objetivo: " + (objetivo != null ? distancia(objetivo.posiciones, puntoDefendido) : "NULL"));
         if (objetivo == null) {
             if (entidadControlada.ir(puntoDefendido)) {
                 /* Estar alerta por si se acercan fuerzas hostiles */
@@ -39,6 +39,8 @@ public class ComportamientoGuardian implements Comportamiento {
                         break;
                     }
                 }
+            } else {
+//                System.out.println("Volviendo al punto defendido");
             }
         } else {
             if (distancia(objetivo.posiciones, puntoDefendido) > maximaDistanciaPerseguir) {

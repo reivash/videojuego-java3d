@@ -6,28 +6,19 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
-import com.sun.j3d.utils.image.TextureLoader;
 import eventos.Evento;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
-import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Font3D;
-import javax.media.j3d.FontExtrusion;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.Text3D;
-import javax.media.j3d.Texture;
-import javax.media.j3d.TextureAttributes;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.vecmath.Matrix3f;
-import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import main.Juego;
 import util.Log;
+import static util.Maths.distancia;
 
 public abstract class Entidad extends Log {
 
@@ -67,7 +58,7 @@ public abstract class Entidad extends Log {
     public boolean esMDL;
 
     /* Visión */
-    private float epsilon = .05f;
+    private float epsilon = .1f;
 
     /* Muere al llamarse el método remover */
     protected boolean muerto = false;
@@ -209,6 +200,9 @@ public abstract class Entidad extends Log {
     }
 
     public boolean mirarA(float[] p) {
+//        if(distancia(posiciones, p) < 1) return true;
+
+       
         if (!estaMirando(p)) {
             Vector3f direccionAlPunto = new Vector3f(
                     p[0] - posiciones[0],
@@ -218,24 +212,23 @@ public abstract class Entidad extends Log {
             direccionAlPunto.normalize();
 
             float[] a = new float[]{
-                posiciones[0] + direccionAlPunto.x,
-                posiciones[1] + direccionAlPunto.y,
-                posiciones[2] + direccionAlPunto.z
+                direccionAlPunto.x,
+                0,
+                direccionAlPunto.z
             };
 
             Vector3f direccionVista = direccionFrontal();
+            direccionVista.normalize();
             float[] b = new float[]{
-                posiciones[0] + direccionVista.x,
-                posiciones[1] + direccionVista.y,
-                posiciones[2] + direccionVista.z
+                direccionVista.x,
+                0,
+                direccionVista.z
             };
 
-            Vector3f distancia = new Vector3f(a[0] - b[0], 0, a[2] - b[2]);
-
             /* From: http://math.stackexchange.com/questions/74307/two-2d-vector-angle-clockwise-predicate */
-            float c = direccionAlPunto.x * direccionVista.z 
+            float c = direccionAlPunto.x * direccionVista.z
                     - direccionAlPunto.z * direccionVista.x;
-            
+
             if (c > 0) {
                 velocidad_angular.y += 5;
             } else {
@@ -265,30 +258,34 @@ public abstract class Entidad extends Log {
         direccionAlPunto.normalize();
 
         float[] a = new float[]{
-            posiciones[0] + direccionAlPunto.x,
-            posiciones[1] + direccionAlPunto.y,
-            posiciones[2] + direccionAlPunto.z
+            direccionAlPunto.x,
+            0,
+            direccionAlPunto.z
         };
 
         Vector3f direccionVista = direccionFrontal();
+        direccionVista.normalize();
+
         float[] b = new float[]{
-            posiciones[0] + direccionVista.x,
-            posiciones[1] + direccionVista.y,
-            posiciones[2] + direccionVista.z
+            direccionVista.x,
+            0,
+            direccionVista.z
         };
 
         Vector3f distancia = new Vector3f(a[0] - b[0], 0, a[2] - b[2]);
 
 //        System.out.println("a: (" + a[0] + ", " + a[2] + ")");
 //        System.out.println("b: (" + b[0] + ", " + b[2] + ")");
-//        System.out.println("Distancia: " + distancia.length());
+//        System.out.println("Distancia angular (recta): " + distancia.length());
         boolean res = distancia.length() < epsilon;
+
         if (res) {
             /* Eliminamos velocidad de rotación en Y si estamos mirándole */
             Vector3f angularVelocity = new Vector3f();
             cuerpoRigido.getAngularVelocity(angularVelocity);
             angularVelocity.y = 0;
             cuerpoRigido.setAngularVelocity(angularVelocity);
+//            System.out.println("Está mirando");
         }
         return res;
     }

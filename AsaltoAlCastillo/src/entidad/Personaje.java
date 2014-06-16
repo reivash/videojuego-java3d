@@ -37,18 +37,18 @@ public class Personaje extends Entidad {
 
     /* Sistema vida */
     public int vida = 100;
-    
+
     /* Booleano de tener el tesoro */
     public boolean tieneTesoro = false;
 
     /* Sistema de ataque */
     protected float distanciaAtaque = 7f;
     protected float dañoAtaque = 40;
-    protected float intervaloAtaque = 15;
+    protected float intervaloAtaque = 40;
     protected float siguienteAtaque = 0;
 
     /* No tienes porque estar exactamente en la posición a la que vas */
-    private float epsilonIr = 5f;
+    private float epsilonIr = 7f;
 
     public Personaje(String ficheroMDL,
             float radio,
@@ -73,11 +73,15 @@ public class Personaje extends Entidad {
         //nombre = "figura_MDL_" + identificador;
         //Sphere figuraVisual = new Sphere(radio);
         TransformGroup figuraVisual = crearObjetoMDL(ficheroMDL, radio * 2);
-        SphereShape figuraFisica = new SphereShape(radio);
+        SphereShape figuraFisica = new SphereShape(radio*2f);
         ramaFisica = new CollisionObject();
         ramaFisica.setCollisionShape(figuraFisica);
         ramaVisible.addChild(desplazamiento);
         desplazamiento.addChild(figuraVisual);
+        ab.setSchedulingBounds(new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0));
+        
+        ab.setAnimationTimeScale(.6f);
+
     }
 
     public TransformGroup crearObjetoMDL(String archivo, float multiplicadorEscala) {
@@ -96,8 +100,9 @@ public class Personaje extends Entidad {
             CapabilitiesMDL.setCapabilities(RamaMDL, this.identificadorFigura);
             //Para cada Objeto MDL dar nombre las animaciones de la figura. Dar rotaciones a la figuraMDL (suelen venir giradas)
             ab = (AnimationBehavior) escenaPersonaje1.getNamedObjects().get("AnimationBehavior");
+            
             if (archivo.equals("objetosMDL/Iron_Golem.mdl")) {
-                nombreAnimacionCorriendo = "iron_golem:cwalk";
+                nombreAnimacionCorriendo = "iron_golem:crun";
                 nombreAnimacionCaminando = "iron_golem:cwalk";
                 nombreAnimacionQuieto = "iron_golem:cpause1";
                 nombreAnimacionLuchando = "iron_golem:ca1slashl";
@@ -109,7 +114,7 @@ public class Personaje extends Entidad {
                 alturaDeOjos = alturaP;
             }
             if (archivo.equals("objetosMDL/Doomknight.mdl")) {
-                nombreAnimacionCaminando = "Doomknight:crun";
+                nombreAnimacionCorriendo = "Doomknight:crun";
                 nombreAnimacionCaminando = "Doomknight:cwalk";
                 nombreAnimacionQuieto = "Doomknight:cpause1";
                 rotacionX = -1.5f;
@@ -120,7 +125,7 @@ public class Personaje extends Entidad {
                 desplazamientoY = -1f;
             }
             if (archivo.equals("objetosMDL/Dire_Cat.mdl")) {
-                nombreAnimacionCaminando = "dire_cat:crun";
+                nombreAnimacionCorriendo = "dire_cat:crun";
                 nombreAnimacionCaminando = "dire_cat:cwalk";
                 nombreAnimacionQuieto = "dire_cat:cpause1";
                 rotacionX = -1.5f;
@@ -130,7 +135,7 @@ public class Personaje extends Entidad {
                 alturaDeOjos = alturaP * escalaTamano;
             }
             if (archivo.equals("objetosMDL/pixie.mdl")) {
-                nombreAnimacionCaminando = "pixie:crun";
+                nombreAnimacionCorriendo = "pixie:crun";
                 nombreAnimacionCaminando = "pixie:cwalk";
                 nombreAnimacionQuieto = "pixie:cpause1";
                 rotacionX = -1.5f;
@@ -141,7 +146,7 @@ public class Personaje extends Entidad {
                 alturaDeOjos = alturaP * escalaTamano;
             }
             if (archivo.equals("objetosMDL/Intellect_Devour.mdl")) {
-                nombreAnimacionCaminando = "intellect_devour:crun";
+                nombreAnimacionCorriendo = "intellect_devour:crun";
                 nombreAnimacionCaminando = "intellect_devour:cwalk";
                 nombreAnimacionQuieto = "intellect_devour:cpause1";
                 nombreAnimacionLuchando = "intellect_devour:ca1slashl";
@@ -274,6 +279,75 @@ public class Personaje extends Entidad {
         }
     }
 
+
+    /* Sólo tiene en cuenta la dirección en el plano XZ */
+    public boolean ir(float[] p) {
+
+//        System.out.println("");
+        if (distancia(posiciones, p) < epsilonIr) {
+            /* Nos paramos */
+//            System.out.println("Punto alcanzado");
+            cuerpoRigido.setLinearVelocity(new Vector3f(0, 0, 0));
+            return true;
+        }
+
+        /* Si no estamos mirando en la dirección giramos */
+        if (mirarA(p)) {
+            /* Cogemos la dirección y nos movemos a nuestra velocidad */
+            Vector3f dir = new Vector3f(p[0] - posiciones[0], p[1] - posiciones[1], p[2] - posiciones[2]);
+            if (dir.x > 0 || dir.y > 0 || dir.z > 0) {
+                dir.normalize();
+                dir.y = 0; // Para no aplicar fuerzas verticales
+                dir.scale(velocidad_movimiento);
+                cuerpoRigido.applyCentralForce(dir);
+            }
+        } else {
+//            System.out.println("Mirando al punto destino");
+        }
+        /* Devolvemos false si aún no estabamos ahí */
+//                System.out.println("animacionActual: " + animacionActual + " nombreAnimacionCorriendo: " + nombreAnimacionCorriendo);
+        if (!animacionActual.equals(nombreAnimacionCorriendo)) {
+            ab.playAnimation(nombreAnimacionCorriendo, true);
+//            System.out.println("Reproduciendo animación de correr");
+            animacionActual = nombreAnimacionCorriendo;
+        }
+        accionRealizada = true;
+        return false;
+    }
+
+    public void atacar(Personaje objetivo) {
+        /* Si el objetivo está lejos nos acercamos */
+        if (ir(objetivo.posiciones) && mirarA(objetivo.posiciones)) {
+//            System.out.println("[Atacar] Esperando a que se pueda atacar");
+            /* Si hemos atacado recientemente nos esperamos */
+            if (siguienteAtaque <= 0) {
+                Evento e = new Evento();
+                e.setComando("dañar");
+                e.setValor(dañoAtaque);
+                objetivo.procesarEvento(e);
+//                System.out.println("Ataque realizado!");
+                siguienteAtaque = intervaloAtaque;
+                ab.playAnimation(nombreAnimacionLuchando, false);
+                accionRealizada = true;
+            }
+            cuerpoRigido.setLinearVelocity(new Vector3f());
+        } else {
+//            System.out.println("[Atacar] Mirando al objetivo");
+        }
+    }
+
+    public void procesarEvento(Evento e) {
+        switch (e.getComando()) {
+            case "dañar":
+                vida -= e.getValor();
+                if (vida <= 0) {
+                    remover();
+                }
+//                System.out.println("La entidad con etiquetas: " + etiquetas.toString() + " ha perdido todos sus puntos de vida");
+                break;
+        }
+    }
+
     @Override
     public void actualizar() {
         super.actualizar();
@@ -300,66 +374,10 @@ public class Personaje extends Entidad {
         if (siguienteAtaque > 0) {
             siguienteAtaque--;
         }
-        
-        if(etiquetas.contains("JUGADOR")){
-            System.out.println("Jugador (x,z) = (" + posiciones[0] + ", " + posiciones[2] + ")");
-        }
+
+//        if(etiquetas.contains("JUGADOR")){
+//            System.out.println("Jugador (x,z) = (" + posiciones[0] + ", " + posiciones[2] + ")");
+//        }
     }
 
-    /* Sólo tiene en cuenta la dirección en el plano XZ */
-    public boolean ir(float[] p) {
-
-        if (distancia(posiciones, p) < epsilonIr) {
-            /* Nos paramos */
-            System.out.println("Punto alcanzado");
-            cuerpoRigido.setLinearVelocity(new Vector3f(0, 0, 0));
-            return true;
-        }
-
-        /* Si no estamos mirando en la dirección giramos */
-        if (!estaMirando(p)) {
-            mirarA(p);
-        } else {
-            /* Cogemos la dirección y nos movemos a nuestra velocidad */
-            Vector3f dir = new Vector3f(p[0] - posiciones[0], p[1] - posiciones[1], p[2] - posiciones[2]);
-            if (dir.x > 0 || dir.y > 0 || dir.z > 0) {
-                dir.normalize();
-                dir.y = 0; // Para no aplicar fuerzas verticales
-                dir.scale(velocidad_movimiento);
-                cuerpoRigido.applyCentralForce(dir);
-            }
-        }
-        /* Devolvemos false si aún no estabamos ahí */
-        return false;
-    }
-
-    public void atacar(Personaje objetivo) {
-        /* Si el objetivo está lejos nos acercamos */
-        if (ir(objetivo.posiciones) && mirarA(objetivo.posiciones)) {
-            System.out.println("[Atacar] Esperando a que se pueda atacar");
-            /* Si hemos atacado recientemente nos esperamos */
-            if (siguienteAtaque <= 0) {
-                Evento e = new Evento();
-                e.setComando("dañar");
-                e.setValor(dañoAtaque);
-                objetivo.procesarEvento(e);
-                System.out.println("Ataque realizado!");
-            }
-            cuerpoRigido.setLinearVelocity(new Vector3f());
-        } else {
-            System.out.println("[Atacar] Mirando al objetivo");
-        }
-    }
-
-    public void procesarEvento(Evento e) {
-        switch (e.getComando()) {
-            case "dañar":
-                vida -= e.getValor();
-                if (vida <= 0) {
-                    remover();
-                }
-                System.out.println("La entidad con etiquetas: " + etiquetas.toString() + " ha perdido todos sus puntos de vida");
-                break;
-        }
-    }
 }
