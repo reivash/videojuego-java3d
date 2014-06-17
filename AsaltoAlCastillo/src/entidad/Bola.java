@@ -78,7 +78,7 @@ public class Bola extends Entidad {
                 if(weka!=null){
                     weka.fijarAprendizaje(fuerzaInicial, distancia.length());
                 }
-                float[] posComprobar = {posicion.x, posicion.y, posicion.z};
+                float[] posComprobar = {nuevaPos.x, nuevaPos.y, nuevaPos.z};
                 float dist  = Maths.distancia(juego.getJugador().posiciones, posComprobar);
                 if(dist<=radioDeteccion){
                     Evento e = new Evento();
