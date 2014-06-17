@@ -368,6 +368,9 @@ public class Personaje extends Entidad {
                 if (ent.getId().equals(id)) {
                     continue;
                 }
+                if(ent instanceof Bola){
+                    continue;
+                }
                 brazoPoderoso = new Vector3f(
                         ent.posiciones[0] - posiciones[0],
                         ent.posiciones[1] - posiciones[1],
