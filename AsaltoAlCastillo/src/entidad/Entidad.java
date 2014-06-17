@@ -311,8 +311,8 @@ public abstract class Entidad extends Log {
 
     public void mostrar() {
 
-        CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
-        RigidBody cuerpoRigido = RigidBody.upcast(objeto);
+        //CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
+        //RigidBody cuerpoRigido = RigidBody.upcast(objeto);
 
         if (cuerpoRigido != null && cuerpoRigido.getMotionState() != null) {
             Transform trans = new Transform();
