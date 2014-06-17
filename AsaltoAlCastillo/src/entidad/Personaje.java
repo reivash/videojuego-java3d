@@ -22,6 +22,7 @@ import util.Sonido;
 
 public class Personaje extends Entidad {
     public static final long TIEMPO_ENTRE_SALTOS = 1000;
+    public static final long TIEMPO_ENTRE_ATAQUES = 500;
     
     /* Animación */
     public Scene escenaPersonaje1;
@@ -41,8 +42,9 @@ public class Personaje extends Entidad {
     /* Sistema vida */
     public int vida = 100;
 
-    /* Control de los saltos */
+    /* Control de los tiempos de espera */
     private long ultimoSalto;
+    private long ultimoAtaque;
     
     /* Booleano de tener el tesoro */
     public boolean tieneTesoro = false;
@@ -285,6 +287,7 @@ public class Personaje extends Entidad {
                     break;
                 }
                 case "atacar": {
+                    if(ultimoAtaque + TIEMPO_ENTRE_ATAQUES <= System.currentTimeMillis()){
                     log("Atacando");
                     ataqueArea();
 
@@ -296,6 +299,7 @@ public class Personaje extends Entidad {
 ////                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
 //                        }
 //                    }
+                    }
                     break;
                 }
                 /* Porque puedo */

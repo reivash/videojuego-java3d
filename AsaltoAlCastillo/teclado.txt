@@ -31,7 +31,7 @@
 		TipoObjetivo = 'jugador';
 		Comando = 'atacar';
 	}
-	"f"
+	"espacio"
 	{
 		TipoObjetivo = 'jugador';
 		Comando = 'saltar';
