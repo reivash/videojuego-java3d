@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
         <file>
             <url>src/entidad/EntidadInteligente.java</url>
             <bookmark id="1">
                 <name/>
-                <line>13</line>
+                <line>11</line>
+                <key/>
+            </bookmark>
+        </file>
+        <file>
+            <url>src/entidad/DiccionarioEntidades.java</url>
+            <bookmark id="2">
+                <name/>
+                <line>146</line>
                 <key/>
             </bookmark>
         </file>
@@ -22,8 +30,8 @@
         </group>
         <group name="ProgVideojuegos">
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/FactoriaEntidades.java</file>
-            <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/main/Juego.java</file>
             <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/entidad/Personaje.java</file>
+            <file>file:/D:/Repo/TrabajoVideojuegos/AsaltoAlCastillo/src/main/Juego.java</file>
         </group>
     </open-files>
 </project-private>
