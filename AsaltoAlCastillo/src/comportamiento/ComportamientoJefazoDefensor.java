@@ -11,6 +11,7 @@ public class ComportamientoJefazoDefensor implements Comportamiento {
     private static DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
 
     private EntidadInteligente entidadControlada = null;
+
     private float minimaDistanciaDefensa = 50f;
 
     /* El jefe tiene una vista de halcón y ve los enemigos antes */
@@ -50,8 +51,11 @@ public class ComportamientoJefazoDefensor implements Comportamiento {
             d = distancia(per.posiciones, entidadControlada.posiciones);
 //            System.out.println("Comprobando personaje con etiquetas " + per.getEtiquetas() + " distancia al jefe: " + d);
             /* Si los enemigos han cruzado el perímetro enviamos dos soldados */
+            if (d < entidadControlada.getDistanciaAtaque()) {
+                entidadControlada.atacar(per);
+            }
             if (d < minimaDistanciaDefensa) {
-                System.out.println("Enemigo dentro del perímetro interno!");
+//                System.out.println("Enemigo dentro del perímetro interno!");
                 /* Si un enemigo está demasiado cerca todos deben atacarle */
                 for (EntidadInteligente entInt : escuadron) {
                     entInt.setComportamiento(new ComportamientoAtacar(entInt, per));

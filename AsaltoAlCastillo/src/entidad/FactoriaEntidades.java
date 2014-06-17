@@ -3,6 +3,7 @@ package entidad;
 import comportamiento.ComportamientoApuntar;
 import comportamiento.ComportamientoAtacar;
 import comportamiento.ComportamientoJefazoDefensor;
+import comportamiento.ComportamientoPatrullar;
 import comportamiento.ComportamientoPerseguir;
 import comportamiento.ComportamientoRangoAtacar;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class FactoriaEntidades {
                         ei = new EntidadInteligente("objetosMDL/Iron_Golem_Bl.mdl", .5f, conjunto, juego, true);
                         ei.añadirTipo("ENEMIGO");
                         ei.setComportamiento(new ComportamientoRangoAtacar(ei, 256));
-                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(i * 5 - 10, 1, 100 - j*5), new Vector3f(0, (float)Math.PI, 0));
+                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(i * 5 - 10, 1, 100 - j * 5), new Vector3f(0, (float) Math.PI, 0));
                         ei.setDañoAtaque(10);
                         ei.setVida(50);
                         escuadron.add(ei);
@@ -87,11 +88,33 @@ public class FactoriaEntidades {
                 EntidadInteligente jefazo = new EntidadInteligente("objetosMDL/Iron_Golem_Yel.mdl", 1f, conjunto, juego, true);
                 jefazo.añadirTipo("ENEMIGO");
                 jefazo.setComportamiento(new ComportamientoJefazoDefensor(jefazo, escuadron));
-                jefazo.crearPropiedades(2.5f, elasticidad, dampingLineal, new Vector3f(0, 1, 105), new Vector3f(0, (float)Math.PI, 0));
+                jefazo.crearPropiedades(2.5f, elasticidad, dampingLineal, new Vector3f(0, 1, 105), new Vector3f(0, (float) Math.PI, 0));
                 jefazo.setVida(300);
                 jefazo.setIntervaloAtaque(10);
                 jefazo.setDañoAtaque(20);
 
+                break;
+            }
+            case "patrullaCastillo": {
+
+                {
+                    float[] p1 = new float[]{-80, 0, 110};
+                    float[] p2 = new float[]{80, 0, 110};
+                    EntidadInteligente ei = new EntidadInteligente("objetosMDL/Iron_Golem_Bl.mdl", .7f, conjunto, juego, true);
+                    ei.añadirTipo("ENEMIGO");
+                    ei.setComportamiento(new ComportamientoPatrullar(ei, p1, p2));
+                    ei.crearPropiedades(3, elasticidad, dampingLineal, new Vector3f(5, 1, 110), new Vector3f(0, 0, 0));
+                    ei.setDañoAtaque(15);
+                }
+                {
+                    float[] p1 = new float[]{-80, 0, 115};
+                    float[] p2 = new float[]{80, 0, 115};
+                    EntidadInteligente ei = new EntidadInteligente("objetosMDL/Iron_Golem_Bl.mdl", .7f, conjunto, juego, true);
+                    ei.añadirTipo("ENEMIGO");
+                    ei.setComportamiento(new ComportamientoPatrullar(ei, p2, p1));
+                    ei.crearPropiedades(3, elasticidad, dampingLineal, new Vector3f(-5, 1, 115), new Vector3f(0, 0, 0));
+                    ei.setDañoAtaque(15);
+                }
                 break;
             }
         }

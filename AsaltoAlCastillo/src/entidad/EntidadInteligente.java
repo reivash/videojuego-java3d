@@ -26,7 +26,7 @@ public class EntidadInteligente extends Personaje {
 
         if (!muerto && vida <= 0) {
             muerto = true;
-            
+
             /* Tumbar */
             Transform trans = new Transform();
             Quat4f rotacion = new Quat4f();
@@ -51,6 +51,10 @@ public class EntidadInteligente extends Personaje {
 
     void setDañoAtaque(int i) {
         this.dañoAtaque = i;
+    }
+
+    public float getDistanciaAtaque() {
+        return distanciaAtaque;
     }
 
 }

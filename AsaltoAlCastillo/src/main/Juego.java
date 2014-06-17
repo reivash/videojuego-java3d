@@ -227,7 +227,7 @@ public class Juego extends JFrame {
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 //        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
         FactoriaEntidades.crearEntidad("escuadron01", conjunto, this);
-
+          FactoriaEntidades.crearEntidad("patrullaCastillo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
@@ -246,8 +246,8 @@ public class Juego extends JFrame {
 //        CreadorDeEstructuras.crearTorre(new Vector3f(+200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Torres del castillo delanteras */
-//        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
-//        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(+100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Muros traseros */
         float alturaMuros = 15f;
@@ -257,8 +257,8 @@ public class Juego extends JFrame {
 //        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset*1.05f, 0, 400), new Vector3f(radioTorre / 2 + offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
 //
 //        /* Muros delanteros */
-//        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
-//        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
 //
 //        /* Muros laterales */
 //        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
