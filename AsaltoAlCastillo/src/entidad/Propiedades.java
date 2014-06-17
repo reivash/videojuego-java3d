@@ -30,7 +30,8 @@ public class Propiedades {
     }
     
     public void registrar(){
-        entidad.crearPropiedades(masa, elasticidad, dampingLineal, centro, new Vector3f());
         entidad.velocidad_lineal = fuerza;
+        entidad.crearPropiedades(masa, elasticidad, dampingLineal, centro, new Vector3f()); 
+        entidad.empujar(fuerza);
     }
 }
