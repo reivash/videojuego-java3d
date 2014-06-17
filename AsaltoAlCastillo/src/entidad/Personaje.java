@@ -383,6 +383,7 @@ public class Personaje extends Entidad {
     public void procesarEvento(Evento e) {
         switch (e.getComando()) {
             case "dañar":
+                Sonido.reproducirSonido("scream");
                 vida -= e.getValor();
 //                System.out.println("La entidad con etiquetas: " + etiquetas.toString() + " ha perdido todos sus puntos de vida");
                 break;
