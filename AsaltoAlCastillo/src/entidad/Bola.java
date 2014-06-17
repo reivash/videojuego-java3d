@@ -68,6 +68,9 @@ public class Bola extends Entidad {
         super.actualizar();
         Vector3f nuevaPos = new Vector3f();
         cuerpoRigido.getCenterOfMassPosition(nuevaPos);
+        if (nuevaPos.y - radio < 0.01f){
+            cuerpoRigido.setLinearVelocity(new Vector3f());
+        }
         posicion.sub(nuevaPos);
         if (posicion.length() < DISTANCIA_MINIMA_ACTIVA) {
             framesComprobados++;
@@ -77,6 +80,7 @@ public class Bola extends Entidad {
                 distancia.sub(posicionInicial, nuevaPos);
                 if(weka!=null){
                     weka.fijarAprendizaje(fuerzaInicial, distancia.length());
+                    System.out.println("Aprendiendo: " + distancia.length() + ", " + fuerzaInicial);
                 }
                 float[] posComprobar = {nuevaPos.x, nuevaPos.y, nuevaPos.z};
                 float dist  = Maths.distancia(juego.getJugador().posiciones, posComprobar);

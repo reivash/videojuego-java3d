@@ -57,7 +57,7 @@ public abstract class Entidad extends Log {
     public boolean esMDL;
 
     /* Visión */
-    private float epsilon = .1f;
+    private float epsilon = .05f;
 
     /* Muere al llamarse el método remover */
     protected boolean muerto = false;
@@ -118,7 +118,8 @@ public abstract class Entidad extends Log {
 
         //A–adiendo objetoVisual asociado al grafo de escea y a la lista de objetos fisicos visibles y situandolo
         branchGroup.addChild(ramaVisible);
-        diccionarioEntidades.añadirEntidad(this);
+        //diccionarioEntidades.añadirEntidad(this);
+        diccionarioEntidades.encolar(this);
 
         //Presentaci—n inicial de la  figura visual asociada al cuerpo rigido
         Transform3D inip = new Transform3D();

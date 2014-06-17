@@ -15,7 +15,7 @@ public class DiccionarioEntidades {
 
     private Map<String, List<String>> mapHostilidades = new HashMap<String, List<String>>();
     private List<Entidad> colaEliminacion = new ArrayList<Entidad>();
-    private List<Propiedades> colaCreacion = new ArrayList<Propiedades>();
+    private List<Entidad> colaCreacion = new ArrayList<Entidad>();
     private Integer index = new Integer(0);
 
     private List<Disparador> disparadores = new ArrayList<Disparador>();
@@ -39,13 +39,21 @@ public class DiccionarioEntidades {
         disparadores.add(d);
     }
 
-    public void encolar(Propiedades propiedades) {
-        colaCreacion.add(propiedades);
+    public void encolar(Entidad entidad) {
+        if(!colaCreacion.contains(entidad)){
+            colaCreacion.add(entidad);
+        }
     }
 
     public void creaEncolados() {
-        for (Propiedades p : colaCreacion) {
+        /*for (Propiedades p : colaCreacion) {
             p.registrar();
+        }*/
+        if(colaCreacion.size()!=0){
+            System.out.println(">> Tam. cola creación: " + colaCreacion.size());
+        }
+        for (Entidad e : colaCreacion){
+            añadirEntidad(e);
         }
         colaCreacion.clear();
     }
@@ -128,6 +136,9 @@ public class DiccionarioEntidades {
     }
 
     public void eliminarEncolados() {
+        if(colaEliminacion.size()!=0){
+            System.out.println(">> Tam. cola eliminación: " + colaEliminacion.size());
+        }
         for (Entidad e : colaEliminacion) {
             e.remover();
         }
@@ -135,7 +146,9 @@ public class DiccionarioEntidades {
     }
 
     public void marcarParaEliminar(Entidad e) {
-        colaEliminacion.add(e);
+        if(!colaEliminacion.contains(e)){
+           colaEliminacion.add(e); 
+        }
     }
 
     public Iterable<Personaje> getPersonajesHostiles(Entidad objetivo) {
