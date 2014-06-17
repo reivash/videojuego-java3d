@@ -59,9 +59,12 @@ public class ComportamientoApuntar implements Comportamiento {
                         desplazamiento.scale(10f);
                         vectorPosicion.add(desplazamiento);
                         vectorPosicion.y = entidadControlada.alturaDeOjos/2f;
-                        Propiedades propiedades = new Propiedades(bolazo, 1, 0, 0.5f, vectorPosicion, vectorFuerza);
+                        //Propiedades propiedades = new Propiedades(bolazo, 1, 0, 0.5f, vectorPosicion, vectorFuerza);
                         bolazo.setWeka(weka, fuerzaEstimada, vectorPosicion);
-                        diccionarioEntidades.encolar(propiedades);
+                        //diccionarioEntidades.encolar(propiedades);
+                        bolazo.crearPropiedades(1, 0, 0.5f, vectorPosicion, vectorFuerza);
+                        diccionarioEntidades.encolar(bolazo);
+                        bolazo.empujar(vectorFuerza);
                         System.out.println("Bolillazo");
                         tiempoUltimoAtaque = System.currentTimeMillis();
                     }
