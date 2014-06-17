@@ -21,7 +21,8 @@ import static util.Maths.distancia;
 import util.Sonido;
 
 public class Personaje extends Entidad {
-
+    public static final long TIEMPO_ENTRE_SALTOS = 1000;
+    
     /* Animación */
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
@@ -40,6 +41,9 @@ public class Personaje extends Entidad {
     /* Sistema vida */
     public int vida = 100;
 
+    /* Control de los saltos */
+    private long ultimoSalto;
+    
     /* Booleano de tener el tesoro */
     public boolean tieneTesoro = false;
 
@@ -295,9 +299,18 @@ public class Personaje extends Entidad {
                     break;
                 }
                 /* Porque puedo */
-                case "volar": {
-                    log("Volando");
-                    velocidad_lineal.y += 200;
+                case "saltar": {
+                    if(ultimoSalto + TIEMPO_ENTRE_SALTOS <= System.currentTimeMillis()){
+                        log("Saltando");
+                        velocidad_lineal.y += 512;
+                        ultimoSalto = System.currentTimeMillis();
+                    }
+                    
+                    break;
+                }
+                case "salir": {
+                    log("Cerrando");
+                    System.exit(0);
                     break;
                 }
             }

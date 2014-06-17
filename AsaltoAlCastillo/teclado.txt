@@ -34,7 +34,12 @@
 	"f"
 	{
 		TipoObjetivo = 'jugador';
-		Comando = 'volar';
+		Comando = 'saltar';
+	}
+	"escape"
+	{
+		TipoObjetivo = 'jugador';
+		Comando = 'salir';
 	}
 }
 
