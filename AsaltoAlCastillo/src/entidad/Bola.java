@@ -10,6 +10,7 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 import main.Juego;
 import util.Maths;
+import util.Sonido;
 import util.Weka;
 
 public class Bola extends Entidad {
@@ -57,7 +58,7 @@ public class Bola extends Entidad {
         this.branchGroup = conjunto;
     }
 
-    public void setWeka (Weka _weka, double fuerza){
+    public void setWeka (Weka _weka, double fuerza, Vector3f posicion){
         weka = _weka;
         fuerzaInicial = fuerza;
         posicionInicial = posicion;
@@ -71,12 +72,13 @@ public class Bola extends Entidad {
         if (posicion.length() < DISTANCIA_MINIMA_ACTIVA) {
             framesComprobados++;
             if (framesComprobados >= NUMERO_FRAMES_COMPROBAR) {
+                Sonido.reproducirSonido("explosion");
                 Vector3f distancia = new Vector3f(0,0,0);
-                distancia.sub(posicionInicial, posicion);
+                distancia.sub(posicionInicial, nuevaPos);
                 if(weka!=null){
                     weka.fijarAprendizaje(fuerzaInicial, distancia.length());
                 }
-                float[] posComprobar = {posicion.x, posicion.y, posicion.z};
+                float[] posComprobar = {nuevaPos.x, nuevaPos.y, nuevaPos.z};
                 float dist  = Maths.distancia(juego.getJugador().posiciones, posComprobar);
                 if(dist<=radioDeteccion){
                     Evento e = new Evento();

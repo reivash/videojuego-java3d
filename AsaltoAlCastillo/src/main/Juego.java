@@ -224,7 +224,10 @@ public class Juego extends JFrame {
 //        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
 //        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
-//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        
+        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
+
 
         /* CASTILLO */
         /* Torres del castillo traseras */
@@ -324,9 +327,10 @@ public class Juego extends JFrame {
     }
 
     public void actualizar(float dt) {
+        
+        diccionarioEntidades.actualizar();
         diccionarioEntidades.eliminarEncolados();
         diccionarioEntidades.creaEncolados();
-        diccionarioEntidades.actualizar();
         /* Actualizar la física del mundo */
         try {
             mundoFisico.stepSimulation(dt);

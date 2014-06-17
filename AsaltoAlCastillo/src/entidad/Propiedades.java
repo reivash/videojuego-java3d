@@ -18,18 +18,20 @@ public class Propiedades {
     float elasticidad;
     float dampingLineal;
     Vector3f centro;
-    Vector3f rotacion;
+    Vector3f fuerza;
     
-    public Propiedades(Entidad entidad, float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f rotacion){
+    public Propiedades(Entidad entidad, float masa, float elasticidad, float dampingLineal, Vector3f centro, Vector3f fuerza){
         this.entidad = entidad;
         this.masa = masa;
         this.elasticidad = elasticidad;
         this.dampingLineal = dampingLineal;
         this.centro = centro;
-        this.rotacion = rotacion;                
+        this.fuerza = fuerza;
     }
     
     public void registrar(){
-        entidad.crearPropiedades(masa, elasticidad, dampingLineal, centro, rotacion);
+        entidad.velocidad_lineal = fuerza;
+        entidad.crearPropiedades(masa, elasticidad, dampingLineal, centro, new Vector3f()); 
+        entidad.empujar(fuerza);
     }
 }

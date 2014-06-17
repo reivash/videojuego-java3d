@@ -3,6 +3,7 @@ package entidad;
 import comportamiento.ComportamientoApuntar;
 import comportamiento.ComportamientoAtacar;
 import comportamiento.ComportamientoPerseguir;
+import comportamiento.ComportamientoRangoAtacar;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Vector3f;
 import main.Juego;
@@ -21,6 +22,13 @@ public class FactoriaEntidades {
 
     public static void crearEntidad(String nombre, BranchGroup conjunto, Juego juego) {
         switch (nombre) {
+            case "soldado": {
+                EntidadInteligente ei = new EntidadInteligente("objetosMDL/Iron_Golem_Bl.mdl", .5f, conjunto, juego, true);
+                ei.añadirTipo("ENEMIGO");
+                ei.setComportamiento(new ComportamientoRangoAtacar(ei,juego.getJugador(),256));
+                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(25, 1, 0), new Vector3f());
+                break;
+            }
             case "perroListo": {
                 EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
                 ei.añadirTipo("ENEMIGO");

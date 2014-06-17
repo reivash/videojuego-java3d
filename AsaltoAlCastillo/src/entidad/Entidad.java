@@ -131,7 +131,11 @@ public abstract class Entidad extends Log {
         //Actualizacion de posicion. La rotacion se empezará a actualizar en el primer movimiento (ver final del metodo mostrar(rigidBody))
         this.posiciones[0] = centro.x;
         this.posiciones[1] = centro.y;
-        this.posiciones[2] = centro.z;
+        this.posiciones[2] = centro.z;        
+    }
+    
+    public void empujar(Vector3f fuerza){
+        cuerpoRigido.applyCentralForce(fuerza);
     }
 
     public void remover() {
@@ -307,8 +311,8 @@ public abstract class Entidad extends Log {
 
     public void mostrar() {
 
-        CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
-        RigidBody cuerpoRigido = RigidBody.upcast(objeto);
+        //CollisionObject objeto = mundoFisico.getCollisionObjectArray().get(identificadorFisico); //
+        //RigidBody cuerpoRigido = RigidBody.upcast(objeto);
 
         if (cuerpoRigido != null && cuerpoRigido.getMotionState() != null) {
             Transform trans = new Transform();

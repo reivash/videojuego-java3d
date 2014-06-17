@@ -21,7 +21,9 @@ import static util.Maths.distancia;
 import util.Sonido;
 
 public class Personaje extends Entidad {
-
+    public static final long TIEMPO_ENTRE_SALTOS = 1000;
+    public static final long TIEMPO_ENTRE_ATAQUES = 500;
+    
     /* Animación */
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
@@ -40,6 +42,10 @@ public class Personaje extends Entidad {
     /* Sistema vida */
     public int vida = 100;
 
+    /* Control de los tiempos de espera */
+    private long ultimoSalto;
+    private long ultimoAtaque;
+    
     /* Booleano de tener el tesoro */
     public boolean tieneTesoro = false;
 
@@ -111,6 +117,30 @@ public class Personaje extends Entidad {
                 rotacionX = -1.5f;
                 rotacionZ = 3.14f;
                 escalaTamano = 0.65f;
+                desplazamientoY = -1f;
+                alturaP = (float) 3f * escalaTamano;
+                alturaDeOjos = alturaP;
+            }
+            if (archivo.equals("objetosMDL/Iron_Golem_Bl.mdl")) {
+                nombreAnimacionCorriendo = "iron_golem_bl:crun";
+                nombreAnimacionCaminando = "iron_golem_bl:cwalk";
+                nombreAnimacionQuieto = "iron_golem_bl:cpause1";
+                nombreAnimacionLuchando = "iron_golem_bl:ca1slashl";
+                rotacionX = -1.5f;
+                rotacionZ = 3.14f;
+                escalaTamano = 1.25f;
+                desplazamientoY = -1f;
+                alturaP = (float) 3f * escalaTamano;
+                alturaDeOjos = alturaP;
+            }
+            if (archivo.equals("objetosMDL/Iron_Golem_Yel.mdl")) {
+                nombreAnimacionCorriendo = "iron_golem_yel:crun";
+                nombreAnimacionCaminando = "iron_golem_yel:cwalk";
+                nombreAnimacionQuieto = "iron_golem_yel:cpause1";
+                nombreAnimacionLuchando = "iron_golem_yel:ca1slashl";
+                rotacionX = -1.5f;
+                rotacionZ = 3.14f;
+                escalaTamano = 1.25f;
                 desplazamientoY = -1f;
                 alturaP = (float) 3f * escalaTamano;
                 alturaDeOjos = alturaP;
@@ -257,6 +287,7 @@ public class Personaje extends Entidad {
                     break;
                 }
                 case "atacar": {
+                    if(ultimoAtaque + TIEMPO_ENTRE_ATAQUES <= System.currentTimeMillis()){
                     log("Atacando");
                     ataqueArea();
 
@@ -268,12 +299,22 @@ public class Personaje extends Entidad {
 ////                             System.out.println("este: " + cuerpoRigido.toString() + "\nOtro: " + ef.cuerpoRigido.toString() + "\n");
 //                        }
 //                    }
+                    }
                     break;
                 }
                 /* Porque puedo */
-                case "volar": {
-                    log("Volando");
-                    velocidad_lineal.y += 200;
+                case "saltar": {
+                    if(ultimoSalto + TIEMPO_ENTRE_SALTOS <= System.currentTimeMillis()){
+                        log("Saltando");
+                        velocidad_lineal.y += 512;
+                        ultimoSalto = System.currentTimeMillis();
+                    }
+                    
+                    break;
+                }
+                case "salir": {
+                    log("Cerrando");
+                    System.exit(0);
                     break;
                 }
             }
@@ -325,6 +366,9 @@ public class Personaje extends Entidad {
             Vector3f brazoPoderoso = null;
             for (Entidad ent : diccionarioEntidades.getEntidades()) {
                 if (ent.getId().equals(id)) {
+                    continue;
+                }
+                if(ent instanceof Bola){
                     continue;
                 }
                 brazoPoderoso = new Vector3f(
@@ -383,6 +427,7 @@ public class Personaje extends Entidad {
     public void procesarEvento(Evento e) {
         switch (e.getComando()) {
             case "dañar":
+                Sonido.reproducirSonido("scream");
                 vida -= e.getValor();
 //                System.out.println("La entidad con etiquetas: " + etiquetas.toString() + " ha perdido todos sus puntos de vida");
                 break;
