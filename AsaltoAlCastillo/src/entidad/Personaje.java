@@ -381,6 +381,9 @@ public class Personaje extends Entidad {
                 if (ent.getClass().equals(EntidadInteligente.class)) {
                     ((EntidadInteligente) ent).procesarEvento(e);
                 }
+                if(ent.getClass().equals(Tesoro.class)){
+                    ((Tesoro) ent).procesarEvento(e);
+                }
                 brazoPoderoso.normalize();
                 brazoPoderoso.scale(20000);
                 brazoPoderoso.y += 500;

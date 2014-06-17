@@ -66,9 +66,12 @@ public class FactoriaEntidades {
                 break;
             }
             case "tesoro": {
-                Bloque b = new Bloque(new Vector3f(10, 4, 4), "res//texturas//balon.jpg", conjunto, juego);
-                b.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 2, 350), new Vector3f());
-                b.añadirTipo("TESORO");
+//                Bloque b = new Bloque(new Vector3f(10, 4, 4), "res//texturas//balon.jpg", conjunto, juego);
+//                b.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 2, 350), new Vector3f());
+//                b.añadirTipo("TESORO");
+                Tesoro t = new Tesoro(new Vector3f(10, 4, 4), "res//texturas//balon.jpg", conjunto, juego);
+                t.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 2, 350), new Vector3f());
+                t.añadirTipo("TESORO");
                 break;
             }
             case "escuadron01": {

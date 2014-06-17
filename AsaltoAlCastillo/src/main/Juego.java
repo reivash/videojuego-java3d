@@ -49,6 +49,8 @@ public class Juego extends JFrame {
 
     private boolean partidaAcabada = false;
 
+    private boolean tesoroConseguido = false;
+
     /* Texto3D */
     private BranchGroup tituloBG = null;
     private Font3D font3d = new Font3D(new Font("Helvetica", Font.PLAIN, 2), new FontExtrusion());
@@ -124,7 +126,7 @@ public class Juego extends JFrame {
     public BranchGroup crearEscena() {
         // Gestion de rendering
         Visualizador mostrar = new Visualizador(this);
-        
+
         // Universo lógioc
         BranchGroup objRoot = new BranchGroup();
         conjunto = new BranchGroup();
@@ -136,7 +138,7 @@ public class Juego extends JFrame {
         // Añadimos el renderizado
         mostrar.setSchedulingBounds(limitesBackground);
         objRoot.addChild(mostrar);
-        
+
         /* Iluminación */
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f),
                 new Vector3f(1f, 0f, -1f));
@@ -206,10 +208,10 @@ public class Juego extends JFrame {
         jugador.setDistanciaAtaque(14);
         jugador.setIntervaloAtaque(15);
 //        System.out.println("Jugador: " + jugador);
-        
+
         /* Sonido */
         Sonido.init(conjunto, universo);
-        
+
 //        //Creando un Agente (es decir, un personaje aut—nomo) con el objetivo de perseguir al personaje controlado por teclado
 //        float fuerza_muscular = 20f;
 //        EntidadPerseguidora perseguidor;
@@ -239,10 +241,8 @@ public class Juego extends JFrame {
         FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
         FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
         FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-        
+
 //        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
-
-
         /* CASTILLO */
         /* Torres del castillo traseras */
         float radioTorre = 12f;
@@ -274,8 +274,6 @@ public class Juego extends JFrame {
         /* Prueba de bola */
 //        entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
 //        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
-
-
         /* Test de rotación de muros */
 //        for (int i = 0; i < 8; i++) {
 //            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);
@@ -291,12 +289,12 @@ public class Juego extends JFrame {
 
         /* Crear tesoro */
         FactoriaEntidades.crearEntidad("tesoro", conjunto, this);
-        
+
         /* Disparador */
         Evento evento = new Evento();
-        evento.setComando("VICTORIA");
+        evento.setComando("comprobarTesoroCogido");
         ArrayList<String> objetivos = new ArrayList<String>();
-        objetivos.add("TESORO");
+        objetivos.add("JUGADOR");
         Disparador d = new DisparadorRectangular(objetivos, this, evento, -1000, 50, 1000, -500, conjunto);
     }
 
@@ -313,6 +311,10 @@ public class Juego extends JFrame {
         return jugador;
     }
 
+    public void setTesoroConseguido(boolean b) {
+        this.tesoroConseguido = b;
+    }
+    
     public void añadirLineaAlChat(String linea) {
         ((JuegoCanvas) universo.getCanvas()).addLineToChat(linea);
     }
@@ -332,6 +334,15 @@ public class Juego extends JFrame {
                     partidaAcabada = true;
                 }
                 break;
+            case "comprobarTesoroCogido":
+                if (tesoroConseguido) {
+                    if (!partidaAcabada) {
+                        añadirTitulo("VICTORIA");
+                        partidaAcabada = true;
+                    }
+                }
+                break;
+
         }
     }
 
@@ -341,7 +352,7 @@ public class Juego extends JFrame {
     }
 
     public void actualizar(float dt) {
-                
+
         diccionarioEntidades.eliminarEncolados();
         diccionarioEntidades.creaEncolados();
         diccionarioEntidades.actualizar();
