@@ -109,7 +109,12 @@ public abstract class Entidad extends Log {
         InformacionCuerpoR.restitution = elasticidad;
 
         cuerpoRigido = new RigidBody(InformacionCuerpoR);
-        cuerpoRigido.setActivationState(RigidBody.DISABLE_DEACTIVATION);
+        // *******************************************************************
+        // *******************************************************************
+        // EXPERIMENTAL : A LO MEJOR ME HE CARGADO ALGO
+        // *******************************************************************
+        // *******************************************************************
+        //cuerpoRigido.setActivationState(RigidBody.DISABLE_DEACTIVATION);
         cuerpoRigido.setDamping(dampingLineal, 0.1f);   //a–ade m‡s (1) o menos  (0) "friccion del aire" al desplazarse/caer o rotar
         cuerpoRigido.setFriction(0.3f);
         //A–adiendo el cuerpoRigido al mundoFisico
@@ -154,7 +159,13 @@ public abstract class Entidad extends Log {
                     //ramaVisible.removeAllChildren();
                     ramaVisible.detach();
                     System.out.println("Eliminando: " + identificadorFigura);
-                    mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
+                    
+                    // *******************************************************************
+                    // *******************************************************************
+                    // EXPERIMENTAL : A LO MEJOR ME HE CARGADO ALGO
+                    // *******************************************************************
+                    // *******************************************************************
+                    //mundoFisico.getCollisionObjectArray().remove(identificadorFisico);
                     mundoFisico.removeRigidBody(cuerpoRigido);
                 } catch (Exception e) {
                     System.out.println("Ya eliminado");
