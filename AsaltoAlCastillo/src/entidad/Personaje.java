@@ -166,15 +166,15 @@ public class Personaje extends Entidad {
                 escalaTamano = 1f;
                 alturaDeOjos = alturaP * escalaTamano;
             }
-            if (archivo.equals("objetosMDL/pixie.mdl")) {
-                nombreAnimacionCorriendo = "pixie:crun";
-                nombreAnimacionCaminando = "pixie:cwalk";
-                nombreAnimacionQuieto = "pixie:cpause1";
+            if (archivo.equals("objetosMDL/Fire_Elemental.mdl")) {
+                nombreAnimacionCorriendo = "fire_elemental:crun";
+                nombreAnimacionCaminando = "fire_elemental:cwalk";
+                nombreAnimacionQuieto = "fire_elemental:cpause1";
                 rotacionX = -1.5f;
                 rotacionZ = 3.14f;
                 alturaP = 0.4f;
-                escalaTamano = 12.0f;
-                desplazamientoY = -11.5f;
+                escalaTamano = 2.0f;
+                desplazamientoY = 0.5f;
                 alturaDeOjos = alturaP * escalaTamano;
             }
             if (archivo.equals("objetosMDL/Intellect_Devour.mdl")) {

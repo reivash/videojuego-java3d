@@ -47,7 +47,7 @@ public class FactoriaEntidades {
                 break;
             }
             case "tiraBolas": {
-                EntidadInteligente ei = new EntidadInteligente("objetosMDL/pixie.mdl", .5f, conjunto, juego, true);
+                EntidadInteligente ei = new EntidadInteligente("objetosMDL/Fire_Elemental.mdl", .5f, conjunto, juego, true);
                 ei.setComportamiento(new ComportamientoApuntar(ei));
                 ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 0, 30), new Vector3f());
                 ei.añadirTipo("ENEMIGO");
