@@ -40,13 +40,18 @@ public class DiccionarioEntidades {
     }
 
     public void encolar(Entidad entidad) {
-        colaCreacion.add(entidad);
+        if(!colaCreacion.contains(entidad)){
+            colaCreacion.add(entidad);
+        }
     }
 
     public void creaEncolados() {
         /*for (Propiedades p : colaCreacion) {
             p.registrar();
         }*/
+        if(colaCreacion.size()!=0){
+            System.out.println(">> Tam. cola creación: " + colaCreacion.size());
+        }
         for (Entidad e : colaCreacion){
             añadirEntidad(e);
         }
@@ -131,6 +136,9 @@ public class DiccionarioEntidades {
     }
 
     public void eliminarEncolados() {
+        if(colaEliminacion.size()!=0){
+            System.out.println(">> Tam. cola eliminación: " + colaEliminacion.size());
+        }
         for (Entidad e : colaEliminacion) {
             e.remover();
         }
@@ -138,7 +146,9 @@ public class DiccionarioEntidades {
     }
 
     public void marcarParaEliminar(Entidad e) {
-        colaEliminacion.add(e);
+        if(!colaEliminacion.contains(e)){
+           colaEliminacion.add(e); 
+        }
     }
 
     public Iterable<Personaje> getPersonajesHostiles(Entidad objetivo) {

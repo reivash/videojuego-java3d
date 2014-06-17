@@ -226,6 +226,10 @@ public class Juego extends JFrame {
 //        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
         
         FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        
         FactoriaEntidades.crearEntidad("soldado", conjunto, this);
 
 
