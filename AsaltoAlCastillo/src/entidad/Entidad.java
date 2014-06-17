@@ -57,7 +57,7 @@ public abstract class Entidad extends Log {
     public boolean esMDL;
 
     /* Visión */
-    private float epsilon = .1f;
+    private float epsilon = .05f;
 
     /* Muere al llamarse el método remover */
     protected boolean muerto = false;

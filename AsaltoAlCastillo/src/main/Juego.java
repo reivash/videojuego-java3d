@@ -336,6 +336,7 @@ public class Juego extends JFrame {
             mundoFisico.stepSimulation(dt);
         } catch (Exception e) {
             System.out.println("JBullet forzado. No debe crearPropiedades de solidoRigidos durante la actualizacion stepSimulation");
+            e.printStackTrace();
         }
 
         tiempoJuego = tiempoJuego + dt;
