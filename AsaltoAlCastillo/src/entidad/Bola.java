@@ -10,6 +10,7 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 import main.Juego;
 import util.Maths;
+import util.Sonido;
 import util.Weka;
 
 public class Bola extends Entidad {
@@ -71,6 +72,7 @@ public class Bola extends Entidad {
         if (posicion.length() < DISTANCIA_MINIMA_ACTIVA) {
             framesComprobados++;
             if (framesComprobados >= NUMERO_FRAMES_COMPROBAR) {
+                Sonido.reproducirSonido("explosion");
                 Vector3f distancia = new Vector3f(0,0,0);
                 distancia.sub(posicionInicial, nuevaPos);
                 if(weka!=null){
