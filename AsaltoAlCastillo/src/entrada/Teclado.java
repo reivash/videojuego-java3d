@@ -103,7 +103,10 @@ public class Teclado
             if(tecla.equals("escape")){
                 tecla = Character.toString((char)27);
             }
-
+            if(tecla.equals("espacio")){
+                tecla = Character.toString((char)32);
+            }
+            
             String tipoObjetivo = datosTecla.getNodeByIndex(0).asValue().getValue().getDatum().toString().toUpperCase();
             String comando = datosTecla.getNodeByIndex(1).asValue().getValue().getDatum().toString();
 
