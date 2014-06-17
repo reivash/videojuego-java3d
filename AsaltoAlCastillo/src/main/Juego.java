@@ -122,6 +122,10 @@ public class Juego extends JFrame {
     }
 
     public BranchGroup crearEscena() {
+        // Gestion de rendering
+        Visualizador mostrar = new Visualizador(this);
+        
+        // Universo lógioc
         BranchGroup objRoot = new BranchGroup();
         conjunto = new BranchGroup();
         objRoot.addChild(conjunto);
@@ -129,6 +133,10 @@ public class Juego extends JFrame {
         conjunto.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
         conjunto.setCapability(BranchGroup.ALLOW_DETACH);
 
+        // Añadimos el renderizado
+        mostrar.setSchedulingBounds(limitesBackground);
+        objRoot.addChild(mostrar);
+        
         /* Iluminación */
         DirectionalLight LuzDireccional = new DirectionalLight(new Color3f(10f, 10f, 10f),
                 new Vector3f(1f, 0f, -1f));
@@ -180,7 +188,6 @@ public class Juego extends JFrame {
     }
 
     public void cargarContenido() {
-
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float masa = 1f;
         float radio = 1f;
@@ -370,8 +377,6 @@ public class Juego extends JFrame {
             teclado.actualizar();
 
             actualizar(dt);
-            mostrar();
-
             camara.camaraAlPersonaje(jugador);
 
 //            System.out.println("Hostiles al jugador: " + diccionarioEntidades.getEntidadesHostiles(jugador));
