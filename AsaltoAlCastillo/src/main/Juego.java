@@ -47,9 +47,12 @@ public class Juego extends JFrame {
 
     private boolean peticionDeCierre = false;
 
-    private boolean partidaAcabada = false;
-
+    /* Tutorial */
+    Disparador disparadorTutorialActual = null;
+    
+    /* Nivel */
     private boolean tesoroConseguido = false;
+    private boolean partidaAcabada = false;
 
     /* Texto3D */
     private BranchGroup tituloBG = null;
@@ -228,11 +231,48 @@ public class Juego extends JFrame {
 //            perseguidor.asignarObjetivo(jugador, fuerza_muscular);   //Este objetivo de perseguir DEBE actualizado para que persiga la nueva posicion del personaje
 //            diccionarioEntidades.añadirEntidadFisica(perseguidor);
 //        }
+        /* Prueba de bola */
+//        entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
+//        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
+        /* Test de rotación de muros */
+//        for (int i = 0; i < 8; i++) {
+//            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);
+//        }
+//        for (int i = 0; i < 8; i++) {
+//            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, -20f), new Vector3f(-300f + i*100f, 0f, -400f), 10, 5, conjunto, this);
+//        }
+        /* Bloque paralelo al eje X */
+//        CreadorDeEstructuras.crearBloque(new Vector3f(), new Vector3f(20, 1, 5), new Vector3f(), conjunto, this);
+        
+        // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
+        float friccion = 4f;
+        mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
 
+        cargarTutorial();
+    }
+
+    public void cargarTutorial() {
+        añadirLineaAlChat("¡Completa el tutorial para prepararte para la batalla!");
+        añadirLineaAlChat("Utiliza A,W,S,D para moverte y ESPACIO para saltar.");
+        añadirLineaAlChat("Camina hasta el cuadrado de enfrente para continuar");
+        
+        // Tira un concurrentException porque al actualizarse crea el nivel y mete otro disparador
+        //ToDo: Arreglar
+        Evento evento = new Evento();
+        evento.setComando("cargarNivel");
+        ArrayList<String> objetivos = new ArrayList<String>();
+        objetivos.add("JUGADOR");
+        disparadorTutorialActual = new DisparadorRectangular(objetivos, this, evento, -5, -5, 5, 5, conjunto);
+        
+//        crearNivel();
+    }
+
+    public void cargarNivel() {
+        añadirLineaAlChat("Cargando nivel...");
         /* NPCs */
 //        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
-//        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
+        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 //        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
         FactoriaEntidades.crearEntidad("escuadron01", conjunto, this);
@@ -248,9 +288,9 @@ public class Juego extends JFrame {
         float radioTorre = 12f;
         int nivelesTorre = 5;
         int numPiezasNivel = 8;
-//        CreadorDeEstructuras.crearTorre(new Vector3f(0, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
-//        CreadorDeEstructuras.crearTorre(new Vector3f(-200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
-//        CreadorDeEstructuras.crearTorre(new Vector3f(+200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(0, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(-200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
+        CreadorDeEstructuras.crearTorre(new Vector3f(+200, 0f, 400), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
 //
 //        /* Torres del castillo delanteras */
         CreadorDeEstructuras.crearTorre(new Vector3f(-100, 0f, 150), radioTorre, nivelesTorre, numPiezasNivel, conjunto, this);
@@ -260,32 +300,16 @@ public class Juego extends JFrame {
         float alturaMuros = 15f;
         int numPiezas = 10;
         float offset = 15f; // Ayuda a posicionar los muros de forma que no choquen con las torres y las tiren
-//        CreadorDeEstructuras.crearMuro(new Vector3f(-200 + radioTorre / 2 + offset*1.05f, 0, 400), new Vector3f(-radioTorre / 2 - offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
-//        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset*1.05f, 0, 400), new Vector3f(radioTorre / 2 + offset*1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-200 + radioTorre / 2 + offset * 1.05f, 0, 400), new Vector3f(-radioTorre / 2 - offset * 1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(200 - radioTorre / 2 - offset * 1.05f, 0, 400), new Vector3f(radioTorre / 2 + offset * 1.1f, 0, 400), alturaMuros, numPiezas, conjunto, this);
 //
 //        /* Muros delanteros */
         CreadorDeEstructuras.crearMuro(new Vector3f(-100 + radioTorre / 2 + offset, 0f, 150), new Vector3f(-15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
         CreadorDeEstructuras.crearMuro(new Vector3f(+100 - radioTorre / 2 - offset, 0f, 150), new Vector3f(15, 0, 150), alturaMuros, numPiezas / 2, conjunto, this);
 //
 //        /* Muros laterales */
-//        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
-//        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100 , 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
-
-        /* Prueba de bola */
-//        entidad.Bola b = new entidad.Bola(1, 64, new Vector3f(-750000,500,0), "res//texturas//bola.jpg", conjunto, this);
-//        b.crearPropiedades(100, 0, dampingLineal, new Vector3f(0,0,1), new Vector3f());
-        /* Test de rotación de muros */
-//        for (int i = 0; i < 8; i++) {
-//            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, 20f), new Vector3f(-300f + i*100f, 0f, 400f), 10, 5, conjunto, this);
-//        }
-//        for (int i = 0; i < 8; i++) {
-//            CreadorDeEstructuras.crearMuro(new Vector3f(-30f + i*10, 0f, -20f), new Vector3f(-300f + i*100f, 0f, -400f), 10, 5, conjunto, this);
-//        }
-        /* Bloque paralelo al eje X */
-//        CreadorDeEstructuras.crearBloque(new Vector3f(), new Vector3f(20, 1, 5), new Vector3f(), conjunto, this);
-        // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
-        float friccion = 4f;
-        mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
+        CreadorDeEstructuras.crearMuro(new Vector3f(-200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(-100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
+        CreadorDeEstructuras.crearMuro(new Vector3f(200, 0, 400 - radioTorre / 2 - offset * 1.4f), new Vector3f(100, 0f, 150 + radioTorre / 2 + offset * 1.4f), alturaMuros, numPiezas, conjunto, this);
 
         /* Crear tesoro */
         FactoriaEntidades.crearEntidad("tesoro", conjunto, this);
@@ -296,6 +320,9 @@ public class Juego extends JFrame {
         ArrayList<String> objetivos = new ArrayList<String>();
         objetivos.add("JUGADOR");
         Disparador d = new DisparadorRectangular(objetivos, this, evento, -1000, 50, 1000, -500, conjunto);
+
+        añadirLineaAlChat("Nivel cargado!!");
+        añadirLineaAlChat("¡Asalta al castillo, roba el tesoro y vuelve al principio sano y salvo");
     }
 
     /* Getters y setters */
@@ -314,7 +341,7 @@ public class Juego extends JFrame {
     public void setTesoroConseguido(boolean b) {
         this.tesoroConseguido = b;
     }
-    
+
     public void añadirLineaAlChat(String linea) {
         ((JuegoCanvas) universo.getCanvas()).addLineToChat(linea);
     }
@@ -342,7 +369,14 @@ public class Juego extends JFrame {
                     }
                 }
                 break;
-
+            case "tutorialParte1":
+                //ToDo: Implementar
+                break;
+            case "cargarNivel":
+                //ToDo: remover disparador
+                disparadorTutorialActual = null;
+                cargarNivel();
+                break;
         }
     }
 

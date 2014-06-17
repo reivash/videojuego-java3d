@@ -2,6 +2,7 @@ package entidad;
 
 import comportamiento.ComportamientoApuntar;
 import comportamiento.ComportamientoAtacar;
+import comportamiento.ComportamientoGuardian;
 import comportamiento.ComportamientoJefazoDefensor;
 import comportamiento.ComportamientoPatrullar;
 import comportamiento.ComportamientoPerseguir;
@@ -54,12 +55,13 @@ public class FactoriaEntidades {
                 break;
             }
             case "jauria": {
-                Personaje jugador = (Personaje) diccionarioEntidades.buscarEntidades("JUGADOR").get(0);
+//                Personaje jugador = (Personaje) diccionarioEntidades.buscarEntidades("JUGADOR").get(0);
+                EntidadInteligente ei;
                 for (int j = 0; j < 3; j++) {
                     for (int i = 0; i < 5; i++) {
-                        EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
+                        ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
                         ei.añadirTipo("ENEMIGO");
-                        ei.setComportamiento(new ComportamientoAtacar(ei, jugador));
+                        ei.setComportamiento(new ComportamientoGuardian(ei));
                         ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f((i - 2) * 30, 1, 300 + j * 10), new Vector3f());
                     }
                 }
