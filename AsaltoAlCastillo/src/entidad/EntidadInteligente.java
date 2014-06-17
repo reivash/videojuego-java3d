@@ -49,4 +49,8 @@ public class EntidadInteligente extends Personaje {
         return comportamiento;
     }
 
+    void setDañoAtaque(int i) {
+        this.dañoAtaque = i;
+    }
+
 }

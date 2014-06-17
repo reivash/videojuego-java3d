@@ -225,9 +225,9 @@ public class Juego extends JFrame {
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
 //        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
         
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
-
+//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+//        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
+        FactoriaEntidades.crearEntidad("escuadron01", conjunto, this);
 
         /* CASTILLO */
         /* Torres del castillo traseras */

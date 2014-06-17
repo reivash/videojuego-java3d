@@ -474,4 +474,8 @@ public class Personaje extends Entidad {
 //        }
     }
 
+    public boolean estaMuerto() {
+        return muerto;
+    }
+
 }

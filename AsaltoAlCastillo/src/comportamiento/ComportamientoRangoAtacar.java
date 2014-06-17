@@ -14,19 +14,31 @@ public class ComportamientoRangoAtacar implements Comportamiento {
     private EntidadInteligente entidadControlada = null;
     private Personaje objetivo = null;
     private float rango = 256;
-    public ComportamientoRangoAtacar(EntidadInteligente entidadControlada, Personaje personaje, float rango) {
+
+    public ComportamientoRangoAtacar(EntidadInteligente entidadControlada, float rango) {
         this.entidadControlada = entidadControlada;
 
         /* Ponemos al jugador como enemigo fijo */
-        this.objetivo = personaje;
-        
+//        this.objetivo = personaje;
+
         this.rango = rango;
 //        System.out.println("Objetivo:  " + objetivo);
     }
 
     public void actualizar() {
-        if(Maths.distancia(entidadControlada.posiciones, objetivo.posiciones)<rango){
-            entidadControlada.atacar(objetivo);
+        if (objetivo == null) {
+            for (Personaje j : diccionarioEntidades.getPersonajesHostiles(entidadControlada)) {
+                if (Maths.distancia(entidadControlada.posiciones, j.posiciones) < rango) {
+                    objetivo = j;
+                    break;
+                }
+            }
+        } else {
+            if (objetivo.estaMuerto()) {
+                objetivo = null;
+            } else {
+                entidadControlada.atacar(objetivo);
+            }
         }
     }
 }
