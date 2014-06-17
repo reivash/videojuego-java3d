@@ -127,6 +127,18 @@ public class Personaje extends Entidad {
                 alturaP = (float) 3f * escalaTamano;
                 alturaDeOjos = alturaP;
             }
+            if (archivo.equals("objetosMDL/Iron_Golem_Yel.mdl")) {
+                nombreAnimacionCorriendo = "iron_golem_yel:crun";
+                nombreAnimacionCaminando = "iron_golem_yel:cwalk";
+                nombreAnimacionQuieto = "iron_golem_yel:cpause1";
+                nombreAnimacionLuchando = "iron_golem_yel:ca1slashl";
+                rotacionX = -1.5f;
+                rotacionZ = 3.14f;
+                escalaTamano = 1.25f;
+                desplazamientoY = -1f;
+                alturaP = (float) 3f * escalaTamano;
+                alturaDeOjos = alturaP;
+            }
             if (archivo.equals("objetosMDL/Doomknight.mdl")) {
                 nombreAnimacionCorriendo = "Doomknight:crun";
                 nombreAnimacionCaminando = "Doomknight:cwalk";
