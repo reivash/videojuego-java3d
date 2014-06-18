@@ -20,6 +20,9 @@ public class EntidadInteligente extends Personaje {
 
     public void actualizar() {
         super.actualizar();
+        if(juego.partidaAcabada) {
+            comportamiento = null;
+        }
         if (comportamiento != null) {
             comportamiento.actualizar();
         }
@@ -49,12 +52,11 @@ public class EntidadInteligente extends Personaje {
         return comportamiento;
     }
 
-    void setDañoAtaque(int i) {
+    public void setDañoAtaque(int i) {
         this.dañoAtaque = i;
     }
 
     public float getDistanciaAtaque() {
         return distanciaAtaque;
     }
-
 }

@@ -65,4 +65,8 @@ public class Tesoro extends Entidad {
             }
         }
     }
+
+    void setVida(int i) {
+        this.vida = i; 
+   }
 }

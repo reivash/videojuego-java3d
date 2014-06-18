@@ -7,14 +7,18 @@ import com.bulletphysics.dynamics.*;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+import comportamiento.ComportamientoGuardian;
 import disparadores.Disparador;
 import disparadores.DisparadorRectangular;
 import entidad.DiccionarioEntidades;
+import entidad.EntidadInteligente;
 import entidad.FactoriaEntidades;
 import entrada.Teclado;
 import eventos.Evento;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.vecmath.*;
@@ -49,10 +53,12 @@ public class Juego extends JFrame {
 
     /* Tutorial */
     Disparador disparadorTutorialActual = null;
-    
+
     /* Nivel */
     private boolean tesoroConseguido = false;
-    private boolean partidaAcabada = false;
+    public boolean partidaAcabada = false;
+    /* 0 tutorial 1 tutorial segunda parte 2 nivel */
+    private int estadoJuego = 0;
 
     /* Texto3D */
     private BranchGroup tituloBG = null;
@@ -104,7 +110,7 @@ public class Juego extends JFrame {
     private void inicializarTexto3D() {
         tituloBG = new BranchGroup();
 
-        textGeom = new Text3D(font3d, "", new Point3f(0, 4, -5f));
+        textGeom = new Text3D(font3d, "", new Point3f(0, 3, -5f));
         textGeom.setAlignment(Text3D.ALIGN_CENTER);
         Shape3D textShape = new Shape3D(textGeom);
 
@@ -196,8 +202,8 @@ public class Juego extends JFrame {
         //Creando el personaje del juego, controlado por teclado. Tambien se pudo haber creado en CrearEscena()
         float masa = 1f;
         float radio = 1f;
-        float posX = 5f;
-        float posY = 5f, posZ = -50f;
+        float posX = 0f;
+        float posY = 5f, posZ = -250f;
         float elasticidad = 0.5f;
         float dampingLineal = 0.5f;
         float dampingAngular = 0.9999998f;
@@ -207,9 +213,10 @@ public class Juego extends JFrame {
         jugador.cuerpoRigido.setDamping(dampingLineal, dampingAngular); //ToDo: eliminar acceso directo
         teclado.setJugador(jugador);
         jugador.cuerpoRigido.setFriction(0.6f);
-        jugador.setVida(5000);
+        jugador.setVida(500);
         jugador.setDistanciaAtaque(14);
         jugador.setIntervaloAtaque(15);
+
 //        System.out.println("Jugador: " + jugador);
 
         /* Sonido */
@@ -243,7 +250,6 @@ public class Juego extends JFrame {
 //        }
         /* Bloque paralelo al eje X */
 //        CreadorDeEstructuras.crearBloque(new Vector3f(), new Vector3f(20, 1, 5), new Vector3f(), conjunto, this);
-        
         // Creación de un Terreno Simple (no es una figura, no es movil, tiene masa 0)
         float friccion = 4f;
         mundo.TerrenoSimple terreno = new TerrenoSimple(2000, 2000, -1000, -3f, -1000, "res//texturas//cespedfutbol.jpg", conjunto, mundoFisico, friccion);
@@ -251,36 +257,20 @@ public class Juego extends JFrame {
         cargarTutorial();
     }
 
-    public void cargarTutorial() {
-        añadirLineaAlChat("¡Completa el tutorial para prepararte para la batalla!");
-        añadirLineaAlChat("Utiliza A,W,S,D para moverte y ESPACIO para saltar.");
-        añadirLineaAlChat("Camina hasta el cuadrado de enfrente para continuar");
-        
-        // Tira un concurrentException porque al actualizarse crea el nivel y mete otro disparador
-        //ToDo: Arreglar
-        Evento evento = new Evento();
-        evento.setComando("cargarNivel");
-        ArrayList<String> objetivos = new ArrayList<String>();
-        objetivos.add("JUGADOR");
-        disparadorTutorialActual = new DisparadorRectangular(objetivos, this, evento, -5, -5, 5, 5, conjunto);
-        
-//        crearNivel();
-    }
-
     public void cargarNivel() {
-        añadirLineaAlChat("Cargando nivel...");
+        añadirLineaAlChat("Cargando mapa...");
         /* NPCs */
-//        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
+        FactoriaEntidades.crearEntidad("perroListo", conjunto, this);
 //        FactoriaEntidades.crearEntidad("perroPerseguidor", conjunto, this);
-        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
+//        FactoriaEntidades.crearEntidad("jauria", conjunto, this);
 //        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 //        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
         FactoriaEntidades.crearEntidad("escuadron01", conjunto, this);
         FactoriaEntidades.crearEntidad("patrullaCastillo", conjunto, this);
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
-        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+        FactoriaEntidades.crearEntidad("tiraBolasPuerta", conjunto, this);
+//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
+//        FactoriaEntidades.crearEntidad("tiraBolas", conjunto, this);
 
 //        FactoriaEntidades.crearEntidad("soldado", conjunto, this);
         /* CASTILLO */
@@ -319,10 +309,10 @@ public class Juego extends JFrame {
         evento.setComando("comprobarTesoroCogido");
         ArrayList<String> objetivos = new ArrayList<String>();
         objetivos.add("JUGADOR");
-        Disparador d = new DisparadorRectangular(objetivos, this, evento, -1000, 50, 1000, -500, conjunto);
+        Disparador d = new DisparadorRectangular(objetivos, this, evento, -50, -30, 50, 30, conjunto);
 
-        añadirLineaAlChat("Nivel cargado!!");
-        añadirLineaAlChat("¡Asalta al castillo, roba el tesoro y vuelve al principio sano y salvo");
+        añadirLineaAlChat("¡¡Mapa cargado!!");
+        añadirLineaAlChat("¡Asalta al castillo, roba el tesoro y vuelve al principio sano y salvo!");
     }
 
     /* Getters y setters */
@@ -339,11 +329,56 @@ public class Juego extends JFrame {
     }
 
     public void setTesoroConseguido(boolean b) {
+        jugador.tieneTesoro = b;
         this.tesoroConseguido = b;
     }
 
     public void añadirLineaAlChat(String linea) {
         ((JuegoCanvas) universo.getCanvas()).addLineToChat(linea);
+    }
+
+    public void cargarTutorial() {
+        new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                añadirLineaAlChat("¡Completa el tutorial para prepararte para la batalla!");
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(2500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                añadirLineaAlChat("Utiliza A,W,S,D para moverte y ESPACIO para saltar");
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(3500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                añadirLineaAlChat("Camina hasta el cuadrado de enfrente para continuar");
+            }
+        }.start();
+
+        // Tira un concurrentException porque al actualizarse crea el nivel y mete otro disparador
+        //ToDo: Arreglar
+        Evento evento = new Evento();
+        evento.setComando("tutorialParte1");
+        ArrayList<String> objetivos = new ArrayList<String>();
+        objetivos.add("JUGADOR");
+        /* El constructor mete la instancia en el diccionario */
+        new DisparadorRectangular(objetivos, this, evento, -5, -225, 5, -230, conjunto);
+
+//        crearNivel();
     }
 
     public void procesarEvento(Evento e) {
@@ -353,12 +388,14 @@ public class Juego extends JFrame {
                 if (!partidaAcabada) {
                     añadirTitulo("VICTORIA");
                     partidaAcabada = true;
+                    Sonido.reproducirSonido("victory");
                 }
                 break;
             case "GAME_OVER":
                 if (!partidaAcabada) {
                     añadirTitulo("GAME OVER");
                     partidaAcabada = true;
+                    Sonido.reproducirSonido("scream");
                 }
                 break;
             case "comprobarTesoroCogido":
@@ -370,12 +407,40 @@ public class Juego extends JFrame {
                 }
                 break;
             case "tutorialParte1":
-                //ToDo: Implementar
+                if (estadoJuego < 1) {
+                    estadoJuego = 1;
+                    añadirLineaAlChat("Para atacar, pulsa L");
+                    EntidadInteligente ei = new EntidadInteligente("objetosMDL/Iron_Golem_Bl.mdl", .5f, conjunto, this, true);
+                    ei.añadirTipo("ENEMIGO");
+                    ei.crearPropiedades(1, 0.5f, 0.5f, new Vector3f(0, .2f, -200), new Vector3f(0, (float) Math.PI, 0));
+                    ei.setComportamiento(new ComportamientoGuardian(ei));
+                    ei.setVida(10);
+                    ei.setDañoAtaque(5);
+
+                }
                 break;
+            case "tutorialParte2": {
+                if (estadoJuego < 2) {
+                    estadoJuego = 2;
+                    añadirLineaAlChat("¡Bien hecho, has completado el tutorial!");
+                    añadirLineaAlChat("Camina hasta el siguiente control para comenzar el juego");
+                    Evento evento = new Evento();
+                    evento.setComando("cargarNivel");
+                    ArrayList<String> objetivos = new ArrayList<String>();
+                    objetivos.add("JUGADOR");
+                    /* El constructor mete la instancia en el diccionario */
+                    new DisparadorRectangular(objetivos, this, evento, -5, -100, 5, -105, conjunto);
+                }
+                break;
+            }
             case "cargarNivel":
-                //ToDo: remover disparador
-                disparadorTutorialActual = null;
-                cargarNivel();
+                if (estadoJuego < 3) {
+                    System.out.println("Estado juego: " + estadoJuego + " CARGANDO NIVEL");
+                    estadoJuego = 3;
+                    disparadorTutorialActual = null;
+                    jugador.setVida(500);
+                    cargarNivel();
+                }
                 break;
         }
     }
@@ -446,6 +511,10 @@ public class Juego extends JFrame {
 
         /* Bucle del juego */
         juego.empezar();
+    }
+
+    public int getEstado() {
+       return estadoJuego;
     }
 
 }

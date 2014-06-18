@@ -6,24 +6,21 @@ import com.bulletphysics.collision.dispatch.*;
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.linearmath.Transform;
 import com.sun.j3d.loaders.Scene;
-import entidad.Entidad;
-import entidad.EntidadInteligente;
 import eventos.Evento;
 import java.net.URL;
-import static java.rmi.server.LogStream.log;
 import java.util.ArrayList;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import net.sf.nwn.loader.AnimationBehavior;
 import net.sf.nwn.loader.NWNLoader;
-import util.Maths;
 import static util.Maths.distancia;
 import util.Sonido;
 
 public class Personaje extends Entidad {
+
     public static final long TIEMPO_ENTRE_SALTOS = 1000;
     public static final long TIEMPO_ENTRE_ATAQUES = 500;
-    
+
     /* Animación */
     public Scene escenaPersonaje1;
     public AnimationBehavior ab = null;
@@ -45,7 +42,7 @@ public class Personaje extends Entidad {
     /* Control de los tiempos de espera */
     private long ultimoSalto;
     private long ultimoAtaque;
-    
+
     /* Booleano de tener el tesoro */
     public boolean tieneTesoro = false;
 
@@ -215,9 +212,9 @@ public class Personaje extends Entidad {
     public void realizarAccion(Evento e) {
 
 //        /* No podemos hacer acciones si no tenemos puntos de vida */
-//        if (vida <= 0) {
-//            return;
-//        }
+        if (vida <= 0) {
+            return;
+        }
         accionRealizada = true;
 
         /* Velocidad por defecto de la animación */
@@ -287,11 +284,11 @@ public class Personaje extends Entidad {
                     break;
                 }
                 case "atacar": {
-                    if(ultimoAtaque + TIEMPO_ENTRE_ATAQUES <= System.currentTimeMillis()){
-                    log("Atacando");
-                    ataqueArea();
+                    if (ultimoAtaque + TIEMPO_ENTRE_ATAQUES <= System.currentTimeMillis()) {
+                        log("Atacando");
+                        ataqueArea();
 
-                    /* Empuje vertical a las entidades cercanas */
+                        /* Empuje vertical a las entidades cercanas */
 //                    for (Entidad ent : diccionarioEntidades.getEntidades()) {
 //                        /* ToDo: Reparar esto que no funciona. El método de colisión siempre da true */
 //                        if (!getId().equals(ent.getId())) {
@@ -304,12 +301,12 @@ public class Personaje extends Entidad {
                 }
                 /* Porque puedo */
                 case "saltar": {
-                    if(ultimoSalto + TIEMPO_ENTRE_SALTOS <= System.currentTimeMillis()){
+                    if (ultimoSalto + TIEMPO_ENTRE_SALTOS <= System.currentTimeMillis()) {
                         log("Saltando");
                         velocidad_lineal.y += 512;
                         ultimoSalto = System.currentTimeMillis();
                     }
-                    
+
                     break;
                 }
                 case "salir": {
@@ -368,7 +365,7 @@ public class Personaje extends Entidad {
                 if (ent.getId().equals(id)) {
                     continue;
                 }
-                if(ent instanceof Bola){
+                if (ent instanceof Bola) {
                     continue;
                 }
                 brazoPoderoso = new Vector3f(
@@ -381,7 +378,7 @@ public class Personaje extends Entidad {
                 if (ent.getClass().equals(EntidadInteligente.class)) {
                     ((EntidadInteligente) ent).procesarEvento(e);
                 }
-                if(ent.getClass().equals(Tesoro.class)){
+                if (ent.getClass().equals(Tesoro.class)) {
                     ((Tesoro) ent).procesarEvento(e);
                 }
                 brazoPoderoso.normalize();
@@ -426,12 +423,26 @@ public class Personaje extends Entidad {
     public void setDistanciaAtaque(float d) {
         this.distanciaAtaque = d;
     }
-    
+
     public void procesarEvento(Evento e) {
+//        System.out.println("Personaje: " + etiquetas.toString());
+//        System.out.println("Recibido: " + e.getComando());
         switch (e.getComando()) {
             case "dañar":
                 Sonido.reproducirSonido("scream");
-                vida -= e.getValor();
+//                System.out.println("Valor daño: " + e.getValor());
+                vida -= (int) e.getValor();
+//                System.out.println("Vida restante: " + vida);
+                if (vida <= 0) {
+                    if (etiquetas.contains("JUGADOR")) {
+                        Evento evento = new Evento();
+                        evento.setComando("GAME_OVER");
+                        juego.procesarEvento(evento);
+                    } else {
+                        alMorir();
+                    }
+                }
+
 //                System.out.println("La entidad con etiquetas: " + etiquetas.toString() + " ha perdido todos sus puntos de vida");
                 break;
         }
@@ -444,6 +455,7 @@ public class Personaje extends Entidad {
     public void setIntervaloAtaque(int v) {
         this.intervaloAtaque = v;
     }
+
     @Override
     public void actualizar() {
         super.actualizar();
@@ -481,4 +493,13 @@ public class Personaje extends Entidad {
         return muerto;
     }
 
+    public void alMorir() {
+        /* Sobreescribir método en el constructor si necesario */
+        if (juego.getEstado() == 1) {
+            this.remover();
+            Evento e = new Evento();
+            e.setComando("tutorialParte2");
+            juego.procesarEvento(e);
+        }
+    }
 }

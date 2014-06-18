@@ -36,7 +36,8 @@ public class FactoriaEntidades {
             case "perroListo": {
                 EntidadInteligente ei = new EntidadInteligente("objetosMDL/Intellect_Devour.mdl", .5f, conjunto, juego, true);
                 ei.añadirTipo("ENEMIGO");
-                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 1, 50), new Vector3f());
+                ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 1, 150), new Vector3f(0, (float) Math.PI, 0));
+                ei.setComportamiento(new ComportamientoGuardian(ei));
                 break;
             }
             case "perroPerseguidor": {
@@ -52,6 +53,24 @@ public class FactoriaEntidades {
                 ei.setComportamiento(new ComportamientoApuntar(ei));
                 ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 0, 30), new Vector3f());
                 ei.añadirTipo("ENEMIGO");
+                break;
+            }
+            case "tiraBolasPuerta": {
+
+                {
+                    EntidadInteligente ei = new EntidadInteligente("objetosMDL/Fire_Elemental.mdl", .5f, conjunto, juego, true);
+                    ei.setComportamiento(new ComportamientoApuntar(ei));
+                    ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(-15, 0, 140), new Vector3f());
+                    ei.añadirTipo("ENEMIGO");
+                    ei.setVida(1);
+                }
+                {
+                    EntidadInteligente ei = new EntidadInteligente("objetosMDL/Fire_Elemental.mdl", .5f, conjunto, juego, true);
+                    ei.setComportamiento(new ComportamientoApuntar(ei));
+                    ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(15, 0, 140), new Vector3f());
+                    ei.añadirTipo("ENEMIGO");
+                    ei.setVida(1);
+                }
                 break;
             }
             case "jauria": {
@@ -74,6 +93,7 @@ public class FactoriaEntidades {
                 Tesoro t = new Tesoro(new Vector3f(10, 4, 4), "res//texturas//balon.jpg", conjunto, juego);
                 t.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(0, 2, 350), new Vector3f());
                 t.añadirTipo("TESORO");
+                t.setVida(50);
                 break;
             }
             case "escuadron01": {
@@ -84,7 +104,7 @@ public class FactoriaEntidades {
                         ei = new EntidadInteligente("objetosMDL/Iron_Golem_Bl.mdl", .5f, conjunto, juego, true);
                         ei.añadirTipo("ENEMIGO");
                         ei.setComportamiento(new ComportamientoRangoAtacar(ei, 256));
-                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(i * 5 - 10, 1, 100 - j * 5), new Vector3f(0, (float) Math.PI, 0));
+                        ei.crearPropiedades(masa, elasticidad, dampingLineal, new Vector3f(i * 5 - 10, 1, 250 - j * 5), new Vector3f(0, (float) Math.PI, 0));
                         ei.setDañoAtaque(10);
                         ei.setVida(50);
                         escuadron.add(ei);
@@ -93,7 +113,7 @@ public class FactoriaEntidades {
                 EntidadInteligente jefazo = new EntidadInteligente("objetosMDL/Iron_Golem_Yel.mdl", 1f, conjunto, juego, true);
                 jefazo.añadirTipo("ENEMIGO");
                 jefazo.setComportamiento(new ComportamientoJefazoDefensor(jefazo, escuadron));
-                jefazo.crearPropiedades(2.5f, elasticidad, dampingLineal, new Vector3f(0, 1, 105), new Vector3f(0, (float) Math.PI, 0));
+                jefazo.crearPropiedades(1.5f, elasticidad, dampingLineal, new Vector3f(0, 1, 255), new Vector3f(0, (float) Math.PI, 0));
                 jefazo.setVida(300);
                 jefazo.setIntervaloAtaque(10);
                 jefazo.setDañoAtaque(20);

@@ -12,11 +12,11 @@ import util.Weka;
 
 public class ComportamientoApuntar implements Comportamiento {
 
-    public static final long TIEMPO_ESPERA_ATAQUES = 3000;
+    public static final long TIEMPO_ESPERA_ATAQUES = 5000;
     private static DiccionarioEntidades diccionarioEntidades = DiccionarioEntidades.getInstance();
 
     private EntidadInteligente entidadControlada = null;
-    private float maximaRangoDistancia = 256f;
+    private float maximaRangoDistancia = 150f;
     private long tiempoUltimoAtaque = 0;
 
     /* El supuesto enemigo */

@@ -19,6 +19,7 @@ public class DiccionarioEntidades {
     private Integer index = new Integer(0);
 
     private List<Disparador> disparadores = new ArrayList<Disparador>();
+    private List<Disparador> listaAñadirDisparadores = new ArrayList<Disparador>();
 
     /**
      * ************ On demand holder initialization *************
@@ -36,23 +37,24 @@ public class DiccionarioEntidades {
     }
 
     public void añadirDisparador(Disparador d) {
-        disparadores.add(d);
+        listaAñadirDisparadores.add(d); // Para evitar ConcurrentException por disparadores que crean disparadores
+//        disparadores.add(d);
     }
 
     public void encolar(Entidad entidad) {
-        if(!colaCreacion.contains(entidad)){
+        if (!colaCreacion.contains(entidad)) {
             colaCreacion.add(entidad);
         }
     }
 
     public void creaEncolados() {
         /*for (Propiedades p : colaCreacion) {
-            p.registrar();
-        }*/
-        if(colaCreacion.size()!=0){
-            System.out.println(">> Tam. cola creación: " + colaCreacion.size());
+         p.registrar();
+         }*/
+        if (colaCreacion.size() != 0) {
+//            System.out.println(">> Tam. cola creación: " + colaCreacion.size());
         }
-        for (Entidad e : colaCreacion){
+        for (Entidad e : colaCreacion) {
             añadirEntidad(e);
         }
         colaCreacion.clear();
@@ -80,15 +82,20 @@ public class DiccionarioEntidades {
         for (Disparador d : disparadores) {
             d.actualizar();
         }
+        /* Si los hay añadir los disparadores creados */
+        for (Disparador d : listaAñadirDisparadores) {
+            disparadores.add(d);
+        }
+        listaAñadirDisparadores.clear();
     }
 
     public void mostrar() {
         /* Mostrar las entidades */
         for (Entidad e : listaEntidades.values()) {
-            if(colaEliminacion.size()==0 || !colaEliminacion.contains(e)){
+            if (colaEliminacion.size() == 0 || !colaEliminacion.contains(e)) {
                 e.mostrar();
             } else {
-                System.out.println(">>>>>>> No mostrando: " + e);
+//                System.out.println(">>>>>>> No mostrando: " + e);
             }
         }
     }
@@ -136,8 +143,8 @@ public class DiccionarioEntidades {
     }
 
     public void eliminarEncolados() {
-        if(colaEliminacion.size()!=0){
-            System.out.println(">> Tam. cola eliminación: " + colaEliminacion.size());
+        if (colaEliminacion.size() != 0) {
+//            System.out.println(">> Tam. cola eliminación: " + colaEliminacion.size());
         }
         for (Entidad e : colaEliminacion) {
             e.remover();
@@ -146,8 +153,8 @@ public class DiccionarioEntidades {
     }
 
     public void marcarParaEliminar(Entidad e) {
-        if(!colaEliminacion.contains(e)){
-           colaEliminacion.add(e); 
+        if (!colaEliminacion.contains(e)) {
+            colaEliminacion.add(e);
         }
     }
 
